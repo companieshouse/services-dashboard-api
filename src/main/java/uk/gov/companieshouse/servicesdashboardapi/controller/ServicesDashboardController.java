@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.util.List;
 
+import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.repository.ServicesDashboardRepository;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.service.dtgetallprojects.GetAllProjects;
-import uk.gov.companieshouse.servicesdashboardapi.model.dto.DepTrackProjectInfo;
 
 
 
@@ -40,10 +42,15 @@ public class ServicesDashboardController {
   }    
 
   @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<List<DepTrackProjectInfo>> feedback() {
+  public ResponseEntity<List<DepTrackProjectInfo>> feedback(
+   // DepTrackProjectInfo depTrackProjectInfo
+  ) {
    //int i = this.getP();
    ApiLogger.infoContext("10", "---------ALL OK");
    List<DepTrackProjectInfo> list = this.servicesDepTrack.fetch();
+   // this.servicesDashboardService.createServicesDashboard(depTrackProjectInfo,"aaaaa");
+   this.servicesDashboardService.createServicesDashboard(list,"aaaaa");
+
    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 

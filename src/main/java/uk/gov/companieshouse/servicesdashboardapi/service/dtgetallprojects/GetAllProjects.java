@@ -20,9 +20,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 
+import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.service.DepTrackGetDataService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.model.dto.DepTrackProjectInfo;
 
 @Service
 public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProjectInfo>>{

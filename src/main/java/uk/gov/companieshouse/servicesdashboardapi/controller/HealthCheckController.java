@@ -10,6 +10,6 @@ public class HealthCheckController {
 
   @GetMapping("/services-dashboard/healthcheck")
   public ResponseEntity<String> healthcheck() {
-    return new ResponseEntity("Customer Feedback API Service is healthy", HttpStatus.OK);
+    return new ResponseEntity("Services Dashboard API Service is healthy", HttpStatus.OK);
   }
 }
