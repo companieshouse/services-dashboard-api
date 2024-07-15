@@ -21,15 +21,22 @@ import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProject
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ProjectInfoMapper;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
+// @Configuration
 @Service   
 public class ServicesDashboardService {
 
    // @Autowired
    // private ProjectInfoMapper projectInfoMapper;
-   @Autowired
-   private ServicesDashboardRepository servicesDashboardRepository;
+   // @Autowired
+   // private ServicesDashboardRepository servicesDashboardRepository;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
    // @Autowired
    // private ServicesDashboardRepository servicesDashboardRepository;
@@ -48,8 +55,16 @@ public class ServicesDashboardService {
 
    //var mongoProjectInfo = projectInfoMapper.toDao(depTrackProjectInfo);
 
-    ApiLogger.debugContext(requestId, "Processing services dashboard");
+   ApiLogger.infoContext("10", "---------Create Serv[1]");
+   //MongoProjectInfo mongoProjectInfo = new MongoProjectInfo();
+   // mongoTemplate.save(mongoProjectInfo);
+   mongoTemplate.insertAll(depTrackProjectInfo);
+   
+   // servicesDashboardRepository.save(mongoProjectInfo);
 
+   //  ApiLogger.debugContext(requestId, "Processing services dashboard");
+
+   ApiLogger.infoContext("10", "---------Create Serv[2]");
    // MongoProjectInfo mongoProjectInfo =
    // ServicesDashboardRepository.insert(mongoProjectInfo);
 

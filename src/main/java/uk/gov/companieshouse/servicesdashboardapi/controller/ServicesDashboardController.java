@@ -46,11 +46,12 @@ public class ServicesDashboardController {
    // DepTrackProjectInfo depTrackProjectInfo
   ) {
    //int i = this.getP();
-   ApiLogger.infoContext("10", "---------ALL OK");
+   ApiLogger.infoContext("10", "---------ALL OK[1]");
    List<DepTrackProjectInfo> list = this.servicesDepTrack.fetch();
    // this.servicesDashboardService.createServicesDashboard(depTrackProjectInfo,"aaaaa");
    this.servicesDashboardService.createServicesDashboard(list,"aaaaa");
 
+   ApiLogger.infoContext("10", "---------ALL OK[2]");
    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
