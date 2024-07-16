@@ -26,10 +26,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import java.util.List;
+import java.util.stream.Collectors;
 // @Configuration
 @Service   
 public class ServicesDashboardService {
 
+   // @Autowired
+   // private ProjectInfoMapper projectInfoMapper;
+   
    // @Autowired
    // private ProjectInfoMapper projectInfoMapper;
    // @Autowired
@@ -51,14 +58,19 @@ public class ServicesDashboardService {
    // this.servicesDashboardRepository = servicesDashboardRepository;
    // }
 
-   public void createServicesDashboard(List<DepTrackProjectInfo> depTrackProjectInfo, String requestId){
+   public void createServicesDashboard(List<DepTrackProjectInfo> depTrackProjectInfoList, String requestId){
 
    //var mongoProjectInfo = projectInfoMapper.toDao(depTrackProjectInfo);
 
    ApiLogger.infoContext("10", "---------Create Serv[1]");
    //MongoProjectInfo mongoProjectInfo = new MongoProjectInfo();
    // mongoTemplate.save(mongoProjectInfo);
-   mongoTemplate.insertAll(depTrackProjectInfo);
+
+   // Map the list of DepTrackProjectInfo to a list of MongoProjectInfo
+   // List<MongoProjectInfo> mongoProjectInfoList = projectInfoMapper.depTrackProjectInfoListToMongoProjectInfoList(depTrackProjectInfoList);
+
+   // mongoTemplate.insertAll(mongoProjectInfoList);
+   insertProjects(depTrackProjectInfoList);
    
    // servicesDashboardRepository.save(mongoProjectInfo);
 
@@ -69,4 +81,24 @@ public class ServicesDashboardService {
    // ServicesDashboardRepository.insert(mongoProjectInfo);
 
   }
+
+  public void insertProjects(List<DepTrackProjectInfo> depTrackProjectInfoList) {
+   List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.depTrackProjectInfoListToMongoProjectInfoList(depTrackProjectInfoList);
+   List<MongoProjectInfo> filteredProjectInfoList = filterExistingProjects(mongoProjectInfoList);
+   mongoTemplate.insertAll(filteredProjectInfoList);
+   }
+
+   private boolean existsByNameAndVersion(String name, String version) {
+      Query query = new Query();
+      query.addCriteria(Criteria.where("name").is(name).and("version").is(version));
+      return mongoTemplate.exists(query, MongoProjectInfo.class);
+   }
+
+   private List<MongoProjectInfo> filterExistingProjects(List<MongoProjectInfo> projectList) {
+      return projectList.stream()
+         .filter(project -> !existsByNameAndVersion(project.getName(), project.getVersion()))
+         .collect(Collectors.toList());
+   }
 }
+
+
