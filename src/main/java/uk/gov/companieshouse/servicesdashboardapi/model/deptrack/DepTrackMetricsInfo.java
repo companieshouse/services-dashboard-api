@@ -2,10 +2,8 @@ package uk.gov.companieshouse.servicesdashboardapi.model.deptrack;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
-
 public class DepTrackMetricsInfo {
-   
+
    @JsonProperty("critical")
    private int critical;
 

@@ -2,7 +2,6 @@ package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
 import java.util.Date;
 
-import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoMetricsInfo;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
