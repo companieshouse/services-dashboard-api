@@ -3,10 +3,12 @@ package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "projects")
+// @Document(collection = "projects")
+@Document
 public class MongoProjectInfo {
    @Id
    private String id;

@@ -14,15 +14,31 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import uk.gov.companieshouse.servicesdashboardapi.repository.MongoProjectInfoRepository;
 
 
+
+// @EnableMongoRepositories(basePackageClasses = MongoProjectInfoRepository.class)
+// public class MongoConfig extends AbstractMongoClientConfiguration {
+// @EnableMongoRepositories(basePackages = "uk.gov.companieshouse.servicesdashboardapi.repository") <--- this was ok
 @Configuration
 public class MongoConfig {
 
-    @Autowired
+   @Autowired
     private MongoProperties mongoProperties;
 
-    @Bean
+   public String getCollectionName() {
+      return  mongoProperties.getCollectionName();
+   }
+
+   // @Override
+   // protected String getDatabaseName() {
+   //     return mongoProperties.getDbname();
+   // }
+
+  @Bean
     public MongoClient mongoClient() {
         String auth = (mongoProperties.getUser().isEmpty() ? "" : 
                   String.format("%s:%s@",

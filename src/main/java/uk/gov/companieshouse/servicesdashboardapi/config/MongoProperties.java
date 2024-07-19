@@ -12,7 +12,7 @@ public class MongoProperties {
     private String password;
     private String hostandport;
     private String dbname;
-    private String collection;
+    private String collectionName;
 
     // Getters and Setters
     public String getProtocol() { return protocol; }
@@ -30,6 +30,6 @@ public class MongoProperties {
     public String getDbname() { return dbname; }
     public void setDbname(String dbname) { this.dbname = dbname; }
 
-    public String getCollection() { return collection; }
-    public void setCollection(String collection) { this.collection = collection; }
+    public String getCollectionName() { return collectionName; }
+    public void setCollectionName(String collectionName) { this.collectionName = collectionName; }
 }
