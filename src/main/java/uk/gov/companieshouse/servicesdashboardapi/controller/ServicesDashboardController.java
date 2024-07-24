@@ -12,8 +12,8 @@ import java.util.List;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
+import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.service.dtgetallprojects.GetAllProjects;
 
 @RestController
 public class ServicesDashboardController {
@@ -28,22 +28,19 @@ public class ServicesDashboardController {
 }  
 
   @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<List<DepTrackProjectInfo>> feedback(
-   // DepTrackProjectInfo depTrackProjectInfo
-  ) {
-   //int i = this.getP();
-   ApiLogger.infoContext("10", "---------ALL OK[1]");
+  public ResponseEntity<List<DepTrackProjectInfo>> listServices( ) {
+   ApiLogger.info("---------list-services START");
    List<DepTrackProjectInfo> list = this.servicesDepTrack.fetch();
    this.servicesDashboardService.createServicesDashboard(list,"aaaaa");
 
-   ApiLogger.infoContext("10", "---------ALL OK[2]");
+   ApiLogger.info("---------list-services END");
    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-      ApiLogger.infoContext("10", "Failure in integer conversion of Response's header total projects");
+      ApiLogger.info("Failure in integer conversion of Response's header total projects");
   }
 
 }

@@ -18,9 +18,9 @@ public class ServicesDashboardService {
 
    public void createServicesDashboard(List<DepTrackProjectInfo> depTrackProjectInfoList, String requestId){
 
-   ApiLogger.infoContext("10", "---------Create Serv[1]");
+   ApiLogger.info("---------Create Serv START");
    insertProjects(depTrackProjectInfoList);
-   ApiLogger.infoContext("10", "---------Create Serv[2]");
+   ApiLogger.info("---------Create Serv END");
   }
 
   public void insertProjects(List<DepTrackProjectInfo> depTrackProjectInfoList) {

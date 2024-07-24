@@ -3,6 +3,9 @@ package uk.gov.companieshouse.servicesdashboardapi.config;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
+
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+
 import com.mongodb.client.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +41,7 @@ public class MongoConfig {
             mongoProperties.getHostandport(),
             mongoProperties.getDbname());
 
+        ApiLogger.debug("Connection string: " + uri);
         ConnectionString connectionString = new ConnectionString(uri);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)

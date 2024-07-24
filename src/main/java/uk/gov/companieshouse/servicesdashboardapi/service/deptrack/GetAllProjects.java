@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.servicesdashboardapi.service.dtgetallprojects;
+package uk.gov.companieshouse.servicesdashboardapi.service.deptrack;
 
 import java.io.IOException;
 import java.util.AbstractMap;
