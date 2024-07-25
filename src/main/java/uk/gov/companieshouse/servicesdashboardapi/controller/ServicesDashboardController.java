@@ -11,8 +11,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.List;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
-import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
+import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @RestController
@@ -23,9 +23,9 @@ public class ServicesDashboardController {
   
   @Autowired
   public ServicesDashboardController(ServicesDashboardService servicesDashboardService, GetAllProjects servicesDepTrack) {
-   this.servicesDashboardService = servicesDashboardService;
-   this.servicesDepTrack = servicesDepTrack;
-}  
+      this.servicesDashboardService = servicesDashboardService;
+      this.servicesDepTrack = servicesDepTrack;
+  }
 
   @GetMapping("/services-dashboard/list-services")
   public ResponseEntity<List<DepTrackProjectInfo>> listServices( ) {
@@ -42,7 +42,6 @@ public class ServicesDashboardController {
   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
       ApiLogger.info("Failure in integer conversion of Response's header total projects");
   }
-
 }
 
 

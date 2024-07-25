@@ -3,6 +3,7 @@ package uk.gov.companieshouse.servicesdashboardapi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// @SpringBootApplication(scanBasePackages = "uk.gov.companieshouse.servicesdashboardapi")
 @SpringBootApplication
 public class ServicesDashboardApiApplication {
 

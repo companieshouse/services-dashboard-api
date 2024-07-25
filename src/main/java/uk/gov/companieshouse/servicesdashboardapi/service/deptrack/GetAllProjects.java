@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
-import uk.gov.companieshouse.servicesdashboardapi.service.DepTrackGetDataService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+import uk.gov.companieshouse.servicesdashboardapi.service.DepTrackGetDataService;
 
 @Service
 public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProjectInfo>>{
@@ -40,6 +40,7 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
     // PostConstruct to initialize the endPoint field from the property
     @PostConstruct
     private void init() {
+        System.out.println("GetAllProjects initialized with endPoint: " + endPoint);
         this.endPoint = endPointValue;
     }
    
