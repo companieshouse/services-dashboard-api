@@ -90,10 +90,6 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
 
       } while (offset < totalCount);
 
-      // Print the list
-      // for (DepTrackProjectInfo model : allProjects) {
-      //    System.out.println(model);
-      // }
       return allProjects;
    }
 }

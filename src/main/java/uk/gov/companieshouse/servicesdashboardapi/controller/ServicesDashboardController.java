@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.util.List;
 
+import uk.gov.companieshouse.servicesdashboardapi.mapper.MergeInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
@@ -32,7 +34,13 @@ public class ServicesDashboardController {
   public ResponseEntity<List<DepTrackProjectInfo>> listServices( ) {
    ApiLogger.info("---------list-services START");
    List<DepTrackProjectInfo> list = this.servicesDepTrack.fetch();
-   this.servicesDashboardService.createServicesDashboard(list,"aaaaa");
+
+   List<ProjectInfo> list2 = MergeInfoMapper.INSTANCE.mapList(list);
+
+   for (ProjectInfo p : list2) {
+      System.out.println(p);
+  }
+   this.servicesDashboardService.createServicesDashboard(list2,"aaaaa");
 
    ApiLogger.info("---------list-services END");
    return new ResponseEntity<>(list, HttpStatus.OK);

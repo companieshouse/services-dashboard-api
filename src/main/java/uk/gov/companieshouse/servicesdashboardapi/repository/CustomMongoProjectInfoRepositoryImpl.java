@@ -25,16 +25,23 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
     @Override
     public void saveProjectInfos(List<MongoProjectInfo> mongoProjectInfoList) {
         for (MongoProjectInfo info : mongoProjectInfoList) {
-            if (!existsByNameAndVersion(info.getName(), info.getVersion())) {
-                mongoTemplate.insert(info, collectionName);
+         // if (!existsByNameAndVersion(info.getName(), info.getVersion())) {
+            if (!existsByName(info.getName())) {
+               mongoTemplate.insert(info, collectionName);
             }
         }
     }
 
+   //  @Override
+   //  public boolean existsByNameAndVersion(String name, String version) {
+   //    Query query = new Query();
+   //      query.addCriteria(Criteria.where("name").is(name).and("version").is(version));
+   //      return mongoTemplate.exists(query, MongoProjectInfo.class, collectionName);
+   //  }
     @Override
-    public boolean existsByNameAndVersion(String name, String version) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name).and("version").is(version));
+    public boolean existsByName(String name) {
+      Query query = new Query();
+        query.addCriteria(Criteria.where("name").is(name));
         return mongoTemplate.exists(query, MongoProjectInfo.class, collectionName);
     }
 }

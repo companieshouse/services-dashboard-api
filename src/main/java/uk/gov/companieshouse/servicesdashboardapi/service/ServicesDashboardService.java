@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ProjectInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoProjectInfoRepository;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
@@ -20,18 +20,18 @@ public class ServicesDashboardService {
     @Autowired
     private SonarService serviceSonar;
 
-   public void createServicesDashboard(List<DepTrackProjectInfo> depTrackProjectInfoList, String requestId){
-      for (DepTrackProjectInfo info : depTrackProjectInfoList) {
-            System.out.println("==============> working on " + info.getName());
-            serviceSonar.fetchMetrics(info.getName());
+   public void createServicesDashboard(List<ProjectInfo> projectInfoList, String requestId){
+      for (ProjectInfo p : projectInfoList) {
+            System.out.println("==============> working on " + p.getName());
+            serviceSonar.fetchMetrics(p.getName());
       }
       ApiLogger.info("---------Create Serv START");
-      insertProjects(depTrackProjectInfoList);
+      insertProjects(projectInfoList);
       ApiLogger.info("---------Create Serv END");
    }
 
-   public void insertProjects(List<DepTrackProjectInfo> depTrackProjectInfoList) {
-      List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.depTrackProjectInfoListToMongoProjectInfoList(depTrackProjectInfoList);
+   public void insertProjects(List<ProjectInfo> projectInfoList) {
+      List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.projectInfoListToMongoProjectInfoList(projectInfoList);
       customMongoProjectInfoRepository.saveProjectInfos(mongoProjectInfoList);
    }
 }

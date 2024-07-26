@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.annotation.Id;
@@ -14,14 +14,8 @@ public class MongoProjectInfo {
    @Field("name")
    private String name;
 
-   @Field("version")
-   private String version;
-
-   @Field("lastBomImport")
-   private Date lastBomImport;
-
-   @Field("metrics")
-   private MongoMetricsInfo metrics;
+   @Field("versions")
+   private List<MongoVersionInfo> versions;
 
    // Getters and Setters
    public String getName() {
@@ -31,37 +25,15 @@ public class MongoProjectInfo {
    public void setName(String name) {
        this.name = name;
    }
+  public List<MongoVersionInfo> getVersions() {
+   return versions;
+  }
 
-   public String getVersion() {
-      return version;
-   }
-
-   public void setVersion(String version) {
-      this.version = version;
-   }
-
-   public Date getLastBomImport() {
-      return lastBomImport;
-   }
-
-   public void setLastBomImport(Date lastBomImport) {
-      this.lastBomImport = lastBomImport;
-   }
-   public MongoMetricsInfo getMetrics() {
-      return metrics;
-   }
-
-  public void setMetrics(MongoMetricsInfo metrics) {
-      this.metrics = metrics;
-   }
-
-   @Override
-   public String toString() {
-       return "DepTrackProjectInfo{" +
-       "name='" + name + '\'' +
-       ", version='" + version + '\'' +
-       ", lastBomImport='" + lastBomImport + '\'' +
-       ", metrics='" + metrics + '\'' +
-              '}';
-   }
+  public void setVersions(List<MongoVersionInfo> versions) {
+    this.versions = versions;
+  }
+  @Override
+  public String toString() {
+      return String.format("{n:%s,v:%s,%s}", name, versions);
+  }
 }

@@ -2,7 +2,6 @@ package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 
-
 public class MongoMetricsInfo {
 
    @Field("critical")
@@ -27,7 +26,6 @@ public class MongoMetricsInfo {
    public int getCritical() {
       return critical;
    }
-
    public void setCritical(int critical) {
       this.critical = critical;
    }

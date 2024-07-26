@@ -71,6 +71,11 @@ public class DepTrackMetricsInfo {
       this.components = components;
    }
 
+   @Override
+   public String toString() {
+       return String.format("{C:%s/H:%s/M:%s/L:%s/v:%s/c:%s}", critical, high, medium, low, vulnerabilities, components);
+   }
+
 }
 
 
