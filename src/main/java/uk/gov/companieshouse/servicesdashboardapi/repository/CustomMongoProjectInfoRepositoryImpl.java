@@ -16,7 +16,7 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
     private final MongoTemplate mongoTemplate;
     private final String collectionName;
 
-    public CustomMongoProjectInfoRepositoryImpl(MongoTemplate mongoTemplate, 
+    public CustomMongoProjectInfoRepositoryImpl(MongoTemplate mongoTemplate,
                                                 MongoConfig mongoConfig) {
         this.mongoTemplate = mongoTemplate;
         this.collectionName = mongoConfig.getCollectionName();

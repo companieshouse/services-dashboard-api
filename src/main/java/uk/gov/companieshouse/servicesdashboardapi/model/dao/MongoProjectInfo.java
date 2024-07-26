@@ -19,7 +19,7 @@ public class MongoProjectInfo {
 
    @Field("lastBomImport")
    private Date lastBomImport;
-   
+
    @Field("metrics")
    private MongoMetricsInfo metrics;
 

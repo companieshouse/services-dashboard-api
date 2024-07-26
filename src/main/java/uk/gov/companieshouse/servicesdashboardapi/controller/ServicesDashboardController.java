@@ -20,9 +20,10 @@ public class ServicesDashboardController {
 
    private final ServicesDashboardService servicesDashboardService;
    private final GetAllProjects servicesDepTrack;
-  
+
   @Autowired
-  public ServicesDashboardController(ServicesDashboardService servicesDashboardService, GetAllProjects servicesDepTrack) {
+  public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
+                                     GetAllProjects servicesDepTrack){
       this.servicesDashboardService = servicesDashboardService;
       this.servicesDepTrack = servicesDepTrack;
   }

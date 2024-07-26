@@ -50,11 +50,10 @@ public class DepTrackProjectInfo  {
 
    @Override
    public String toString() {
-       return "DepTrackProjectInfo{" +
-       "name='" + name + '\'' +
-       ", version='" + version + '\'' +
-       ", lastBomImport='" + lastBomImport + '\'' +
-       ", metrics='" + metrics + '\'' +
-              '}';
+      return String.format("DepTrackProjectInfo{name:%s,version:%s,lastBomImport:%s,metrics:%s}",
+      name,
+      version,
+      lastBomImport,
+      metrics);
    }
 }

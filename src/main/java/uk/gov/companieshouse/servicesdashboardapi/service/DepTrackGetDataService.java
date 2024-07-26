@@ -26,7 +26,7 @@ public abstract class DepTrackGetDataService<T> {
 
    protected final RestTemplate restTemplate;
 
-   public DepTrackGetDataService(String endPoint) {      
+   public DepTrackGetDataService(String endPoint) {
       this.restTemplate = new RestTemplate();
       this.endPoint = endPoint;
    }
@@ -47,11 +47,11 @@ public abstract class DepTrackGetDataService<T> {
 
    public String setUri(List<Map.Entry<String, String>> queryParams) {
       UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.baseUrl + this.endPoint);
-      
+
       for (Map.Entry<String, String> param : queryParams) {
           builder.queryParam(param.getKey(), param.getValue());
       }
-      
+
       return builder.toUriString();
   }
 }

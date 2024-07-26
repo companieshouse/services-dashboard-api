@@ -30,11 +30,11 @@ public class MongoConfig {
 
   @Bean
     public MongoClient mongoClient() {
-        String auth = (mongoProperties.getUser().isEmpty() ? "" : 
+        String auth = (mongoProperties.getUser().isEmpty() ? "" :
                   String.format("%s:%s@",
                      mongoProperties.getUser(),
                      mongoProperties.getPassword()));
-     
+
         String uri = String.format("%s://%s%s/%s",
             mongoProperties.getProtocol(),
             auth,

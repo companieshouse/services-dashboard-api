@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "mongo")
 public class MongoProperties {
-   
+
     private String protocol;
     private String user;
     private String password;
