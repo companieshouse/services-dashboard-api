@@ -1,11 +1,13 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.merge;
 
 import java.util.List;
+import java.util.Map;
 
 public class ProjectInfo {
 
    private String name;
    private List<VersionInfo> depTrackVersions;
+   private Map<String, Integer> sonarMetrics;
 
    // Getters and setters
    public String getName() {
@@ -27,8 +29,17 @@ public class ProjectInfo {
   public void addVersion(VersionInfo version) {
      depTrackVersions.add(version);
  }
+
+ public Map<String, Integer> getSonarMetrics() {
+   return sonarMetrics;
+}
+
+public void setSonarMetrics(Map<String, Integer> sonarMetrics) {
+   this.sonarMetrics = sonarMetrics;
+}
+
  @Override
  public String toString() {
-     return String.format("Merge:%s/%s", name, depTrackVersions);
+     return String.format("Merge:%s/%s (%s)", name, depTrackVersions, sonarMetrics);
  }
 }

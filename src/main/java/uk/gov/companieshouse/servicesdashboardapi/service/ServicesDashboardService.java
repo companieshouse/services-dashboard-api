@@ -10,21 +10,13 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ProjectInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoProjectInfoRepository;
-import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 @Service
 public class ServicesDashboardService {
 
     @Autowired
     private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
 
-    @Autowired
-    private SonarService serviceSonar;
-
    public void createServicesDashboard(List<ProjectInfo> projectInfoList, String requestId){
-      for (ProjectInfo p : projectInfoList) {
-            System.out.println("==============> working on " + p.getName());
-            serviceSonar.fetchMetrics(p.getName());
-      }
       ApiLogger.info("---------Create Serv START");
       insertProjects(projectInfoList);
       ApiLogger.info("---------Create Serv END");

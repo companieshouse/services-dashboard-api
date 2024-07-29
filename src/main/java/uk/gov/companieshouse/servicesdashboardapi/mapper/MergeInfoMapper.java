@@ -12,7 +12,6 @@ import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProject
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 
-
 @Mapper
 public interface MergeInfoMapper {
    MergeInfoMapper INSTANCE = Mappers.getMapper(MergeInfoMapper.class);

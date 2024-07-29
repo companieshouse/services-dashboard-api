@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 public class MongoVersionInfo {
 
-
    @Field("version")
    private String version;
 

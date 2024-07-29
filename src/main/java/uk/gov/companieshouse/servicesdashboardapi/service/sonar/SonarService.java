@@ -58,8 +58,9 @@ public class SonarService {
       return projKeys;
    }
 
-    public void fetchMetrics(String project) {
+    public SonarProjectInfo fetchMetrics(String project) {
 
+      SonarProjectInfo sonarInfo = new SonarProjectInfo();
       String[] projKeys = getProjKeys(project);
 
       HttpHeaders headers = new HttpHeaders();
@@ -77,15 +78,15 @@ public class SonarService {
                url,
                HttpMethod.GET, entity, String.class);
             if (response.getStatusCode().is2xxSuccessful()) {
-                  SonarProjectInfo result;
-                  result = jsonMapper.readValue(response.getBody(), new TypeReference<SonarProjectInfo>() {});
+                  sonarInfo = jsonMapper.readValue(response.getBody(), new TypeReference<SonarProjectInfo>() {});
 
-                  System.out.println(result);
+                  System.out.println(sonarInfo);
                   break; // Stop the loop on the first successful response
             }
          } catch (Exception e) {
              System.err.println("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage());
         }
       }
+      return sonarInfo;
    }
 }

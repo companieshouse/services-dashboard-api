@@ -1,7 +1,11 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.sonar;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SonarComponent {
 
@@ -38,6 +42,24 @@ public class SonarComponent {
 
     public void setMeasures(List<SonarMeasureInfo> measures) {
         this.measures = measures;
+    }
+
+        // Method to transform measures list to a map
+    public Map<String, Integer> getMeasuresAsMap() {
+        if (measures == null) {
+            return new HashMap<>();
+        }
+
+        return measures.stream().collect(Collectors.toMap(
+            SonarMeasureInfo::getMetric,
+            measure -> {
+                try {
+                    return Integer.parseInt(measure.getValue());
+                } catch (NumberFormatException e) {
+                    return 0;
+                }
+            }
+        ));
     }
 
     @Override

@@ -13,7 +13,10 @@ import java.util.List;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.MergeInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarComponent;
+import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
+import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
@@ -22,6 +25,8 @@ public class ServicesDashboardController {
 
    private final ServicesDashboardService servicesDashboardService;
    private final GetAllProjects servicesDepTrack;
+   @Autowired
+   private SonarService serviceSonar;
 
   @Autowired
   public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
@@ -31,19 +36,25 @@ public class ServicesDashboardController {
   }
 
   @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<List<DepTrackProjectInfo>> listServices( ) {
-   ApiLogger.info("---------list-services START");
-   List<DepTrackProjectInfo> list = this.servicesDepTrack.fetch();
+  public ResponseEntity<List<ProjectInfo>> listServices( ) {
+      ApiLogger.info("---------list-services START");
+      List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
 
-   List<ProjectInfo> list2 = MergeInfoMapper.INSTANCE.mapList(list);
+      List<ProjectInfo> projectInfoList = MergeInfoMapper.INSTANCE.mapList(listDepTrack);
 
-   for (ProjectInfo p : list2) {
-      System.out.println(p);
-  }
-   this.servicesDashboardService.createServicesDashboard(list2,"aaaaa");
+      for (ProjectInfo p : projectInfoList) {
+         System.out.println("==============> working on " + p.getName());
+         SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(p.getName());
+         SonarComponent component = sonarInfo.getComponent();
+         if (component != null) {
+            p.setSonarMetrics(component.getMeasuresAsMap());
+         }
+         System.out.println(p);
+      }
+      this.servicesDashboardService.createServicesDashboard(projectInfoList,"aaaaa");
 
-   ApiLogger.info("---------list-services END");
-   return new ResponseEntity<>(list, HttpStatus.OK);
+      ApiLogger.info("---------list-services END");
+      return new ResponseEntity<>(projectInfoList, HttpStatus.OK);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
