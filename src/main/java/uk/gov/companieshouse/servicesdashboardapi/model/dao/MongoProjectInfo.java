@@ -21,6 +21,9 @@ public class MongoProjectInfo {
    @Field("sonarMetrics")
    private Map<String, Integer> sonarMetrics;
 
+   @Field("gitInfo")
+   private MongoGitInfo gitInfo;
+
    // Getters and Setters
    public String getName() {
        return name;
@@ -40,14 +43,22 @@ public class MongoProjectInfo {
 
    public Map<String, Integer> getSonarMetrics() {
     return sonarMetrics;
-}
+   }
 
-public void setSonarMetrics(Map<String, Integer> sonarMetrics) {
-   this.sonarMetrics = sonarMetrics;
-}
+   public void setSonarMetrics(Map<String, Integer> sonarMetrics) {
+      this.sonarMetrics = sonarMetrics;
+   }
 
-  @Override
-  public String toString() {
-      return String.format("{n:%s,[v:%s],%s}", name, versions, sonarMetrics);
-  }
+   public MongoGitInfo getGitInfo() {
+      return gitInfo;
+   }
+
+   public void setGitInfo(MongoGitInfo gitInfo) {
+      this.gitInfo = gitInfo;
+   }
+
+   @Override
+   public String toString() {
+      return String.format("{n:%s,[v:%s],%s,%s}", name, versions, sonarMetrics, gitInfo);
+   }
 }

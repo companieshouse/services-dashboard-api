@@ -12,10 +12,12 @@ import java.util.List;
 
 import uk.gov.companieshouse.servicesdashboardapi.mapper.MergeInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarComponent;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
+import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
@@ -27,6 +29,9 @@ public class ServicesDashboardController {
    private final GetAllProjects servicesDepTrack;
    @Autowired
    private SonarService serviceSonar;
+
+   @Autowired
+   private GitService gitService;
 
   @Autowired
   public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
@@ -43,13 +48,18 @@ public class ServicesDashboardController {
       List<ProjectInfo> projectInfoList = MergeInfoMapper.INSTANCE.mapList(listDepTrack);
 
       for (ProjectInfo p : projectInfoList) {
-         System.out.println("==============> working on " + p.getName());
+         System.out.print("==============> working on " + p.getName());
          SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(p.getName());
          SonarComponent component = sonarInfo.getComponent();
          if (component != null) {
             p.setSonarMetrics(component.getMeasuresAsMap());
          }
+
+         GitInfo gitInfo = gitService.getRepoInfo(p.getName());
+         p.setGitInfo(gitInfo);
+
          System.out.println(p);
+
       }
       this.servicesDashboardService.createServicesDashboard(projectInfoList,"aaaaa");
 

@@ -40,13 +40,13 @@ public class SonarService {
     @Value("${sonar.endpoint.measures}")
     private String endpointMeasures;
 
+    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private JsonMapper jsonMapper;
 
     public SonarService() {
-        this.restTemplate = new RestTemplate();
     }
 
     private String[] getProjKeys(String project) {

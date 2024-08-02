@@ -3,6 +3,7 @@ package uk.gov.companieshouse.servicesdashboardapi.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,10 +25,10 @@ public abstract class DepTrackGetDataService<T> {
 
    protected String endPoint;
 
-   protected final RestTemplate restTemplate;
+    @Autowired
+    protected RestTemplate restTemplate;
 
    public DepTrackGetDataService(String endPoint) {
-      this.restTemplate = new RestTemplate();
       this.endPoint = endPoint;
    }
 

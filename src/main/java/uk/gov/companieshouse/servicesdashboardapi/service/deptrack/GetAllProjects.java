@@ -37,7 +37,7 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
     @Autowired
     private JsonMapper jsonMapper;
 
-    public GetAllProjects() {
+    public GetAllProjects()  {
         super(null); // Pass a placeholder value, will be overwritten in init method
     }
 
