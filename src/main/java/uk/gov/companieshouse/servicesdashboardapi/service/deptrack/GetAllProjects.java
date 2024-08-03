@@ -44,7 +44,6 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
     // PostConstruct to initialize the endPoint field from the property
     @PostConstruct
     private void init() {
-        System.out.println("GetAllProjects initialized with endPoint: " + endPoint);
         this.endPoint = endPointValue;
     }
 

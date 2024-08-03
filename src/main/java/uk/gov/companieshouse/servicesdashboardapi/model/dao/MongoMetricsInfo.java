@@ -72,15 +72,8 @@ public class MongoMetricsInfo {
 
    @Override
    public String toString() {
-       return "Metrics{" +
-              "critical='" + critical + '\'' +
-              ", high='" + high + '\'' +
-              ", medium='" + medium + '\'' +
-              ", low='" + low + '\'' +
-              ", vulnerabilities='" + vulnerabilities + '\'' +
-              ", components='" + components + '\'' +
-              '}';
-
+      return String.format("critical:%s high:%s medium:%s low:%s vulnerabilities:%s components:%s",
+      critical, high, medium, low, vulnerabilities, components);
    }
 }
 

@@ -46,10 +46,7 @@ public class SonarService {
     @Autowired
     private JsonMapper jsonMapper;
 
-    public SonarService() {
-    }
-
-    private String[] getProjKeys(String project) {
+   private String[] getProjKeys(String project) {
       String[] projKeys = new String[2];
 
       projKeys[0] = projectKeyPreamble + project ; // this should be the standard key
@@ -58,7 +55,7 @@ public class SonarService {
       return projKeys;
    }
 
-    public SonarProjectInfo fetchMetrics(String project) {
+   public SonarProjectInfo fetchMetrics(String project) {
 
       SonarProjectInfo sonarInfo = new SonarProjectInfo();
       String[] projKeys = getProjKeys(project);
@@ -84,8 +81,8 @@ public class SonarService {
                   break; // Stop the loop on the first successful response
             }
          } catch (Exception e) {
-             System.err.println("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage());
-        }
+            System.err.println("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage());
+      }
       }
       return sonarInfo;
    }

@@ -48,7 +48,7 @@ public class ServicesDashboardController {
       List<ProjectInfo> projectInfoList = MergeInfoMapper.INSTANCE.mapList(listDepTrack);
 
       for (ProjectInfo p : projectInfoList) {
-         System.out.print("==============> working on " + p.getName());
+         ApiLogger.info("==============> working on " + p.getName());
          SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(p.getName());
          SonarComponent component = sonarInfo.getComponent();
          if (component != null) {
@@ -59,7 +59,6 @@ public class ServicesDashboardController {
          p.setGitInfo(gitInfo);
 
          System.out.println(p);
-
       }
       this.servicesDashboardService.createServicesDashboard(projectInfoList,"aaaaa");
 

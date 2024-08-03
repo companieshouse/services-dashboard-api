@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,6 +18,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoGitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoGitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoMetricsInfo;
@@ -49,14 +52,34 @@ public interface ProjectInfoMapper {
    }
 
     // Custom mapping: String to Date
-    @Named("stringToDate")
-    default Date stringToDate(String date) {
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+   @Named("stringToDate")
+   default Date stringToDate(String date) {
+      String defaultDateString = "1970-01-01";
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
       sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+      String extractedDate = defaultDateString;
+
       try {
-         return sdf.parse(date);
-      } catch (ParseException e) {
-         throw new RuntimeException("Failed to parse date: " + date, e);
+          Pattern pattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}"); // "yyyy-MM-dd"
+          Matcher matcher = pattern.matcher(date);
+          if (matcher.find()) {
+              extractedDate = matcher.group();
+          } else {
+            ApiLogger.info("Invalid date format: " + date + ", defaulting to " + defaultDateString);
+          }
+      } catch (Exception e) {
+          ApiLogger.info("Unexpected error while parsing date: " + date);
       }
-   }
+
+      try {
+          return sdf.parse(extractedDate);
+      } catch (ParseException e) {
+          ApiLogger.info("Failed to parse extracted date: " + extractedDate);
+          try {
+              return sdf.parse(defaultDateString);
+          } catch (ParseException ex) {
+              throw new RuntimeException("Failed to set default date", ex);
+          }
+      }
+  }
 }

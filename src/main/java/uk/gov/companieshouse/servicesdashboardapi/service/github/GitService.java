@@ -93,7 +93,7 @@ public class GitService {
             gitInfo.setLastRelease(lastReleaseInfo);
          }
       } catch (Exception e) {
-         System.err.println("Failed to retriev Git info for " + gitInfo.getRepo() + ": " + e.getMessage());
+         ApiLogger.info("Failed to retrieve Git info for " + gitInfo.getRepo() + ": " + e.getMessage());
       }
 
       return gitInfo;
