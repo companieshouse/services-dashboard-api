@@ -4,6 +4,7 @@ public class GitInfo {
 
    private String repo;
    private String lang;
+   private String owner;
    private GitLastReleaseInfo lastRelease;
 
    // Getters and Setters
@@ -17,6 +18,14 @@ public class GitInfo {
 
    public String getLang() {
       return lang;
+   }
+
+   public String getOwner() {
+      return owner;
+   }
+
+   public void setOwner(String owner) {
+      this.owner = owner;
    }
 
    public void setLang(String lang) {
@@ -33,7 +42,7 @@ public class GitInfo {
 
    @Override
    public String toString() {
-       return String.format("{r:%s l:%s [R:%s]}", repo, lang, lastRelease);
+       return String.format("{r:%s l:%s o:%s [R:%s]}", repo, lang, owner, lastRelease);
    }
 
 }

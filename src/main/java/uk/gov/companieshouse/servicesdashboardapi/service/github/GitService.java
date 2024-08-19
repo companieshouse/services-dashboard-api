@@ -3,6 +3,8 @@ package uk.gov.companieshouse.servicesdashboardapi.service.github;
 import java.util.Iterator;
 import java.util.Map;
 
+import jakarta.annotation.PostConstruct;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 
+import uk.gov.companieshouse.servicesdashboardapi.model.github.GitCustomProperty;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
@@ -45,24 +48,53 @@ public class GitService {
    @Autowired
    private RestTemplate restTemplate;
 
+   private HttpEntity<String> httpEntity;
+
+    @PostConstruct
+    private void init() {
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("Authorization", "token " + token);
+      headers.set("Accept", headerAccept);
+
+      this.httpEntity = new HttpEntity<>(headers);
+   }
+
+   public String getRepoOwner(String project) {
+      String customPropEndpoint = String.format("%s/repos/%s/%s/properties/values", api, org, project);
+      try {
+         ResponseEntity<GitCustomProperty[]> response = restTemplate.exchange(
+            customPropEndpoint,
+            HttpMethod.GET,
+            httpEntity,
+            GitCustomProperty[].class
+         );
+
+         GitCustomProperty[] properties = response.getBody();
+
+         // Filter and find the value of "team-code-owner"
+         for (GitCustomProperty property : properties) {
+            if ("team-code-owner".equals(property.getPropertyName())) {
+                return property.getValue();
+            }
+        }
+      } catch (Exception e) {
+         ApiLogger.info("Failed to retrieve Git Repo Owner " + project + ": " + e.getMessage());
+      }
+      return "<No Owner>";
+   }
+
    public GitInfo getRepoInfo(String project) {
 
       GitInfo gitInfo = new GitInfo();
 
       // ex https://api.github.com/repos/companieshouse/ch.gov.uk/
-      String repoEndpoint = String.format("%s/repos/%s/%s/",api,org,project);
+      String repoEndpoint = String.format("%s/repos/%s/%s/", api, org, project);
 
-      gitInfo.setRepo(String.format("%s/%s",urlHome,project));
-
-      HttpHeaders headers = new HttpHeaders();
-      headers.set("Authorization", "token " + token);
-      headers.set("Accept", headerAccept);
-
-      HttpEntity<String> entity = new HttpEntity<>(headers);
+      gitInfo.setRepo(String.format("%s/%s", urlHome, project));
 
       try {
          // Get the main programming language
-         ResponseEntity<String> response = restTemplate.exchange(repoEndpoint + "languages", HttpMethod.GET, entity, String.class);
+         ResponseEntity<String> response = restTemplate.exchange(repoEndpoint + "languages", HttpMethod.GET, httpEntity, String.class);
          if (response.getStatusCode().is2xxSuccessful()) {
             String languagesJson = response.getBody();
 
@@ -86,12 +118,16 @@ public class GitService {
 
          // Get the latest release information
          response = restTemplate.exchange(
-         repoEndpoint + "releases/latest",
-         HttpMethod.GET, entity, String.class);
+            repoEndpoint + "releases/latest",
+            HttpMethod.GET, httpEntity, String.class);
          if (response.getStatusCode().is2xxSuccessful()) {
             GitLastReleaseInfo  lastReleaseInfo = jsonMapper.readValue(response.getBody(), new TypeReference<GitLastReleaseInfo>() {});
             gitInfo.setLastRelease(lastReleaseInfo);
          }
+
+         // add repo's owner
+         gitInfo.setOwner(getRepoOwner(project));
+
       } catch (Exception e) {
          ApiLogger.info("Failed to retrieve Git info for " + gitInfo.getRepo() + ": " + e.getMessage());
       }

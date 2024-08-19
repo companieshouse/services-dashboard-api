@@ -13,6 +13,9 @@ public class MongoGitInfo {
    @Field("lastRelease")
    private MongoGitLastReleaseInfo lastRelease;
 
+   @Field("owner")
+   private String owner;
+
    // Getters and Setters
    public String getRepo() {
        return repo;
@@ -24,6 +27,14 @@ public class MongoGitInfo {
 
    public String getLang() {
       return lang;
+   }
+
+   public String getOwner() {
+      return owner;
+   }
+
+   public void setOwner(String owner) {
+      this.owner = owner;
    }
 
    public void setLang(String lang) {
@@ -40,6 +51,6 @@ public class MongoGitInfo {
 
   @Override
   public String toString() {
-      return String.format("{r:%s,[l:%s]}", repo, lastRelease);
+      return String.format("{r:%s, o:%s, [l:%s]}", repo, owner, lastRelease);
   }
 }
