@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.deptrack;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DepTrackProjectInfo  {
@@ -12,6 +14,9 @@ public class DepTrackProjectInfo  {
 
    @JsonProperty("lastBomImport")
    private long lastBomImport;
+
+   @JsonProperty("tags")
+   private List<DepTrackTag> tags;
 
    @JsonProperty("metrics")
    private DepTrackMetricsInfo metrics;
@@ -40,6 +45,14 @@ public class DepTrackProjectInfo  {
    public void setLastBomImport(long lastBomImport) {
       this.lastBomImport = lastBomImport;
    }
+   public List<DepTrackTag> getTags() {
+      return tags;
+   }
+
+   public void setTags(List<DepTrackTag> tags) {
+         this.tags = tags;
+   }
+
    public DepTrackMetricsInfo getMetrics() {
       return metrics;
    }
@@ -50,10 +63,11 @@ public class DepTrackProjectInfo  {
 
    @Override
    public String toString() {
-      return String.format("DepTrackProjectInfo{name:%s,version:%s,lastBomImport:%s,metrics:%s}",
+      return String.format("DepTrackProjectInfo{name:%s,version:%s,lastBomImport:%s,tags:[%s],metrics:%s}",
       name,
       version,
       lastBomImport,
+      tags,
       metrics);
    }
 }

@@ -15,6 +15,9 @@ public class MongoVersionInfo {
    @Field("metrics")
    private MongoMetricsInfo metrics;
 
+   @Field("runtime")
+   private String runtime;
+
    // Getters and Setters
 
    public String getVersion() {
@@ -40,9 +43,17 @@ public class MongoVersionInfo {
       this.metrics = metrics;
    }
 
+   public String getRuntime() {
+      return runtime;
+   }
+
+   public void setRuntime(String runtime) {
+      this.runtime = runtime;
+   }
+
    @Override
    public String toString() {
-       return String.format("{v:%s,l:%s,%s}", version, lastBomImport, metrics);
+       return String.format("{v:%s,l:%s,%s,%s}", version, lastBomImport, metrics, runtime);
    }
 }
 
