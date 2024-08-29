@@ -18,6 +18,9 @@ public class MongoProjectInfo {
    @Field("versions")
    private List<MongoVersionInfo> versions;
 
+   @Field("sonarKey")
+   private String sonarKey;
+
    @Field("sonarMetrics")
    private Map<String, Integer> sonarMetrics;
 
@@ -41,6 +44,14 @@ public class MongoProjectInfo {
     this.versions = versions;
    }
 
+   public String getSonarKey() {
+      return sonarKey;
+   }
+
+   public void setSonarKey(String sonarKey) {
+      this.sonarKey = sonarKey;
+   }
+
    public Map<String, Integer> getSonarMetrics() {
     return sonarMetrics;
    }
@@ -59,6 +70,6 @@ public class MongoProjectInfo {
 
    @Override
    public String toString() {
-      return String.format("{n:%s,[v:%s],%s,%s}", name, versions, sonarMetrics, gitInfo);
+      return String.format("{n:%s,[v:%s],%s,%s} [%s]", name, versions, sonarMetrics, gitInfo, sonarKey);
    }
 }

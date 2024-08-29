@@ -9,6 +9,7 @@ public class ProjectInfo {
 
    private String name;
    private List<VersionInfo> depTrackVersions;
+   private String sonarKey;
    private Map<String, Integer> sonarMetrics;
    private GitInfo gitInfo;
 
@@ -33,6 +34,14 @@ public class ProjectInfo {
       depTrackVersions.add(version);
    }
 
+   public String getSonarKey() {
+      return sonarKey;
+   }
+
+   public void setSonarKey(String sonarKey) {
+      this.sonarKey = sonarKey;
+   }
+
    public Map<String, Integer> getSonarMetrics() {
       return sonarMetrics;
    }
@@ -51,6 +60,6 @@ public class ProjectInfo {
 
    @Override
    public String toString() {
-      return String.format("Merge:%s/%s (%s) (%s)", name, depTrackVersions, sonarMetrics, gitInfo);
+      return String.format("Merge:%s/%s (%s) (%s) [%s]", name, depTrackVersions, sonarMetrics, gitInfo, sonarKey);
    }
 }

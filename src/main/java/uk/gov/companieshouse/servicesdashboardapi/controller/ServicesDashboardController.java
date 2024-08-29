@@ -52,6 +52,7 @@ public class ServicesDashboardController {
          SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(p.getName());
          SonarComponent component = sonarInfo.getComponent();
          if (component != null) {
+            p.setSonarKey(component.getKey());
             p.setSonarMetrics(component.getMeasuresAsMap());
          }
 
