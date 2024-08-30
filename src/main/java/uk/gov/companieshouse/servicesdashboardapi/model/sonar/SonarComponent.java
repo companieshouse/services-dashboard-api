@@ -44,23 +44,17 @@ public class SonarComponent {
         this.measures = measures;
     }
 
-        // Method to transform measures list to a map
-    public Map<String, Integer> getMeasuresAsMap() {
-        if (measures == null) {
-            return new HashMap<>();
-        }
-
-        return measures.stream().collect(Collectors.toMap(
-            SonarMeasureInfo::getMetric,
-            measure -> {
-                try {
-                    return Integer.parseInt(measure.getValue());
-                } catch (NumberFormatException e) {
-                    return 0;
-                }
-            }
-        ));
-    }
+   // Method to transform measures list to a map
+   public Map<String, Integer> getMeasuresAsMap() {
+      if (measures == null) {
+          return new HashMap<>();
+      }
+      return measures.stream().collect(Collectors.toMap(
+         SonarMeasureInfo::getMetric,                   // Key  mapper: metric name
+         measure -> measure.getValue() != null ?        // Value mapper: converting Float to Integer (rounded)
+                    Math.round(measure.getValue()) : 0
+      ));
+   }
 
     @Override
     public String toString() {
