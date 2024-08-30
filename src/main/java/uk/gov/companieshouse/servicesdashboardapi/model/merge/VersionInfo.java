@@ -5,6 +5,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackMetrics
 public class VersionInfo {
 
    private String version;
+   private String uuid;
    private long lastBomImport;
    private DepTrackMetricsInfo DepTrackMetrics;
    private String runtime;
@@ -16,6 +17,13 @@ public class VersionInfo {
 
   public void setVersion(String version) {
       this.version = version;
+   }
+   public String getUuid() {
+      return uuid;
+   }
+
+   public void setUuid(String uuid) {
+      this.uuid = uuid;
    }
 
    public long getLastBomImport() {
@@ -44,6 +52,6 @@ public class VersionInfo {
 
   @Override
   public String toString() {
-      return String.format("{v:%s,l:%s,m:%s,r:%s}", version, lastBomImport, DepTrackMetrics, runtime);
+      return String.format("{v:%s,u:%s,l:%s,m:%s,r:%s}", version, uuid, lastBomImport, DepTrackMetrics, runtime);
   }
 }

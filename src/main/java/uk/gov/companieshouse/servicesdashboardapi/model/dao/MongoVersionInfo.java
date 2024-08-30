@@ -9,6 +9,9 @@ public class MongoVersionInfo {
    @Field("version")
    private String version;
 
+   @Field("uuid")
+   private String uuid;
+
    @Field("lastBomImport")
    private Date lastBomImport;
 
@@ -26,6 +29,14 @@ public class MongoVersionInfo {
 
    public void setVersion(String version) {
       this.version = version;
+   }
+
+   public String getUuid() {
+      return uuid;
+   }
+
+   public void setUuid(String uuid) {
+      this.uuid = uuid;
    }
 
    public Date getLastBomImport() {
@@ -53,7 +64,7 @@ public class MongoVersionInfo {
 
    @Override
    public String toString() {
-       return String.format("{v:%s,l:%s,%s,%s}", version, lastBomImport, metrics, runtime);
+       return String.format("{v:%s,u:%s,l:%s,%s,%s}", version, uuid, lastBomImport, metrics, runtime);
    }
 }
 
