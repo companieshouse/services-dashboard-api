@@ -20,6 +20,7 @@ import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProject
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
+import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @RestController
@@ -32,6 +33,9 @@ public class ServicesDashboardController {
 
    @Autowired
    private GitService gitService;
+
+   @Autowired
+   private EcsService ecsService;
 
   @Autowired
   public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
@@ -53,7 +57,7 @@ public class ServicesDashboardController {
          SonarComponent component = sonarInfo.getComponent();
          if (component != null) {
             p.setSonarKey(component.getKey());
-            p.setSonarMetrics(component.getMeasuresAsMap());
+            p.setSonarMetrics(component.getMeasures());
          }
 
          GitInfo gitInfo = gitService.getRepoInfo(p.getName());
@@ -66,6 +70,12 @@ public class ServicesDashboardController {
       ApiLogger.info("---------list-services END");
       return new ResponseEntity<>(projectInfoList, HttpStatus.OK);
   }
+  @GetMapping("/services-dashboard/ecs")
+  public ResponseEntity<String> sourceEcs( ) {
+      ecsService.fetchClusterInfo();
+      return new ResponseEntity<>("ECS ok", HttpStatus.OK);
+   }
+
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)

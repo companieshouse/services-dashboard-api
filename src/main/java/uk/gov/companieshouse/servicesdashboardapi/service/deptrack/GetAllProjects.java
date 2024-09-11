@@ -74,7 +74,6 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
                result = jsonMapper.readValue(response.getBody(), new TypeReference<List<DepTrackProjectInfo>>() {});
          } catch (IOException e) {
                e.printStackTrace();
-               // Throw a custom exception or handle it
                ApiLogger.debug("Failed to parse Dependency Track JSON response");
                result = Collections.emptyList();
          }

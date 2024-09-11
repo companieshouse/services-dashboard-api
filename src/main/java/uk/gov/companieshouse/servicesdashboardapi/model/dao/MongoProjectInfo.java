@@ -2,6 +2,7 @@ package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.annotation.Id;
@@ -26,6 +27,9 @@ public class MongoProjectInfo {
 
    @Field("gitInfo")
    private MongoGitInfo gitInfo;
+
+   @Field("ecs")
+   private Map<String, Set<String>> ecs;
 
    // Getters and Setters
    public String getName() {
@@ -66,6 +70,14 @@ public class MongoProjectInfo {
 
    public void setGitInfo(MongoGitInfo gitInfo) {
       this.gitInfo = gitInfo;
+   }
+
+   public Map<String, Set<String>> getEcs() {
+      return ecs;
+   }
+
+   public void setEcs(Map<String, Set<String>> ecs) {
+         this.ecs = ecs;
    }
 
    @Override

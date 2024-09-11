@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.sonar;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.companieshouse.servicesdashboardapi.utils.DeserializerSonarMeasures;
 
-import java.util.HashMap;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SonarComponent {
 
@@ -16,7 +16,8 @@ public class SonarComponent {
     private String name;
 
     @JsonProperty("measures")
-    private List<SonarMeasureInfo> measures;
+    @JsonDeserialize(using = DeserializerSonarMeasures.class)
+    private Map<String, Integer>measures;
 
     // Getters and Setters
 
@@ -36,25 +37,13 @@ public class SonarComponent {
         this.name = name;
     }
 
-    public List<SonarMeasureInfo> getMeasures() {
+    public Map<String, Integer> getMeasures() {
         return measures;
     }
 
-    public void setMeasures(List<SonarMeasureInfo> measures) {
+    public void setMeasures(Map<String, Integer> measures) {
         this.measures = measures;
     }
-
-   // Method to transform measures list to a map
-   public Map<String, Integer> getMeasuresAsMap() {
-      if (measures == null) {
-          return new HashMap<>();
-      }
-      return measures.stream().collect(Collectors.toMap(
-         SonarMeasureInfo::getMetric,                   // Key  mapper: metric name
-         measure -> measure.getValue() != null ?        // Value mapper: converting Float to Integer (rounded)
-                    Math.round(measure.getValue()) : 0
-      ));
-   }
 
     @Override
     public String toString() {
