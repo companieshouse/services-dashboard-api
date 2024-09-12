@@ -3,7 +3,7 @@ package uk.gov.companieshouse.servicesdashboardapi.mapper;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,31 +27,37 @@ import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoVersionInfo;
 
 @Mapper
 public interface ProjectInfoMapper {
+   ProjectInfoMapper INSTANCE = Mappers.getMapper(ProjectInfoMapper.class);
 
-    ProjectInfoMapper INSTANCE = Mappers.getMapper(ProjectInfoMapper.class);
+   // Main mapping (Set of ProjectInfo to Set of MongoProjectInfo)
+   Set<MongoProjectInfo> toMongoProjectInfoSet(Set<ProjectInfo> projectInfoSet);
 
-    @Mapping(source = "depTrackVersions", target = "versions")
-    MongoProjectInfo projectInfoToMongoProjectInfo(ProjectInfo projectInfo);
+   // Direct mappings (automatic since the fields match exactly)
+   MongoMetricsInfo toMongoMetricsInfo(DepTrackMetricsInfo metricsInfo);
+   MongoGitInfo toMongoGitInfo(GitInfo gitInfo);
 
-    List<MongoProjectInfo> projectInfoListToMongoProjectInfoList(List<ProjectInfo> projectInfoList);
+   // Custom mappings:
+   // Custom mapping for the depTrackVersions to versions
+   @Mapping(source = "depTrackVersions", target = "versions")
+   MongoProjectInfo toMongoProjectInfo(ProjectInfo projectInfo);
 
-    @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
-    MongoVersionInfo versionInfoToMongoVersionInfo(VersionInfo versionInfo);
+   // Custom mapping metrics & Long to Date
+   @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
+   @Mapping(source = "depTrackMetrics", target = "metrics")
+   MongoVersionInfo toMongoVersionInfo(VersionInfo versionInfo);
 
-    MongoMetricsInfo depTrackMetricsInfoToMongoMetricsInfo(DepTrackMetricsInfo depTrackMetricsInfo);
 
-    MongoGitInfo toMongoGitInfo(GitInfo gitInfo);
-
+   // Custom mapping Release (String to Date)
    @Mapping(source = "date", target = "date", qualifiedByName = "stringToDate")
-    MongoGitLastReleaseInfo toMongoGitLastReleaseInfo(GitLastReleaseInfo gitLastReleaseInfo);
+   MongoGitLastReleaseInfo toMongoGitLastReleaseInfo(GitLastReleaseInfo gitLastReleaseInfo);
 
-   // Custom mapping: long to Date
+   // Long to Date
    @Named("longToDate")
      static Date longToDate(long epoch) {
       return new Date(epoch);
    }
 
-    // Custom mapping: String to Date
+   // String to Date
    @Named("stringToDate")
    default Date stringToDate(String date) {
       String defaultDateString = "1970-01-01";

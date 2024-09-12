@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.util.List;
+import java.util.Set;
 
 import uk.gov.companieshouse.servicesdashboardapi.mapper.MergeInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
@@ -45,13 +46,13 @@ public class ServicesDashboardController {
   }
 
   @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<List<ProjectInfo>> listServices( ) {
+  public ResponseEntity<Set<ProjectInfo>> listServices( ) {
       ApiLogger.info("---------list-services START");
       List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
 
-      List<ProjectInfo> projectInfoList = MergeInfoMapper.INSTANCE.mapList(listDepTrack);
+      Set<ProjectInfo> projectInfoSet = MergeInfoMapper.INSTANCE.mapDepTrackListToProjectInfoSet(listDepTrack);
 
-      for (ProjectInfo p : projectInfoList) {
+      for (ProjectInfo p : projectInfoSet) {
          ApiLogger.info("==============> working on " + p.getName());
          SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(p.getName());
          SonarComponent component = sonarInfo.getComponent();
@@ -65,10 +66,10 @@ public class ServicesDashboardController {
 
          System.out.println(p);
       }
-      this.servicesDashboardService.createServicesDashboard(projectInfoList,"aaaaa");
+      this.servicesDashboardService.createServicesDashboard(projectInfoSet,"aaaaa");
 
       ApiLogger.info("---------list-services END");
-      return new ResponseEntity<>(projectInfoList, HttpStatus.OK);
+      return new ResponseEntity<Set<ProjectInfo>>(projectInfoSet, HttpStatus.OK);
   }
   @GetMapping("/services-dashboard/ecs")
   public ResponseEntity<String> sourceEcs( ) {

@@ -7,7 +7,7 @@ public class VersionInfo {
    private String version;
    private String uuid;
    private long lastBomImport;
-   private DepTrackMetricsInfo DepTrackMetrics;
+   private DepTrackMetricsInfo depTrackMetrics;
    private String runtime;
 
    // Getters and setters
@@ -34,12 +34,12 @@ public class VersionInfo {
       this.lastBomImport = lastBomImport;
    }
 
-   public DepTrackMetricsInfo getMetrics() {
-    return DepTrackMetrics;
+   public DepTrackMetricsInfo getDepTrackMetrics() {
+    return depTrackMetrics;
    }
 
-  public void setMetrics(DepTrackMetricsInfo metrics) {
-    this.DepTrackMetrics = metrics;
+  public void setDepTrackMetrics(DepTrackMetricsInfo metrics) {
+    this.depTrackMetrics = metrics;
   }
 
    public String getRuntime() {
@@ -52,6 +52,6 @@ public class VersionInfo {
 
   @Override
   public String toString() {
-      return String.format("{v:%s,u:%s,l:%s,m:%s,r:%s}", version, uuid, lastBomImport, DepTrackMetrics, runtime);
+      return String.format("{v:%s,u:%s,l:%s,m:%s,r:%s}", version, uuid, lastBomImport, depTrackMetrics, runtime);
   }
 }

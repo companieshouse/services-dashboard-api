@@ -1,7 +1,9 @@
 package uk.gov.companieshouse.servicesdashboardapi.mapper;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
@@ -13,30 +15,49 @@ import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProject
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackTag;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @Mapper
 public interface MergeInfoMapper {
    MergeInfoMapper INSTANCE = Mappers.getMapper(MergeInfoMapper.class);
 
-   @Mapping(target = "name", source = "name")
-   @Mapping(target = "depTrackVersions", source = "versions")
-   ProjectInfo map(String name, List<VersionInfo> versions);
+   // Map a single DepTrackProjectInfo to VersionInfo
+   @Mapping(source = "version", target = "version")
+   @Mapping(source = "uuid", target = "uuid")
+   @Mapping(source = "lastBomImport", target = "lastBomImport")
+   @Mapping(source = "metrics", target = "depTrackMetrics")
+   @Mapping(source = "tags", target = "runtime",  qualifiedByName = "mapTagsToEnv")
+   VersionInfo depTrackToVersionInfo(DepTrackProjectInfo depTrackProjectInfo);
 
-   @Mapping(target = "version", source = "version")
-   @Mapping(target = "lastBomImport", source = "lastBomImport")
-   @Mapping(target = "metrics", source = "metrics")
-   @Mapping(target = "runtime", source = "tags", qualifiedByName = "mapTagsToEnv")
-   VersionInfo map(DepTrackProjectInfo info);
+    // Custom mapping method to handle the grouping logic
+    default Set<ProjectInfo> mapDepTrackListToProjectInfoSet(List<DepTrackProjectInfo> depTrackList) {
+        // Group by 'name' and transform the data
+        Map<String, List<DepTrackProjectInfo>> groupedByName = depTrackList.stream()
+                .collect(Collectors.groupingBy(DepTrackProjectInfo::getName));
 
-   default List<ProjectInfo> mapList(List<DepTrackProjectInfo> list) {
-      Map<String, List<VersionInfo>> groupedMap = list.stream()
-         .collect(Collectors.groupingBy(DepTrackProjectInfo::getName,
-                  Collectors.mapping(this::map, Collectors.toList())));
+        // For each group, map to ProjectInfo
+        Set<ProjectInfo> projectInfoSet = new HashSet<>();
+        for (Map.Entry<String, List<DepTrackProjectInfo>> entry : groupedByName.entrySet()) {
+            String name = entry.getKey();
+            List<DepTrackProjectInfo> depTrackProjects = entry.getValue();
 
-      return groupedMap.entrySet().stream()
-         .map(entry -> map(entry.getKey(), entry.getValue()))
-         .collect(Collectors.toList());
-   }
+            // Map the versions to VersionInfo
+            List<VersionInfo> versionInfoList = depTrackProjects.stream()
+                    .map(this::depTrackToVersionInfo)
+                    .collect(Collectors.toList());
+
+            // Create the ProjectInfo
+            ProjectInfo projectInfo = new ProjectInfo();
+            projectInfo.setName(name);
+            projectInfo.setDepTrackVersions(versionInfoList);
+            ApiLogger.info("=====> Adding projectInfo to Set:" + projectInfo.toString());
+
+
+            projectInfoSet.add(projectInfo);
+        }
+
+        return projectInfoSet;
+    }
 
    @Named("mapTagsToEnv")
    default String mapTagsToEnv(List<DepTrackTag> tags) {
@@ -50,5 +71,4 @@ public interface MergeInfoMapper {
       }
       return "";
    }
-
 }

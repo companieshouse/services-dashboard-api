@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 import uk.gov.companieshouse.servicesdashboardapi.config.MongoConfig;
@@ -21,14 +22,14 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
    private final String collectionName;
 
    public CustomMongoProjectInfoRepositoryImpl(MongoTemplate mongoTemplate,
-                                             MongoConfig mongoConfig) {
+                                               MongoConfig mongoConfig) {
       this.mongoTemplate = mongoTemplate;
       this.collectionName = mongoConfig.getCollectionName();
    }
 
    @Override
-   public void saveProjectInfos(List<MongoProjectInfo> mongoProjectInfoList) {
-      for (MongoProjectInfo info : mongoProjectInfoList) {
+   public void saveProjectInfos(Set<MongoProjectInfo> mongoProjectInfoSet) {
+      for (MongoProjectInfo info : mongoProjectInfoSet) {
             if (existsByName(info.getName())) {
                updateVersions(info);
             } else {
