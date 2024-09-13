@@ -3,6 +3,7 @@ package uk.gov.companieshouse.servicesdashboardapi.service.aws;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Add;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
@@ -13,7 +14,11 @@ import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.services.ecs.EcsClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ecs.model.*;
+
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +38,7 @@ import java.util.regex.Pattern;
    private Pattern imagePattern;
    private EcsClient ecsClient;
 
+   private Map<String, Set<String>> ecsInfo;
 
    @PostConstruct
    private void init() {
@@ -48,28 +54,30 @@ import java.util.regex.Pattern;
       this.imagePattern = Pattern.compile("([^/:]+):([^:]+)$");
    }
 
-   public void fetchClusterInfo() {
-         ListClustersResponse clustersResponse = ecsClient.listClusters();
-         List<String> clusterArns = clustersResponse.clusterArns();
+   public Map<String, Set<String>> fetchClusterInfo() {
+      ecsInfo =  new HashMap<>();
+      ListClustersResponse clustersResponse = ecsClient.listClusters();
+      List<String> clusterArns = clustersResponse.clusterArns();
 
-         clusterArns.forEach(clusterArn -> {
-            ApiLogger.info("Cluster: " + clusterArn);
+      clusterArns.forEach(clusterArn -> {
+         ApiLogger.info("Cluster: " + clusterArn);
 
-            ListTasksResponse tasksResponse = ecsClient.listTasks(ListTasksRequest.builder()
-                     .cluster(clusterArn)
-                     .desiredStatus(DesiredStatus.RUNNING)
-                     .build());
+         ListTasksResponse tasksResponse = ecsClient.listTasks(ListTasksRequest.builder()
+                  .cluster(clusterArn)
+                  .desiredStatus(DesiredStatus.RUNNING)
+                  .build());
 
-            List<String> taskArns = tasksResponse.taskArns();
+         List<String> taskArns = tasksResponse.taskArns();
 
-            if (taskArns.isEmpty()) {
-               ApiLogger.info("No running tasks in cluster: " + clusterArn);
-            } else {
-               taskArns.forEach(taskArn -> {
-                     describeTaskAndFetchImages(clusterArn, taskArn);
-               });
-            }
-         });
+         if (taskArns.isEmpty()) {
+            ApiLogger.info("No running tasks in cluster: " + clusterArn);
+         } else {
+            taskArns.forEach(taskArn -> {
+                  describeTaskAndFetchImages(clusterArn, taskArn);
+            });
+         }
+      });
+      return ecsInfo;
    }
 
    private void describeTaskAndFetchImages(String clusterArn, String taskArn) {
@@ -101,8 +109,8 @@ import java.util.regex.Pattern;
       if (matcher.find()) {
          String name    = matcher.group(1);
          String version = matcher.group(2);
-         ApiLogger.info(String.format("       name: %s / version:%s", name, version));
-         return;
+         ApiLogger.info(String.format("       Added name: %s / version:%s", name, version));
+         ecsInfo.computeIfAbsent(name, k -> new HashSet<>()).add(version);
       }
    }
 }

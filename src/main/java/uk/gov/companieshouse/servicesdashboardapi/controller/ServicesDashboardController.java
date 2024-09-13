@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import uk.gov.companieshouse.servicesdashboardapi.mapper.MergeInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
@@ -68,6 +71,28 @@ public class ServicesDashboardController {
 
          System.out.println(projectInfo);
       });
+      String env = "cidev";
+      ApiLogger.info("=======> STARTING SOURCING ECS: " + env);
+      Map<String, Set<String>> ecsInfo = ecsService.fetchClusterInfo();
+      for (Map.Entry<String, Set<String>> entry : ecsInfo.entrySet()) {
+         String name = entry.getKey();
+         Set<String> versions = entry.getValue();
+
+         // Check if the key is present in secondMap
+         if (!projectInfoMap.containsKey(name)) {
+               // Log if key is not present in secondMap
+               ApiLogger.info("ECS '" + name + "' not present in DT");
+         } else {
+               // Update the ecs map in the ProjectInfo for the given key
+               ProjectInfo projectInfo = projectInfoMap.get(name);
+               // Check if ecs is null or empty, and initialize if needed
+               if (projectInfo.getEcs() == null || projectInfo.getEcs().isEmpty()) {
+                     projectInfo.setEcs(new HashMap<>());
+               }
+               projectInfo.getEcs().computeIfAbsent(env, k -> new HashSet<>()).addAll(versions);
+         }
+      }
+      ApiLogger.info("=======> COMPLETED SOURCING ECS: " + env);
 
       this.servicesDashboardService.createServicesDashboard(projectInfoMap,"aaaaa");
 
