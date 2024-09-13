@@ -2,7 +2,6 @@ package uk.gov.companieshouse.servicesdashboardapi.model.merge;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
@@ -68,19 +67,6 @@ public class ProjectInfo {
 
    public void setEcs(Map<String, Set<String>> ecs) {
          this.ecs = ecs;
-   }
-
-   // custom equals & hashCode to define Set<> of this class
-   @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      ProjectInfo that = (ProjectInfo) o;
-      return Objects.equals(name, that.name);
-   }
-   @Override
-   public int hashCode() {
-      return Objects.hash(name);
    }
 
    @Override

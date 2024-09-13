@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,15 @@ public class ServicesDashboardService {
     @Autowired
     private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
 
-   public void createServicesDashboard(Set<ProjectInfo> projectInfoSet, String requestId){
+   public void createServicesDashboard(Map<String, ProjectInfo> projectInfoMap, String requestId){
       ApiLogger.info("---------Create Serv START");
-      insertProjects(projectInfoSet);
+      insertProjects(projectInfoMap);
       ApiLogger.info("---------Create Serv END");
    }
 
-   public void insertProjects(Set<ProjectInfo> projectInfoSet) {
-      Set<MongoProjectInfo> mongoProjectInfoSet = ProjectInfoMapper.INSTANCE.toMongoProjectInfoSet(projectInfoSet);
-      customMongoProjectInfoRepository.saveProjectInfos(mongoProjectInfoSet);
+   public void insertProjects(Map<String, ProjectInfo> projectInfoMap) {
+      List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.mapProjectInfoMap(projectInfoMap);
+      customMongoProjectInfoRepository.saveProjectInfos(mongoProjectInfoList);
    }
 }
 

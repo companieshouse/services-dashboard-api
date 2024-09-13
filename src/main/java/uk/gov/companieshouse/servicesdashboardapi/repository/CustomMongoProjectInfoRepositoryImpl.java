@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
 
 import uk.gov.companieshouse.servicesdashboardapi.config.MongoConfig;
@@ -28,8 +27,8 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
    }
 
    @Override
-   public void saveProjectInfos(Set<MongoProjectInfo> mongoProjectInfoSet) {
-      for (MongoProjectInfo info : mongoProjectInfoSet) {
+   public void saveProjectInfos(List<MongoProjectInfo> mongoProjectInfoList) {
+      for (MongoProjectInfo info : mongoProjectInfoList) {
             if (existsByName(info.getName())) {
                updateVersions(info);
             } else {

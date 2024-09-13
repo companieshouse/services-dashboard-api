@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import uk.gov.companieshouse.servicesdashboardapi.mapper.MergeInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
@@ -46,30 +48,31 @@ public class ServicesDashboardController {
   }
 
   @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<Set<ProjectInfo>> listServices( ) {
+  public ResponseEntity<List<ProjectInfo>> listServices( ) {
       ApiLogger.info("---------list-services START");
       List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
 
-      Set<ProjectInfo> projectInfoSet = MergeInfoMapper.INSTANCE.mapDepTrackListToProjectInfoSet(listDepTrack);
+      Map<String, ProjectInfo> projectInfoMap = MergeInfoMapper.INSTANCE.mapDepTrackListToProjectInfoMap(listDepTrack);
 
-      for (ProjectInfo p : projectInfoSet) {
-         ApiLogger.info("==============> working on " + p.getName());
-         SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(p.getName());
+      projectInfoMap.forEach((name, projectInfo) -> {
+         ApiLogger.info("==============> working on " + name);
+         SonarProjectInfo sonarInfo = serviceSonar.fetchMetrics(name);
          SonarComponent component = sonarInfo.getComponent();
          if (component != null) {
-            p.setSonarKey(component.getKey());
-            p.setSonarMetrics(component.getMeasures());
+            projectInfo.setSonarKey(component.getKey());
+            projectInfo.setSonarMetrics(component.getMeasures());
          }
 
-         GitInfo gitInfo = gitService.getRepoInfo(p.getName());
-         p.setGitInfo(gitInfo);
+         GitInfo gitInfo = gitService.getRepoInfo(name);
+         projectInfo.setGitInfo(gitInfo);
 
-         System.out.println(p);
-      }
-      this.servicesDashboardService.createServicesDashboard(projectInfoSet,"aaaaa");
+         System.out.println(projectInfo);
+      });
+
+      this.servicesDashboardService.createServicesDashboard(projectInfoMap,"aaaaa");
 
       ApiLogger.info("---------list-services END");
-      return new ResponseEntity<Set<ProjectInfo>>(projectInfoSet, HttpStatus.OK);
+      return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
   }
   @GetMapping("/services-dashboard/ecs")
   public ResponseEntity<String> sourceEcs( ) {

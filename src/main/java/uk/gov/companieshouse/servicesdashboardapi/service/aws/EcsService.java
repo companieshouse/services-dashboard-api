@@ -1,11 +1,13 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.aws;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
 import jakarta.annotation.PostConstruct;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.services.ecs.EcsClient;
@@ -29,12 +31,12 @@ import java.util.regex.Pattern;
    private String env;
 
    private Pattern imagePattern;
-
    private EcsClient ecsClient;
+
 
    @PostConstruct
    private void init() {
-      ApiLogger.info(String.format("PROFILE: %s / REGION:%s",profile, region));
+      ApiLogger.info(String.format("PROFILE: %s / REGION:%s", profile, region));
       ecsClient = EcsClient.builder()
      .region(Region.of(region))
      .credentialsProvider(ProfileCredentialsProvider.create(profile))
@@ -86,23 +88,21 @@ import java.util.regex.Pattern;
 
             List<ContainerDefinition> containerDefinitions = taskDefinitionResponse.taskDefinition().containerDefinitions();
             containerDefinitions.forEach(containerDefinition -> {
-               ApiLogger.info("   Service: " + extractServiceFromImage(containerDefinition.image()));
+               addEcsInfo(containerDefinition.image());
             });
          });
    }
 
-   private String extractServiceFromImage(String image) {
+   private void addEcsInfo(String image) {
 
+      ApiLogger.info(String.format("       Adding image: %s", image));
       Matcher matcher = imagePattern.matcher(image);
 
-      String name = "";
-      String version = "";
-
       if (matcher.find()) {
-         name = matcher.group(1);
-         version = matcher.group(2);
+         String name    = matcher.group(1);
+         String version = matcher.group(2);
+         ApiLogger.info(String.format("       name: %s / version:%s", name, version));
+         return;
       }
-      ApiLogger.info(String.format("       name: %s / version:%s", name, version));
-      return name;
    }
 }

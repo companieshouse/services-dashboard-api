@@ -3,7 +3,9 @@ package uk.gov.companieshouse.servicesdashboardapi.mapper;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,22 +31,51 @@ import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoVersionInfo;
 public interface ProjectInfoMapper {
    ProjectInfoMapper INSTANCE = Mappers.getMapper(ProjectInfoMapper.class);
 
-   // Main mapping (Set of ProjectInfo to Set of MongoProjectInfo)
-   Set<MongoProjectInfo> toMongoProjectInfoSet(Set<ProjectInfo> projectInfoSet);
+    // Map from ProjectInfo to MongoProjectInfo, with custom mapping for the "depTrackVersions" field.
+    @Mapping(source = "depTrackVersions", target = "versions")
+    MongoProjectInfo mapProjectInfoToMongoProjectInfo(ProjectInfo projectInfo);
 
-   // Direct mappings (automatic since the fields match exactly)
-   MongoMetricsInfo toMongoMetricsInfo(DepTrackMetricsInfo metricsInfo);
-   MongoGitInfo toMongoGitInfo(GitInfo gitInfo);
+    // Mapping for nested objects (List<MongoVersionInfo> to List<VersionInfo>)
+    List<MongoVersionInfo> mapVersionInfoList(List<VersionInfo> versionInfoList);
 
-   // Custom mappings:
-   // Custom mapping for the depTrackVersions to versions
-   @Mapping(source = "depTrackVersions", target = "versions")
-   MongoProjectInfo toMongoProjectInfo(ProjectInfo projectInfo);
-
-   // Custom mapping metrics & Long to Date
+    // Map each VersionInfo to MongoVersionInfo
+       // Custom mapping metrics & Long to Date
    @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
    @Mapping(source = "depTrackMetrics", target = "metrics")
-   MongoVersionInfo toMongoVersionInfo(VersionInfo versionInfo);
+    MongoVersionInfo mapVersionInfoToMongoVersionInfo(VersionInfo versionInfo);
+
+    // Map each DepTrackMetricsInfo to MongoMetricsInfo
+    MongoMetricsInfo mapDepTrackMetricsInfoToMongoMetricsInfo(DepTrackMetricsInfo metricsInfo);
+
+    // Map List<ProjectInfo> to List<MongoProjectInfo>
+    default List<MongoProjectInfo> mapProjectInfoList(List<ProjectInfo> projectInfoList) {
+        return projectInfoList.stream()
+                .map(this::mapProjectInfoToMongoProjectInfo)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    // Map Map<String, ProjectInfo> to List<MongoProjectInfo> (only mapping the values of the Map)
+    default List<MongoProjectInfo> mapProjectInfoMap(Map<String, ProjectInfo> projectInfoMap) {
+        return mapProjectInfoList(new ArrayList<>(projectInfoMap.values()));
+    }
+
+
+   // // Main mapping (Set of ProjectInfo to Set of MongoProjectInfo)
+   // Set<MongoProjectInfo> toMongoProjectInfoSet(Set<ProjectInfo> projectInfoSet);
+
+   // // Direct mappings (automatic since the fields match exactly)
+   // MongoMetricsInfo toMongoMetricsInfo(DepTrackMetricsInfo metricsInfo);
+   // MongoGitInfo toMongoGitInfo(GitInfo gitInfo);
+
+   // // Custom mappings:
+   // // Custom mapping for the depTrackVersions to versions
+   // @Mapping(source = "depTrackVersions", target = "versions")
+   // MongoProjectInfo toMongoProjectInfo(ProjectInfo projectInfo);
+
+   // // Custom mapping metrics & Long to Date
+   // @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
+   // @Mapping(source = "depTrackMetrics", target = "metrics")
+   // MongoVersionInfo toMongoVersionInfo(VersionInfo versionInfo);
 
 
    // Custom mapping Release (String to Date)
