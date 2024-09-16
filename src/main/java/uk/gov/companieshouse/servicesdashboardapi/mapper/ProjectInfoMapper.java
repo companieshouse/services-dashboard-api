@@ -33,7 +33,6 @@ public interface ProjectInfoMapper {
 
     // Map from ProjectInfo to MongoProjectInfo, with custom mapping for the "depTrackVersions" field.
     @Mapping(source = "depTrackVersions", target = "versions")
-    @Mapping(source = "ecs", target = "ecs")
     MongoProjectInfo mapProjectInfoToMongoProjectInfo(ProjectInfo projectInfo);
 
     // Mapping for nested objects (List<MongoVersionInfo> to List<VersionInfo>)

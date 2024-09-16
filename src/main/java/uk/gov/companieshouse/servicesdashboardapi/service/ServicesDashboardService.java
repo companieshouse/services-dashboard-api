@@ -10,23 +10,23 @@ import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ProjectInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoProjectInfoRepository;
 @Service
 public class ServicesDashboardService {
 
-    @Autowired
-    private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
+   @Autowired
+   private ServicesInfo servicesInfo;
 
-   public void createServicesDashboard(Map<String, ProjectInfo> projectInfoMap, String requestId){
+   @Autowired
+   private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
+
+   public void createServicesDashboard(){
       ApiLogger.info("---------Create Serv START");
-      insertProjects(projectInfoMap);
-      ApiLogger.info("---------Create Serv END");
-   }
-
-   public void insertProjects(Map<String, ProjectInfo> projectInfoMap) {
-      List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.mapProjectInfoMap(projectInfoMap);
+      List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.mapProjectInfoMap(servicesInfo.getProjectInfoMap());
       customMongoProjectInfoRepository.saveProjectInfos(mongoProjectInfoList);
+      ApiLogger.info("---------Create Serv END");
    }
 }
 
