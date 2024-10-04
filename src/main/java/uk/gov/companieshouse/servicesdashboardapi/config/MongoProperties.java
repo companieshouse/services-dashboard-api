@@ -12,7 +12,8 @@ public class MongoProperties {
     private String password;
     private String hostandport;
     private String dbname;
-    private String collectionName;
+    private String collectionNameProj;
+    private String collectionNameConf;
 
     // Getters and Setters
     public String getProtocol() { return protocol; }
@@ -30,6 +31,9 @@ public class MongoProperties {
     public String getDbname() { return dbname; }
     public void setDbname(String dbname) { this.dbname = dbname; }
 
-    public String getCollectionName() { return collectionName; }
-    public void setCollectionName(String collectionName) { this.collectionName = collectionName; }
+    public String getCollectionNameProj() { return collectionNameProj; }
+    public void setCollectionNameProj(String collectionName) { this.collectionNameProj = collectionName; }
+
+    public String getCollectionNameConf() { return collectionNameConf; }
+    public void setCollectionNameConf(String collectionName) { this.collectionNameConf = collectionName; }
 }

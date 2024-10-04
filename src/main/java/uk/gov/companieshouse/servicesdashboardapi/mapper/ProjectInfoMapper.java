@@ -59,25 +59,6 @@ public interface ProjectInfoMapper {
         return mapProjectInfoList(new ArrayList<>(projectInfoMap.values()));
     }
 
-
-   // // Main mapping (Set of ProjectInfo to Set of MongoProjectInfo)
-   // Set<MongoProjectInfo> toMongoProjectInfoSet(Set<ProjectInfo> projectInfoSet);
-
-   // // Direct mappings (automatic since the fields match exactly)
-   // MongoMetricsInfo toMongoMetricsInfo(DepTrackMetricsInfo metricsInfo);
-   // MongoGitInfo toMongoGitInfo(GitInfo gitInfo);
-
-   // // Custom mappings:
-   // // Custom mapping for the depTrackVersions to versions
-   // @Mapping(source = "depTrackVersions", target = "versions")
-   // MongoProjectInfo toMongoProjectInfo(ProjectInfo projectInfo);
-
-   // // Custom mapping metrics & Long to Date
-   // @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
-   // @Mapping(source = "depTrackMetrics", target = "metrics")
-   // MongoVersionInfo toMongoVersionInfo(VersionInfo versionInfo);
-
-
    // Custom mapping Release (String to Date)
    @Mapping(source = "date", target = "date", qualifiedByName = "stringToDate")
    MongoGitLastReleaseInfo toMongoGitLastReleaseInfo(GitLastReleaseInfo gitLastReleaseInfo);

@@ -15,12 +15,18 @@ import java.util.List;
 import java.util.Map;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
+import uk.gov.companieshouse.servicesdashboardapi.mapper.ConfigInfoMapper;
+import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarComponent;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
+import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoConfigRepository;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
+import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndoflifeService;
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
@@ -48,8 +54,14 @@ public class ServicesDashboardController {
    @Autowired
    private EcsService ecsService;
 
-  @Autowired
-  public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
+   @Autowired
+   private EndoflifeService endolService;
+   @Autowired
+   private CustomMongoConfigRepository customMongoConfigRepository;
+
+
+   @Autowired
+   public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
                                      GetAllProjects servicesDepTrack){
       this.servicesDashboardService = servicesDashboardService;
       this.servicesDepTrack = servicesDepTrack;
@@ -93,12 +105,23 @@ public class ServicesDashboardController {
       }
       return new ResponseEntity<>("ECS ok", HttpStatus.OK);
    }
+   @GetMapping("/services-dashboard/endol")
+   public ResponseEntity<String> sourceEndol( ) {
+      Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();
+      ConfigInfo configInfo = new ConfigInfo ();
+      configInfo.setEndol(endolMap);
+      MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
+      customMongoConfigRepository.saveConfig(mongoConfigInfo);
 
-  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-      ApiLogger.info("Failure in integer conversion of Response's header total projects");
-  }
+      return new ResponseEntity<>("Endol ok", HttpStatus.OK);
+   }
+   
+
+   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+   @ResponseStatus(HttpStatus.BAD_REQUEST)
+   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+         ApiLogger.info("Failure in integer conversion of Response's header total projects");
+   }
 }
 
 

@@ -21,19 +21,23 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @Configuration
 public class MongoConfig {
 
-   @Autowired
+    @Autowired
     private MongoProperties mongoProperties;
 
-   public String getCollectionName() {
-      return  mongoProperties.getCollectionName();
-   }
+    public String getCollectionNameProj() {
+        return  mongoProperties.getCollectionNameProj();
+    }
 
-  @Bean
+    public String getCollectionNameConf() {
+        return  mongoProperties.getCollectionNameConf();
+    }
+
+    @Bean
     public MongoClient mongoClient() {
         String auth = (mongoProperties.getUser().isEmpty() ? "" :
-                  String.format("%s:%s@",
-                     mongoProperties.getUser(),
-                     mongoProperties.getPassword()));
+                String.format("%s:%s@",
+                    mongoProperties.getUser(),
+                    mongoProperties.getPassword()));
 
         String uri = String.format("%s://%s%s/%s",
             mongoProperties.getProtocol(),
@@ -57,11 +61,11 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory()), new MongoMappingContext());
-         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory(), converter);
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory()), new MongoMappingContext());
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory(), converter);
 
-         return mongoTemplate;
+        return mongoTemplate;
     }
 }
 

@@ -18,9 +18,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-
 import uk.gov.companieshouse.servicesdashboardapi.utils.JsonMapper;
-
 
 @Service
 public class SonarService {

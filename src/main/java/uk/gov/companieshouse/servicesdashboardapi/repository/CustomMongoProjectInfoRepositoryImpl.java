@@ -23,7 +23,7 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
    public CustomMongoProjectInfoRepositoryImpl(MongoTemplate mongoTemplate,
                                                MongoConfig mongoConfig) {
       this.mongoTemplate = mongoTemplate;
-      this.collectionName = mongoConfig.getCollectionName();
+      this.collectionName = mongoConfig.getCollectionNameProj();
    }
 
    @Override
