@@ -111,7 +111,7 @@ public class ServicesDashboardController {
       ConfigInfo configInfo = new ConfigInfo ();
       configInfo.setEndol(endolMap);
       MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
-      customMongoConfigRepository.saveConfig(mongoConfigInfo);
+      customMongoConfigRepository.saveConfigInfo(mongoConfigInfo);
 
       return new ResponseEntity<>("Endol ok", HttpStatus.OK);
    }

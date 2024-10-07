@@ -17,6 +17,10 @@ public class MongoConfigInfo {
    private Map<String, List<MongoEndoflifeInfo>> endol;
 
    // Getters and Setters
+   public void setId(String id) {
+      this.id = id;
+   }
+
    public Map<String, List<MongoEndoflifeInfo>> getEndol() {
       return endol;
    }
