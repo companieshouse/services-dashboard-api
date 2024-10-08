@@ -18,6 +18,9 @@ public class MongoVersionInfo {
    @Field("metrics")
    private MongoMetricsInfo metrics;
 
+   @Field("lang")
+   private String lang;
+
    @Field("runtime")
    private String runtime;
 
@@ -53,6 +56,13 @@ public class MongoVersionInfo {
   public void setMetrics(MongoMetricsInfo metrics) {
       this.metrics = metrics;
    }
+   public String getLang() {
+      return lang;
+   }
+
+   public void setLang(String lang) {
+      this.lang = lang;
+   }
 
    public String getRuntime() {
       return runtime;
@@ -64,7 +74,7 @@ public class MongoVersionInfo {
 
    @Override
    public String toString() {
-       return String.format("{v:%s,u:%s,l:%s,%s,%s}", version, uuid, lastBomImport, metrics, runtime);
+       return String.format("{v:%s,u:%s,l:%s,%s,%s,%s}", version, uuid, lastBomImport, metrics, lang, runtime);
    }
 }
 

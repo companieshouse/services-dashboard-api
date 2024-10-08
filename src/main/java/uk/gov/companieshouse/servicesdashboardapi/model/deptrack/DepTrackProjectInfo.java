@@ -13,7 +13,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
     "uuid": "0ee60287-158e-49d8-b783-946e92ac5d8d",
     "tags": [
       {
-        "name": "runtime:21.0.1 java-21-amazon-corretto.x86_64 spring-core:5.3.16 spring-boot-starter:2.6.4"
+        "name": "lang:java"
+      },
+      {
+        "name": "runtime:21.0.1 java-21-amazon-corretto.x86_64 spring-core:6.1.10 spring-boot-starter:3.3.1"
       }
     ],
     "lastBomImport": 1724366968904,
