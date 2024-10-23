@@ -10,6 +10,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.profiles.ProfileFile;
 import software.amazon.awssdk.services.ecs.EcsClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ecs.model.*;
@@ -21,6 +22,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.nio.file.Paths;
+
 
 @Service
    public class EcsService {
@@ -28,8 +31,14 @@ import java.util.regex.Pattern;
    @Autowired
    private ServicesInfo servicesInfo;
 
+   @Value("${aws.useCredentialsFile:true}")
+   private Boolean useCredentialsFile;
+
    @Value("${aws.profile}")
    private String profile;
+
+   @Value("${aws.credentials.path}")
+   private String credentialsFilePath;
 
    @Value("${aws.region}")
    private String region;
@@ -42,11 +51,28 @@ import java.util.regex.Pattern;
 
    @PostConstruct
    private void init() {
-      ApiLogger.info(String.format("PROFILE: %s / REGION:%s", profile, region));
-      ecsClient = EcsClient.builder()
-     .region(Region.of(region))
-     .credentialsProvider(ProfileCredentialsProvider.create(profile))
-     .build();
+      ApiLogger.info(String.format("PROFILE: %s / REGION:%s / CRED:%s", profile, region, credentialsFilePath.toString()));
+
+      if (useCredentialsFile) {
+         // 1.3 Profile File
+         ProfileFile profileFile = ProfileFile.builder()
+         .content(Paths.get(credentialsFilePath))
+         .type(ProfileFile.Type.CREDENTIALS)
+         .build();
+
+         // 2.3 Credentials Provider (from Profile File)
+         ProfileCredentialsProvider credentialsProvider = ProfileCredentialsProvider
+         .builder()
+         .profileFile(profileFile)
+         .profileName(profile)
+         .build();
+
+         // 3.3 ECS Client (from Cred. Provider)
+         ecsClient = EcsClient.builder()
+         .region(Region.of(region))
+         .credentialsProvider(credentialsProvider)
+         .build();
+      }
    }
 
    public EcsService() {
