@@ -2,15 +2,14 @@ package uk.gov.companieshouse.servicesdashboardapi.service.aws;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
-
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-import software.amazon.awssdk.profiles.ProfileFile;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.services.ecs.EcsClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ecs.model.*;
@@ -22,23 +21,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import java.nio.file.Paths;
-
-
 @Service
    public class EcsService {
 
    @Autowired
    private ServicesInfo servicesInfo;
 
-   @Value("${aws.useCredentialsFile:true}")
-   private Boolean useCredentialsFile;
-
    @Value("${aws.profile}")
    private String profile;
-
-   @Value("${aws.credentials.path}")
-   private String credentialsFilePath;
 
    @Value("${aws.region}")
    private String region;
@@ -51,28 +41,21 @@ import java.nio.file.Paths;
 
    @PostConstruct
    private void init() {
-      ApiLogger.info(String.format("PROFILE: %s / REGION:%s / CRED:%s", profile, region, credentialsFilePath.toString()));
+      ApiLogger.info(String.format("PROFILE: %s / REGION:%s", profile, region ));
 
-      if (useCredentialsFile) {
-         // 1.3 Profile File
-         ProfileFile profileFile = ProfileFile.builder()
-         .content(Paths.get(credentialsFilePath))
-         .type(ProfileFile.Type.CREDENTIALS)
-         .build();
+      // Use default provider chain (DefaultCredentialsProvider) which
+      // allows the AWS SDK to automatically look for credentials in the following order:
+      //
+      // 1. Environment variables (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
+      // 2. Java system properties (aws.accessKeyId and aws.secretKey)
+      // 3. Profile credentials file (like .aws/credentials)
+      // 4. IAM roles for ECS tasks or EC2 instances
 
-         // 2.3 Credentials Provider (from Profile File)
-         ProfileCredentialsProvider credentialsProvider = ProfileCredentialsProvider
-         .builder()
-         .profileFile(profileFile)
-         .profileName(profile)
-         .build();
-
-         // 3.3 ECS Client (from Cred. Provider)
-         ecsClient = EcsClient.builder()
-         .region(Region.of(region))
-         .credentialsProvider(credentialsProvider)
-         .build();
-      }
+      // this code will then run both locally and on AWS
+      ecsClient = EcsClient.builder()
+      .region(Region.of(region))
+      .credentialsProvider(DefaultCredentialsProvider.create())  // Use default provider chain
+      .build();
    }
 
    public EcsService() {

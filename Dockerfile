@@ -20,7 +20,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 # Open the port
 EXPOSE 8080
 
-# Copy our JAR
+# Copy JAR
 COPY $APP_FILE /app.jar
 
 # Launch the Spring Boot application
