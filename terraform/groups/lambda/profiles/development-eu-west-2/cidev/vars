@@ -1,0 +1,11 @@
+aws_profile = "development-eu-west-2"
+environment = "cidev"
+vpc_name = "Test & Development"
+lambda_timeout_seconds = 300
+
+# file_transfer_api_kms_key_alias = "alias/cidev-file-transfer"
+
+# image_bucket_name = "s3av-cidev"
+# image_bucket_prefix = "/converted-tiffs"
+
+# data_queue_visibility_timeout_seconds = 300
