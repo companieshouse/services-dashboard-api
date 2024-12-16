@@ -47,11 +47,11 @@ resource "aws_lambda_function" "services_dashboard_api" {
   }
 }
 
-resource "aws_lambda_event_source_mapping" "data" {
-  event_source_arn = aws_sqs_queue.data.arn
-  function_name    = aws_lambda_function.services_dashboard_api.arn
-  batch_size       = var.lambda_event_source_batch_size
-}
+# resource "aws_lambda_event_source_mapping" "data" {
+#   event_source_arn = aws_sqs_queue.data.arn
+#   function_name    = aws_lambda_function.services_dashboard_api.arn
+#   batch_size       = var.lambda_event_source_batch_size
+# }
 
 resource "aws_security_group" "services_dashboard_api" {
   name        = "${var.service}-${var.environment}-lambda-function"
@@ -96,10 +96,10 @@ resource "aws_iam_role_policy_attachment" "vpc_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "sqs_access" {
-  role = aws_iam_role.lambda_execution.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
-}
+# resource "aws_iam_role_policy_attachment" "sqs_access" {
+#   role = aws_iam_role.lambda_execution.name
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
+# }
 
 resource "aws_iam_role_policy" "vpc_execution" {
   name   = "${var.service}-${var.environment}-lambda-policy"
@@ -129,41 +129,41 @@ data "aws_iam_policy_document" "lambda_trust" {
 
 # TODO retrieve key ID from remote state (post file-transfer-api rework)
 
-data "aws_kms_key" "file_transfer_api" {
-  key_id = var.file_transfer_api_kms_key_id
-}
+# data "aws_kms_key" "file_transfer_api" {
+#   key_id = var.file_transfer_api_kms_key_id
+# }
 
-data "aws_iam_policy_document" "lambda_execution" {
-  statement {
-    sid = "LambdaHasFullAccessToImageBucket"
+# data "aws_iam_policy_document" "lambda_execution" {
+#   statement {
+#     sid = "LambdaHasFullAccessToImageBucket"
 
-    effect = "Allow"
+#     effect = "Allow"
 
-    # TODO further restrict permissions
+#     # TODO further restrict permissions
 
-    actions = [
-      "s3:*",
-    ]
+#     actions = [
+#       "s3:*",
+#     ]
 
-    resources = [
-      "${data.aws_s3_bucket.images.arn}/*"
-    ]
-  }
+#     resources = [
+#       "${data.aws_s3_bucket.images.arn}/*"
+#     ]
+#   }
 
-  statement {
-    sid = "LambdaCanUseCustomerManagedKeyToGenerateDataKeys"
+#   statement {
+#     sid = "LambdaCanUseCustomerManagedKeyToGenerateDataKeys"
 
-    effect = "Allow"
+#     effect = "Allow"
 
-    actions = [
-      "kms:GenerateDataKey"
-    ]
+#     actions = [
+#       "kms:GenerateDataKey"
+#     ]
 
-    resources = [
-      data.aws_kms_key.file_transfer_api.arn
-    ]
-  }
-}
+#     resources = [
+#       data.aws_kms_key.file_transfer_api.arn
+#     ]
+#   }
+# }
 
 data "aws_vpc" "selected" {
   id = var.vpc_id

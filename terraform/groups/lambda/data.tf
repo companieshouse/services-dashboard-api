@@ -26,7 +26,7 @@ data "terraform_remote_state" "network" {
   config = {
     bucket = var.network_state_bucket_name
     key    = "env:/${var.network_state_bucket_key}/${var.network_state_bucket_key}/${var.network_state_bucket_key}.tfstate"
-    region = var.region
+    region = var.aws_region
   }
 }
 
@@ -37,9 +37,9 @@ data "aws_vpc" "vpc" {
   }
 }
 
-data "aws_kms_key" "kms_key" {
-  key_id = var.file_transfer_api_kms_key_alias
-}
+# data "aws_kms_key" "kms_key" {
+#   key_id = var.file_transfer_api_kms_key_alias
+# }
 
 
 data "aws_caller_identity" "current" {}
@@ -47,64 +47,64 @@ data "aws_caller_identity" "current" {}
 
 
 
-data "aws_s3_bucket" "images" {
-  bucket = var.image_bucket_name
-}
+# data "aws_s3_bucket" "images" {
+#   bucket = var.image_bucket_name
+# }
 
-data "aws_s3_bucket" "efs_payment_reports" {
-  bucket = "${var.aws_account}-${var.region}.efs-payment-reports.ch.gov.uk"
-}
+# data "aws_s3_bucket" "efs_payment_reports" {
+#   bucket = "${var.aws_account}-${var.aws_region}.efs-payment-reports.ch.gov.uk"
+# }
 
-data "aws_iam_policy_document" "efs_queue_message_producer" {
+# data "aws_iam_policy_document" "efs_queue_message_producer" {
 
-  # API producer can list these buckets
-  statement {
-    effect = "Allow"
+#   # API producer can list these buckets
+#   statement {
+#     effect = "Allow"
 
-    actions = [
-      "s3:ListBucket",
-      "s3:GetBucketLocation"
-    ]
+#     actions = [
+#       "s3:ListBucket",
+#       "s3:GetBucketLocation"
+#     ]
 
-    resources = [
-      data.aws_s3_bucket.images.arn,
-      data.aws_s3_bucket.efs_payment_reports.arn
-    ]
-  }
+#     resources = [
+#       data.aws_s3_bucket.images.arn,
+#       data.aws_s3_bucket.efs_payment_reports.arn
+#     ]
+#   }
 
-  # API producer can write to these buckets
-  statement {
-    effect = "Allow"
+#   # API producer can write to these buckets
+#   statement {
+#     effect = "Allow"
 
-    actions = [
-      "s3:ListObjectsV2",
-      "s3:PutObject",
-      "s3:PutObjectAcl",
-      "s3:GetObject",
-      "s3:GetObjectAcl",
-      "s3:DeleteObject"
-    ]
+#     actions = [
+#       "s3:ListObjectsV2",
+#       "s3:PutObject",
+#       "s3:PutObjectAcl",
+#       "s3:GetObject",
+#       "s3:GetObjectAcl",
+#       "s3:DeleteObject"
+#     ]
 
-    resources = [
-      "${data.aws_s3_bucket.images.arn}${var.image_bucket_prefix}/*",
-      "${data.aws_s3_bucket.efs_payment_reports.arn}/${var.environment}/*"
-    ]
-  }
+#     resources = [
+#       "${data.aws_s3_bucket.images.arn}${var.image_bucket_prefix}/*",
+#       "${data.aws_s3_bucket.efs_payment_reports.arn}/${var.environment}/*"
+#     ]
+#   }
 
-  # Presigned links can read from these buckets
-  statement {
-    effect = "Allow"
+#   # Presigned links can read from these buckets
+#   statement {
+#     effect = "Allow"
 
-    actions = [
-      "s3:GetObject"
-    ]
+#     actions = [
+#       "s3:GetObject"
+#     ]
 
-    resources = [
-      "${data.aws_s3_bucket.images.arn}/*",
-      "${data.aws_s3_bucket.efs_payment_reports.arn}/${var.environment}/*"
-    ]
-  }
-}
+#     resources = [
+#       "${data.aws_s3_bucket.images.arn}/*",
+#       "${data.aws_s3_bucket.efs_payment_reports.arn}/${var.environment}/*"
+#     ]
+#   }
+# }
 
 
 
@@ -119,13 +119,13 @@ data "vault_generic_secret" "configuration" {
 
 
 
-data "vault_generic_secret" "stack_secrets" {
-  path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}-stack"
-}
+# data "vault_generic_secret" "stack_secrets" {
+#   path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}-stack"
+# }
 
-data "aws_kms_key" "kms_key" {
-  key_id = local.kms_alias
-}
+# data "aws_kms_key" "kms_key" {
+#   key_id = local.kms_alias
+# }
 
 data "vault_generic_secret" "service_secrets" {
   path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}-stack/${local.service_name}"

@@ -4,12 +4,16 @@ variable "aws_account" {
   default     = "development"
 }
 
+    variable "aws_account_id" {
+      type        = string
+      description = "The AWS account identifier"
+    }
 variable "aws_profile" {
   type        = string
   description = "The AWS profile name; used as a prefix for Vault secrets"
 }
 
-variable "region" {
+variable "aws_region" {
   type        = string
   description = "The AWS region in which resources will be created"
 }
@@ -25,26 +29,26 @@ variable "service" {
   default     = "services-dashboard-api"
 }
 
-variable "file_transfer_api_kms_key_alias" {
-  type        = string
-  description = "The KMS key alias of the customer-managed key in KMS used by the file transfer API service for S3 bucket encryption"
-}
+# variable "file_transfer_api_kms_key_alias" {
+#   type        = string
+#   description = "The KMS key alias of the customer-managed key in KMS used by the file transfer API service for S3 bucket encryption"
+# }
 
-variable "image_bucket_name" {
-  type        = string
-  description = "The name of the S3 bucket that will store processed images"
-}
+# variable "image_bucket_name" {
+#   type        = string
+#   description = "The name of the S3 bucket that will store processed images"
+# }
 
-variable "image_bucket_prefix" {
-  type        = string
-  description = "The prefix for objects stored in the S3 image bucket; must begin with a leading forward slash and end without a trailing forward slash"
-}
+# variable "image_bucket_prefix" {
+#   type        = string
+#   description = "The prefix for objects stored in the S3 image bucket; must begin with a leading forward slash and end without a trailing forward slash"
+# }
 
-variable "lambda_event_source_batch_size" {
-  type        = number
-  description = "The largest number of records that Lambda will retrieve from the SQS event source at the time of invocation"
-  default     = 10
-}
+# variable "lambda_event_source_batch_size" {
+#   type        = number
+#   description = "The largest number of records that Lambda will retrieve from the SQS event source at the time of invocation"
+#   default     = 10
+# }
 
 variable "lambda_handler_name" {
   type        = string
@@ -76,6 +80,17 @@ variable "lambda_runtime" {
   default     = "java21"
 }
 
+    variable "lambda_vpc_access_subnet_ids" {
+      type        = list(string)
+      description = "A list of subnet identifiers the Lambda function will be able to access resources in"
+    }
+
+variable "vpc_id" {
+  type        = string
+  description = "The VPC in which to create resources"
+}
+
+
 variable "release_bucket_name" {
   type        = string
   description = "The name of the S3 bucket containing the release artefact for the Lambda function"
@@ -86,17 +101,17 @@ variable "release_artifact_key" {
   description = "The release artifact key for the Lambda function"
 }
 
-variable "data_queue_max_receive_count" {
-  type        = number
-  description = "The maximum number of times a message may be received before being moved to the dead-letter queue"
-  default     = 2
-}
+# variable "data_queue_max_receive_count" {
+#   type        = number
+#   description = "The maximum number of times a message may be received before being moved to the dead-letter queue"
+#   default     = 2
+# }
 
-variable "data_queue_visibility_timeout_seconds" {
-  type        = number
-  description = "The visibility timeout for the queue in seconds"
-  default     = 1200
-}
+# variable "data_queue_visibility_timeout_seconds" {
+#   type        = number
+#   description = "The visibility timeout for the queue in seconds"
+#   default     = 1200
+# }
 
 variable "network_state_bucket_name" {
   type        = string
@@ -124,8 +139,32 @@ variable vault_password {
   description = "The HashiCorp Vault password used to retrieve secrets"
 }
 
-variable "message_retention_seconds" {
-  type        = number
-  default     = 345600
-  description = "The number of seconds Amazon SQS retains a message"
+# variable "message_retention_seconds" {
+#   type        = number
+#   default     = 345600
+#   description = "The number of seconds Amazon SQS retains a message"
+# }
+
+
+
+
+
+# ------------------------------------------------------------------------------
+# Service environment variable configs
+# ------------------------------------------------------------------------------
+variable "ssm_version_prefix" {
+  type        = string
+  description = "String to use as a prefix to the names of the variables containing variables and secrets version."
+  default     = "SSM_VERSION_"
+}
+
+# variable "use_set_environment_files" {
+#   type        = bool
+#   default     = false
+#   description = "Toggle default global and shared  environment files"
+# }
+
+variable "services_dashboard_ecs_version" {
+  type        = string
+  description = "The version of the services dashboard ecs container to run."
 }
