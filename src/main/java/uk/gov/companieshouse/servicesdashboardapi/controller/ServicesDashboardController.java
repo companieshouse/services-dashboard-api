@@ -30,7 +30,7 @@ import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndoflifeSer
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
-import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
+// import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @RestController
@@ -51,8 +51,8 @@ public class ServicesDashboardController {
    @Autowired
    private GitService gitService;
 
-   @Autowired
-   private EcsService ecsService;
+   // @Autowired
+   // private EcsService ecsService;
 
    @Autowired
    private EndoflifeService endolService;
@@ -89,22 +89,24 @@ public class ServicesDashboardController {
          System.out.println(projectInfo);
       });
 
-      for (String env : awsEnvs) {
-         ecsService.fetchClusterInfo(env);
-      }
+      // this is now done by https://github.com/companieshouse/services-dashboard-ecs
+      // for (String env : awsEnvs) {
+      //    ecsService.fetchClusterInfo(env);
+      // }
 
       servicesDashboardService.createServicesDashboard();
 
       ApiLogger.info("---------list-services END");
       return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
   }
-  @GetMapping("/services-dashboard/ecs")
-  public ResponseEntity<String> sourceEcs( ) {
-      for (String env : awsEnvs) {
-         ecsService.fetchClusterInfo(env);
-      }
-      return new ResponseEntity<>("ECS ok", HttpStatus.OK);
-   }
+//   @GetMapping("/services-dashboard/ecs")
+//   public ResponseEntity<String> sourceEcs( ) {
+//       for (String env : awsEnvs) {
+//          ecsService.fetchClusterInfo(env);
+//       }
+//       return new ResponseEntity<>("ECS ok", HttpStatus.OK);
+//    }
+
    @GetMapping("/services-dashboard/endol")
    public ResponseEntity<String> sourceEndol( ) {
       Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();

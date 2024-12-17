@@ -21,6 +21,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//====================================================================
+// this service is no more used as this is done by
+// https://github.com/companieshouse/services-dashboard-ecs
+//====================================================================
 @Service
    public class EcsService {
 
