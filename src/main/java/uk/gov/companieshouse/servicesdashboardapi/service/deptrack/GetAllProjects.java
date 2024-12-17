@@ -23,7 +23,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProject
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.service.DepTrackGetDataService;
 
-import uk.gov.companieshouse.servicesdashboardapi.utils.JsonMapper;
+import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
 @Service
 public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProjectInfo>>{
@@ -35,7 +35,7 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
    String headerTotalCount;
 
     @Autowired
-    private JsonMapper jsonMapper;
+    private CustomJsonMapper jsonMapper;
 
     public GetAllProjects()  {
         super(null); // Pass a placeholder value, will be overwritten in init method

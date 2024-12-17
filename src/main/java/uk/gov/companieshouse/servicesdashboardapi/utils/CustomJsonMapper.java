@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JsonMapper extends ObjectMapper{
+public class CustomJsonMapper extends ObjectMapper{
 
-  public JsonMapper() {
+  public CustomJsonMapper() {
         this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 }
