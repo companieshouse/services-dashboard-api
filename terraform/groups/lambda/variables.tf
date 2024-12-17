@@ -1,3 +1,8 @@
+variable "github_read_token" {
+  type        = string
+  description = "GitHub access token to read repos' info from both 'repo' or 'public_repo' scopes"
+}
+
 variable "aws_account" {
   type        = string
   description = "The AWS account name"
@@ -23,11 +28,11 @@ variable "environment" {
   description = "The environment name to be used when creating AWS resources"
 }
 
-variable "service" {
-  type        = string
-  description = "The service name to be used when creating AWS resources"
-  default     = "services-dashboard-api"
-}
+# variable "service" {
+#   type        = string
+#   description = "The service name to be used when creating AWS resources"
+#   default     = "services-dashboard-api"
+# }
 
 # variable "file_transfer_api_kms_key_alias" {
 #   type        = string
@@ -80,15 +85,15 @@ variable "lambda_runtime" {
   default     = "java21"
 }
 
-    variable "lambda_vpc_access_subnet_ids" {
-      type        = list(string)
-      description = "A list of subnet identifiers the Lambda function will be able to access resources in"
-    }
+    # variable "lambda_vpc_access_subnet_ids" {
+    #   type        = list(string)
+    #   description = "A list of subnet identifiers the Lambda function will be able to access resources in"
+    # }
 
-variable "vpc_id" {
-  type        = string
-  description = "The VPC in which to create resources"
-}
+# variable "vpc_id" {
+#   type        = string
+#   description = "The VPC in which to create resources"
+# }
 
 
 variable "release_bucket_name" {
@@ -123,30 +128,27 @@ variable "network_state_bucket_key" {
   description = "The key name used when constructing the path to the application network remote state in the S3 bucket"
 }
 
-variable "vpc_name" {
-  type        = string
-  description = "The VPC in which to create resources"
-  default     = "Test & Development"
-}
+# variable "vpc_name" {
+#   type        = string
+#   description = "The VPC in which to create resources"
+#   default     = "Test & Development"
+# }
 
-variable vault_username {
-  type        = string
-  description = "The HashiCorp Vault username used to retrieve secrets"
-}
+# variable vault_username {
+#   type        = string
+#   description = "The HashiCorp Vault username used to retrieve secrets"
+# }
 
-variable vault_password {
-  type        = string
-  description = "The HashiCorp Vault password used to retrieve secrets"
-}
+# variable vault_password {
+#   type        = string
+#   description = "The HashiCorp Vault password used to retrieve secrets"
+# }
 
 # variable "message_retention_seconds" {
 #   type        = number
 #   default     = 345600
 #   description = "The number of seconds Amazon SQS retains a message"
 # }
-
-
-
 
 
 # ------------------------------------------------------------------------------
@@ -164,7 +166,17 @@ variable "ssm_version_prefix" {
 #   description = "Toggle default global and shared  environment files"
 # }
 
-variable "services_dashboard_ecs_version" {
+variable "services_dashboard_api_version" {
   type        = string
-  description = "The version of the services dashboard ecs container to run."
+  description = "The version of the services dashboard api container to run."
+}
+
+variable "vault_stack_path" {
+  type        = string
+  description = "Vault stack path."
+}
+
+variable "vault_service_path" {
+  type        = string
+  description = "Vault service path."
 }

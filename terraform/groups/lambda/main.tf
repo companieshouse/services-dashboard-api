@@ -18,16 +18,23 @@ provider "aws" {
   region  = var.aws_region
 }
 
-provider "vault" {
-  auth_login {
-    path = "auth/userpass/login/${var.vault_username}"
+# provider "vault" {
+#   auth_login {
+#     path = "auth/userpass/login/${var.vault_username}"
 
-    parameters = {
-      password = var.vault_password
-    }
-  }
+#     parameters = {
+#       password = var.vault_password
+#     }
+#   }
+# }
+module "secrets" {
+  source = "git@github.com:companieshouse/terraform-modules//aws/ecs/secrets?ref=1.0.296"
+
+  name_prefix = "${local.service_name}-${var.environment}"
+  environment = var.environment
+  kms_key_id  = data.aws_kms_key.kms_key.id
+  secrets     = nonsensitive(local.service_secrets)
 }
-
 # module "services_dashboard_api" {
 #   source = "./services-dashboard-api"
 
