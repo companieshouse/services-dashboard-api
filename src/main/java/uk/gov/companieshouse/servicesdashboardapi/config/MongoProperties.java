@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.servicesdashboardapi.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -7,10 +8,16 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "mongo")
 public class MongoProperties {
 
-    private String protocol;
+    @Value("${mongo.user.secret}")
     private String user;
+
+    @Value("${mongo.password.secret}")
     private String password;
+
+    @Value("${mongo.hostandport.secret}")
     private String hostandport;
+
+    private String protocol;
     private String dbname;
     private String collectionNameProj;
     private String collectionNameConf;

@@ -26,7 +26,7 @@ public class SonarService {
     @Value("${sonar.url}")
     private String sonarUrl;
 
-    @Value("${sonar.token}")
+    @Value("${sonar.token.secret}")
     private String sonarToken;
 
     @Value("${sonar.metrics}")

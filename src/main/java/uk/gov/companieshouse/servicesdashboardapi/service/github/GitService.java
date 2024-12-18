@@ -33,7 +33,7 @@ public class GitService {
    @Value("${gh.api}")
    String api;
 
-   @Value("${gh.token}")
+   @Value("${gh.token.secret}")
    String token;
 
    @Value("${gh.org}")

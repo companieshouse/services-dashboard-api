@@ -45,18 +45,16 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
                 }
             });
 
-            // Modify properties ending with ".secret"
+            // Set, from Param. Store, the properties ending with ".secret"
             properties.forEach((key, value) -> {
                 String keyStr = key.toString();
                 if (keyStr.endsWith(".secret")) {
-                    // Perform your custom action here
-                    String secretValue = getSecret(value.toString());
-                    properties.setProperty(keyStr, secretValue);
+                    properties.setProperty(keyStr, getSecret(keyStr));
                 }
             });
 
-            // Add modified properties back to the environment
-            propertySources.addFirst(new PropertiesPropertySource("customProperties", properties));
+            // Add modified properties back to the environment (at 1st position, so before application.properties)
+            propertySources.addFirst(new PropertiesPropertySource("EnvSecrets", properties));
         }
     }
 
@@ -69,8 +67,8 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
                 .build();
 
             GetParameterResponse response = ssmClient.getParameter(request);
-
             return response.parameter().value();
+
         } catch (Exception e) {
             ApiLogger.info("Error fetching secret: " + secretName + " - " + e.getMessage());
             return "";
