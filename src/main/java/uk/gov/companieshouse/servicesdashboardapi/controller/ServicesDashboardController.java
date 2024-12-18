@@ -67,8 +67,34 @@ public class ServicesDashboardController {
       this.servicesDepTrack = servicesDepTrack;
   }
 
-  @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<List<ProjectInfo>> listServices( ) {
+   //   @GetMapping("/services-dashboard/ecs")
+   //   public ResponseEntity<String> sourceEcs( ) {
+   //       for (String env : awsEnvs) {
+   //          ecsService.fetchClusterInfo(env);
+   //       }
+   //       return new ResponseEntity<>("ECS ok", HttpStatus.OK);
+   //    }
+
+   @GetMapping("/services-dashboard/list-services")
+   public ResponseEntity<List<ProjectInfo>> listServices( ) {
+      Map<String, ProjectInfo> projectInfoMap = loadListServices();
+      return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
+   }
+
+   @GetMapping("/services-dashboard/endol")
+   public ResponseEntity<String> sourceEndol( ) {
+      loadListEol();
+      return new ResponseEntity<>("Endol ok", HttpStatus.OK);
+   }
+
+
+   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+   @ResponseStatus(HttpStatus.BAD_REQUEST)
+   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+         ApiLogger.info("Failure in integer conversion of Response's header total projects");
+   }
+
+   private Map<String, ProjectInfo> loadListServices( ) {
       ApiLogger.info("---------list-services START");
       List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
 
@@ -97,33 +123,23 @@ public class ServicesDashboardController {
       servicesDashboardService.createServicesDashboard();
 
       ApiLogger.info("---------list-services END");
-      return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
-  }
-//   @GetMapping("/services-dashboard/ecs")
-//   public ResponseEntity<String> sourceEcs( ) {
-//       for (String env : awsEnvs) {
-//          ecsService.fetchClusterInfo(env);
-//       }
-//       return new ResponseEntity<>("ECS ok", HttpStatus.OK);
-//    }
+      return projectInfoMap;
+   }
 
-   @GetMapping("/services-dashboard/endol")
-   public ResponseEntity<String> sourceEndol( ) {
+   private void loadListEol( ) {
       Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();
       ConfigInfo configInfo = new ConfigInfo ();
       configInfo.setEndol(endolMap);
       MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
       customMongoConfigRepository.saveConfigInfo(mongoConfigInfo);
-
-      return new ResponseEntity<>("Endol ok", HttpStatus.OK);
    }
-   
 
-   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-   @ResponseStatus(HttpStatus.BAD_REQUEST)
-   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-         ApiLogger.info("Failure in integer conversion of Response's header total projects");
+   // when triggered by a scheduler/lambda, load both lists
+   public void loadInfo( ) {
+      Map<String, ProjectInfo> projectInfoMap = loadListServices();
+      loadListEol();
    }
+
 }
 
 

@@ -22,6 +22,7 @@ public class ServicesDashboardService {
    public void createServicesDashboard(){
       ApiLogger.info("---------Create Serv START");
       List<MongoProjectInfo> mongoProjectInfoList = ProjectInfoMapper.INSTANCE.mapProjectInfoMap(servicesInfo.getProjectInfoMap());
+      ApiLogger.info("---------Saving Project Infos to DB");
       customMongoProjectInfoRepository.saveProjectInfos(mongoProjectInfoList);
       ApiLogger.info("---------Create Serv END");
    }
