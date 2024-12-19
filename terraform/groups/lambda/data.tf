@@ -9,7 +9,7 @@ data "vault_generic_secret" "service_secrets" {
 # Policy to attach to the IAM role for the Lambda function
 data "aws_iam_policy_document" "lambda_trust" {
   statement {
-    sid = "LambdaCanAssumeThisRole"
+    sid    = "LambdaCanAssumeThisRole"
     effect = "Allow"
     actions = [
       "sts:AssumeRole"
@@ -26,9 +26,9 @@ data "aws_iam_policy_document" "lambda_trust" {
 # Policy to allow Lambda to access SSM Parameter Store
 data "aws_iam_policy_document" "ssm_access_policy" {
   statement {
-    sid       = "AllowSSMAccess"
-    effect    = "Allow"
-    actions   = [
+    sid    = "AllowSSMAccess"
+    effect = "Allow"
+    actions = [
       "ssm:GetParameter",
       "ssm:GetParameters",
       "ssm:GetParameterHistory"
