@@ -135,7 +135,7 @@ public class ServicesDashboardController {
    }
 
    // when triggered by a scheduler/lambda, load both lists
-   public void loadInfo( ) {
+   public void loadAllInfo( ) {
       Map<String, ProjectInfo> projectInfoMap = loadListServices();
       loadListEol();
    }

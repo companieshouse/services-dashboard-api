@@ -30,9 +30,9 @@ public class HandlerCronEvent implements RequestHandler<ScheduledEvent, Void> {
             String action = (String) detail.get("action");
             logger.log("Action value: " + action + "\n");
 
-            if (action.equals("loadInfo")) {
-                ServicesController.loadInfo();
-                System.out.println("loadInfo");
+            if (action.equals("loadAllInfo")) {
+                ServicesController.loadAllInfo();
+                System.out.println("loadAllInfo");
             }
 
         } else {
