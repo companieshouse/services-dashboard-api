@@ -5,7 +5,7 @@
    <parent>
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>companies-house-parent</artifactId>
-      <version>2.1.5</version>
+      <version>2.1.11</version>
    </parent>
    <groupId>uk.gov.companieshouse</groupId>
    <artifactId>services-dashboard-api</artifactId>
@@ -24,7 +24,11 @@
       <structured-logging.version>2.0.3</structured-logging.version>
       <jackson-databind.version>2.16.1</jackson-databind.version>
       <dependency-track-client.version>1.0.1</dependency-track-client.version>
-      <aws.java.sdk.version>2.27.22</aws.java.sdk.version>
+      <aws.java.sdk.version>2.29.36</aws.java.sdk.version>
+      <aws.spring.adapter.version>4.0.2</aws.spring.adapter.version>
+      <aws.lambda.core.version>1.2.2</aws.lambda.core.version>
+      <aws.lambda.events.version>3.11.0</aws.lambda.events.version>
+      <aws.java.ssm.version>2.29.35</aws.java.ssm.version>
    </properties>
 
    <profiles>
@@ -176,16 +180,39 @@
       </dependency>
 
       <!-- AWS dependencies -->
-      <dependency>
-         <groupId>software.amazon.awssdk</groupId>
-         <artifactId>ecs</artifactId>
-         <version>${aws.java.sdk.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>software.amazon.awssdk</groupId>
-         <artifactId>sso</artifactId>
-         <version>${aws.java.sdk.version}</version>
-      </dependency>
+         <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ecs</artifactId>
+            <version>${aws.java.sdk.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sso</artifactId>
+            <version>${aws.java.sdk.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ssm</artifactId>
+            <version>${aws.java.ssm.version}</version>
+         </dependency>
+
+         <!-- AWS lambda (start) -->
+         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-function-adapter-aws</artifactId>
+            <version>${aws.spring.adapter.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-core</artifactId>
+            <version>${aws.lambda.core.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-events</artifactId>
+            <version>${aws.lambda.events.version}</version>
+         </dependency>
+         <!-- AWS lambda (end) -->
 
    </dependencies>
 

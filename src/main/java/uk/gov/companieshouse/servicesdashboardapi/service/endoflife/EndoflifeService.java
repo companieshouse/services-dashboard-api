@@ -15,7 +15,7 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import org.springframework.http.ResponseEntity;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
-import uk.gov.companieshouse.servicesdashboardapi.utils.JsonMapper;
+import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
 @Service
 public class EndoflifeService {
@@ -30,7 +30,7 @@ public class EndoflifeService {
    private RestTemplate restTemplate;
 
    @Autowired
-   private JsonMapper jsonMapper;
+   private CustomJsonMapper jsonMapper;
 
    public Map<String, List<EndofLifeInfo>> fetcEndofLives() {
 

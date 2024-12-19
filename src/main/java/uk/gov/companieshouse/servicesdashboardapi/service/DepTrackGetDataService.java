@@ -17,7 +17,7 @@ public abstract class DepTrackGetDataService<T> {
    @Value("${dt.server.baseurl}")
    protected String baseUrl;
 
-   @Value("${dt.server.apikey}")
+   @Value("${dt.server.apikey.secret}")
    protected String apiKey;
 
    @Value("${dt.server.header.apikey}")

@@ -30,7 +30,7 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
    public void saveProjectInfos(List<MongoProjectInfo> mongoProjectInfoList) {
       for (MongoProjectInfo info : mongoProjectInfoList) {
             if (existsByName(info.getName())) {
-               updateVersions(info);
+               updateEntry(info);
             } else {
                mongoTemplate.insert(info, collectionName);
             }
@@ -53,7 +53,7 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
       return Optional.ofNullable(result);
    }
 
-   private void updateVersions(MongoProjectInfo newInfo) {
+   private void updateEntry(MongoProjectInfo newInfo) {
       Query query = new Query();
       query.addCriteria(Criteria.where("name").is(newInfo.getName()));
 
@@ -75,6 +75,11 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
             // Update the document with the new versions
             Update update = new Update();
             update.set("versions", existingVersions);
+
+            // Update the other fields
+            update.set("sonarKey", newInfo.getSonarKey());
+            update.set("sonarMetrics", newInfo.getSonarMetrics());
+            update.set("gitInfo", newInfo.getGitInfo());
 
             mongoTemplate.updateFirst(query, update, MongoProjectInfo.class, collectionName);
       }

@@ -21,7 +21,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.github.GitCustomProperty
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.utils.JsonMapper;
+import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 import org.springframework.http.HttpHeaders;
 
 @Service
@@ -33,7 +33,7 @@ public class GitService {
    @Value("${gh.api}")
    String api;
 
-   @Value("${gh.token}")
+   @Value("${gh.token.secret}")
    String token;
 
    @Value("${gh.org}")
@@ -43,7 +43,7 @@ public class GitService {
    String headerAccept;
 
    @Autowired
-   private JsonMapper jsonMapper;
+   private CustomJsonMapper jsonMapper;
 
    @Autowired
    private RestTemplate restTemplate;
@@ -72,11 +72,13 @@ public class GitService {
          GitCustomProperty[] properties = response.getBody();
 
          // Filter and find the value of "team-code-owner"
-         for (GitCustomProperty property : properties) {
-            if ("team-code-owner".equals(property.getPropertyName())) {
-                return property.getValue();
+         if (properties != null) {
+            for (GitCustomProperty property : properties) {
+               if ("team-code-owner".equals(property.getPropertyName())) {
+                  return property.getValue();
+               }
             }
-        }
+         }
       } catch (Exception e) {
          ApiLogger.info("Failed to retrieve Git Repo Owner " + project + ": " + e.getMessage());
       }

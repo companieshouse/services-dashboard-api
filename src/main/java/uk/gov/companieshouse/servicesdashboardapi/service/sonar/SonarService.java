@@ -18,7 +18,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import uk.gov.companieshouse.servicesdashboardapi.utils.JsonMapper;
+import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
 @Service
 public class SonarService {
@@ -26,7 +26,7 @@ public class SonarService {
     @Value("${sonar.url}")
     private String sonarUrl;
 
-    @Value("${sonar.token}")
+    @Value("${sonar.token.secret}")
     private String sonarToken;
 
     @Value("${sonar.metrics}")
@@ -42,7 +42,7 @@ public class SonarService {
     private RestTemplate restTemplate;
 
     @Autowired
-    private JsonMapper jsonMapper;
+    private CustomJsonMapper jsonMapper;
 
    private String[] getProjKeys(String project) {
       String[] projKeys = new String[2];

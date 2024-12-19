@@ -30,7 +30,7 @@ import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndoflifeSer
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
-import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
+// import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @RestController
@@ -51,8 +51,8 @@ public class ServicesDashboardController {
    @Autowired
    private GitService gitService;
 
-   @Autowired
-   private EcsService ecsService;
+   // @Autowired
+   // private EcsService ecsService;
 
    @Autowired
    private EndoflifeService endolService;
@@ -67,8 +67,34 @@ public class ServicesDashboardController {
       this.servicesDepTrack = servicesDepTrack;
   }
 
-  @GetMapping("/services-dashboard/list-services")
-  public ResponseEntity<List<ProjectInfo>> listServices( ) {
+   //   @GetMapping("/services-dashboard/ecs")
+   //   public ResponseEntity<String> sourceEcs( ) {
+   //       for (String env : awsEnvs) {
+   //          ecsService.fetchClusterInfo(env);
+   //       }
+   //       return new ResponseEntity<>("ECS ok", HttpStatus.OK);
+   //    }
+
+   @GetMapping("/services-dashboard/list-services")
+   public ResponseEntity<List<ProjectInfo>> listServices( ) {
+      Map<String, ProjectInfo> projectInfoMap = loadListServices();
+      return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
+   }
+
+   @GetMapping("/services-dashboard/endol")
+   public ResponseEntity<String> sourceEndol( ) {
+      loadListEol();
+      return new ResponseEntity<>("Endol ok", HttpStatus.OK);
+   }
+
+
+   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+   @ResponseStatus(HttpStatus.BAD_REQUEST)
+   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+         ApiLogger.info("Failure in integer conversion of Response's header total projects");
+   }
+
+   private Map<String, ProjectInfo> loadListServices( ) {
       ApiLogger.info("---------list-services START");
       List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
 
@@ -89,39 +115,31 @@ public class ServicesDashboardController {
          System.out.println(projectInfo);
       });
 
-      for (String env : awsEnvs) {
-         ecsService.fetchClusterInfo(env);
-      }
+      // this is now done by https://github.com/companieshouse/services-dashboard-ecs
+      // for (String env : awsEnvs) {
+      //    ecsService.fetchClusterInfo(env);
+      // }
 
       servicesDashboardService.createServicesDashboard();
 
       ApiLogger.info("---------list-services END");
-      return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
-  }
-  @GetMapping("/services-dashboard/ecs")
-  public ResponseEntity<String> sourceEcs( ) {
-      for (String env : awsEnvs) {
-         ecsService.fetchClusterInfo(env);
-      }
-      return new ResponseEntity<>("ECS ok", HttpStatus.OK);
+      return projectInfoMap;
    }
-   @GetMapping("/services-dashboard/endol")
-   public ResponseEntity<String> sourceEndol( ) {
+
+   private void loadListEol( ) {
       Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();
       ConfigInfo configInfo = new ConfigInfo ();
       configInfo.setEndol(endolMap);
       MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
       customMongoConfigRepository.saveConfigInfo(mongoConfigInfo);
-
-      return new ResponseEntity<>("Endol ok", HttpStatus.OK);
    }
-   
 
-   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-   @ResponseStatus(HttpStatus.BAD_REQUEST)
-   public void handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-         ApiLogger.info("Failure in integer conversion of Response's header total projects");
+   // when triggered by a scheduler/lambda, load both lists
+   public void loadAllInfo( ) {
+      Map<String, ProjectInfo> projectInfoMap = loadListServices();
+      loadListEol();
    }
+
 }
 
 
