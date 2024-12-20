@@ -18,7 +18,7 @@ locals {
   # Generate SSM secret names from vault names & appending ".secret" suffix
   ssm_secrets = {
     for k, v in local.vault_secrets :
-    "${k}.secret" => nonsensitive(v)
+    "${k}.secret" => v
   }
 
   # Generate a map of secrets that are 'not sensitive' (as otherwise I cannot use this map
@@ -27,11 +27,11 @@ locals {
     for k, v in local.ssm_secrets :
     k => nonsensitive(v)
   }
-  ssm_xxx_keys = {
-    for k in keys(local.ssm_secrets_nonsensitive) :
-    k => k
-    # k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
-  }
+
+  ssm_secret_keys = nonsensitive(tomap({
+    for k in keys(local.ssm_secrets) :
+    nonsensitive(k) => (can(nonsensitive(k)) ? nonsensitive(k) : k)
+  }))
   # MONGO SETTINGS
   mongo_protocol = "mongodb+srv"
   mongo_dbname   = "services_dashboard"
