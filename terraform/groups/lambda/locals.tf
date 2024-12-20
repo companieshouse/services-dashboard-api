@@ -19,14 +19,14 @@ locals {
   ssm_secrets = {
     for k, v in local.vault_secrets :
     # "${k}.secret" => v
-    "${k}.secret" => nonsensitive(v)
+    "${k}.secret" => sensitive(v)
   }
 
   # Generate a map of secrets that are 'not sensitive' (as otherwise I cannot use this map
   # because Terraform does not allow sensitive values to be used in a "for_each" expression)
-  # ssm_secrets_non_sensitive = {
-  #   for k, v in local.ssm_secrets : k => nonsensitive(v)
-  # }
+  ssm_secrets_non_sensitive = {
+    for k, v in local.ssm_secrets : k => nonsensitive(v)
+  }
   # MONGO SETTINGS
   mongo_protocol = "mongodb+srv"
   mongo_dbname   = "services_dashboard"
