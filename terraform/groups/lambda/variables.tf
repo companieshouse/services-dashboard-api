@@ -22,26 +22,11 @@ variable "environment" {
 
 variable "release_bucket_name" {
   type        = string
-  description = "The name of the S3 bucket containing the release artefact for the Lambda function"
+  description = "The name of the S3 bucket containing the release artifact for the Lambda function"
 }
 variable "release_artifact_key" {
   type        = string
   description = "Key of the Lambda code object in the S3 bucket"
-}
-
-variable "network_state_bucket_name" {
-  type        = string
-  description = "The name of the S3 bucket containing the application network remote state"
-}
-
-variable "network_state_bucket_key" {
-  type        = string
-  description = "The key name used when constructing the path to the application network remote state in the S3 bucket"
-}
-
-variable "services_dashboard_api_version" {
-  type        = string
-  description = "The version of the services dashboard api container to run."
 }
 
 # ---------------- OPTIONAL VARIABLES ----------------

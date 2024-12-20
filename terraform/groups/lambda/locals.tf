@@ -1,7 +1,6 @@
 locals {
 
-  docker_repo          = "services-dashboard-api"
-  service_name         = local.docker_repo
+  service_name         = "services-dashboard-api"
   lambda_function_name = "${local.service_name}-${var.environment}"
   ssm_prefix           = "/${lambda_function_name}"
 
