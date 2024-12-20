@@ -3,7 +3,6 @@
 variable "github_read_token" {
   type        = string
   description = "GitHub access token to read repos' info from both 'repo' or 'public_repo' scopes"
-  default     = "TEMP_VAR_UNTIL_IT_IS_CREATED"
 }
 
 variable "aws_profile" {
