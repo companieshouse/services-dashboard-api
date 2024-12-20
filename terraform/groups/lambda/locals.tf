@@ -24,9 +24,13 @@ locals {
 
   # Generate a map of secrets that are 'not sensitive' (as otherwise I cannot use this map
   # because Terraform does not allow sensitive values to be used in a "for_each" expression)
-  ssm_secrets_non_sensitive = {
+  ssm_secrets_nonsensitive = {
     for k, v in local.ssm_secrets :
     k => (can(nonsensitive(v)) ? nonsensitive(v) : v)
+  }
+  ssm_secrets_keys = {
+    for k in keys(local.ssm_secrets_nonsensitive) :
+    k => k
   }
   # MONGO SETTINGS
   mongo_protocol = "mongodb+srv"

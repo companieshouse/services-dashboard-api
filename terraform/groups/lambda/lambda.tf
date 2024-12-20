@@ -21,10 +21,10 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 
 # SSM Parameters
 resource "aws_ssm_parameter" "secrets" {
-  for_each = local.ssm_secrets_non_sensitive
+   for_each = local.ssm_secrets_keys
 
   name  = "${local.ssm_prefix}/${each.key}"
-  value = each.value
+  value = local.ssm_secrets_nonsensitive[each.key]
   type  = "SecureString"
 }
 
