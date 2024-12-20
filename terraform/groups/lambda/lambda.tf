@@ -24,7 +24,7 @@ resource "aws_ssm_parameter" "secrets" {
   for_each = local.ssm_secret_keys
 
   name  = "${local.ssm_prefix}/${each.key}"
-  value = local.ssm_secrets_nonsensitive[each.key]
+  value = local.ssm_secrets[each.key]
   type  = "SecureString"
 }
 
