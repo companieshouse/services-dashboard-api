@@ -2,7 +2,7 @@ locals {
 
   service_name         = "services-dashboard-api"
   lambda_function_name = "${local.service_name}-${var.environment}"
-  ssm_prefix           = "/${lambda_function_name}"
+  ssm_prefix           = "/${local.lambda_function_name}"
 
   # Secrets
   stack_secrets   = jsondecode(data.vault_generic_secret.stack_secrets.data_json)
