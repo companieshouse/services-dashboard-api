@@ -18,7 +18,7 @@ locals {
   # Generate SSM secret names from vault names & appending ".secret" suffix
   ssm_secrets = {
     for k, v in local.vault_secrets :
-    k + ".secret" => v
+    "${k}.secret" => v
   }
 
   # MONGO SETTINGS
