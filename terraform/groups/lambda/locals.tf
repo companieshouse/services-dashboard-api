@@ -28,7 +28,7 @@ locals {
     for k, v in local.ssm_secrets :
     k => (can(nonsensitive(v)) ? nonsensitive(v) : v)
   }
-  ssm_secrets_keys = {
+  ssm_xxx_keys = {
     for k in keys(local.ssm_secrets_nonsensitive) :
     k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
   }
