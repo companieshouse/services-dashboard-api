@@ -18,19 +18,19 @@ locals {
   # Generate SSM secret names from vault names & appending ".secret" suffix
   ssm_secrets = {
     for k, v in local.vault_secrets :
-    "${k}.secret" => v
-    # "${k}.secret" => sensitive(v)
+    "${k}.secret" => nonsensitive(v)
   }
 
   # Generate a map of secrets that are 'not sensitive' (as otherwise I cannot use this map
   # because Terraform does not allow sensitive values to be used in a "for_each" expression)
   ssm_secrets_nonsensitive = {
     for k, v in local.ssm_secrets :
-    k => (can(nonsensitive(v)) ? nonsensitive(v) : v)
+    k => nonsensitive(v)
   }
   ssm_xxx_keys = {
     for k in keys(local.ssm_secrets_nonsensitive) :
-    k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
+    k => k
+    # k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
   }
   # MONGO SETTINGS
   mongo_protocol = "mongodb+srv"
@@ -38,5 +38,19 @@ locals {
 
   # DEPENDENCY-TRACK SETTINGS
   dt_server_baseurl = "https://dependency-track.companieshouse.gov.uk"
+}
 
+output "debug_ssm_secrets" {
+  value       = local.ssm_secrets
+  sensitive   = false
+}
+
+output "debug_ssm_secrets_nonsensitive" {
+  value       = local.ssm_secrets_nonsensitive
+  sensitive   = false
+}
+
+output "debug_ssm_xxx_keys" {
+  value       = local.ssm_xxx_keys
+  sensitive   = false
 }
