@@ -21,7 +21,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 
 # SSM Parameters
 resource "aws_ssm_parameter" "secrets" {
-  for_each = local.ssm_secret_keys
+  for_each = local.ssm_secret_keys    # Use the cleared/nonsensitive map to loop over the keys
 
   name  = "${local.ssm_prefix}/${each.key}"
   value = local.ssm_secrets[each.key]

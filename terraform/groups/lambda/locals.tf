@@ -21,13 +21,11 @@ locals {
     "${k}.secret" => v
   }
 
-  # Generate a map of secrets that are 'not sensitive' (as otherwise I cannot use this map
-  # because Terraform does not allow sensitive values to be used in a "for_each" expression)
-  ssm_secrets_nonsensitive = {
-    for k, v in local.ssm_secrets :
-    k => v
-  }
-
+  # The map 'ssm_secrets' cannot be used directly in a for_each loop because
+  # Terraform does not allow loops with sensitive values.
+  # Terraform’s sensitivity propagation continues with nested or derived values.
+  # A working solution is to use a "cleared" map with the same keys but with nonsensitive values
+  # then loop on the cleared map and access the sensitive values using the key.
   ssm_secret_keys = nonsensitive(tomap({
     for k in keys(local.ssm_secrets) :
     k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
