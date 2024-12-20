@@ -25,7 +25,7 @@ locals {
   # because Terraform does not allow sensitive values to be used in a "for_each" expression)
   ssm_secrets_nonsensitive = {
     for k, v in local.ssm_secrets :
-    k => nonsensitive(v)
+    k => v
   }
 
   ssm_secret_keys = nonsensitive(tomap({
