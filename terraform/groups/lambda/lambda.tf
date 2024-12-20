@@ -1,6 +1,5 @@
 
 # Create an IAM role for the Lambda function
-
 resource "aws_iam_role" "lambda_execution_role" {
   name               = "${local.lambda_function_name}-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_trust.json
@@ -22,7 +21,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 
 # SSM Parameters
 resource "aws_ssm_parameter" "secrets" {
-  for_each = local.ssm_secrets
+  for_each = local.ssm_secrets_non_sensitive
 
   name  = "${local.ssm_prefix}/${each.key}"
   value = each.value
