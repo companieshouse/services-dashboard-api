@@ -11,11 +11,6 @@ variable "aws_profile" {
   description = "The AWS profile name; used as a prefix for Vault secrets"
 }
 
-variable "aws_region" {
-  type        = string
-  description = "The AWS region in which resources will be created"
-}
-
 variable "environment" {
   type        = string
   description = "The environment name to be used when creating AWS resources"
@@ -36,6 +31,12 @@ variable "aws_account" {
   description = "The AWS account name"
   default     = "development"
 }
+variable "aws_region" {
+  type        = string
+  description = "The AWS region in which resources will be created"
+  default     = "eu-west-2"
+}
+
 
 variable "lambda_runtime" {
   type        = string
