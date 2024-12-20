@@ -40,17 +40,17 @@ locals {
   dt_server_baseurl = "https://dependency-track.companieshouse.gov.uk"
 }
 
-output "debug_ssm_secrets" {
-  value       = local.ssm_secrets
-  sensitive   = false
-}
+# output "debug_ssm_secrets" {
+#   value       = local.ssm_secrets
+#   sensitive   = false
+# }
 
-output "debug_ssm_secrets_nonsensitive" {
-  value       = local.ssm_secrets_nonsensitive
-  sensitive   = false
-}
+# output "debug_ssm_secrets_nonsensitive" {
+#   value       = local.ssm_secrets_nonsensitive
+#   sensitive   = false
+# }
 
-output "debug_ssm_xxx_keys" {
-  value       = local.ssm_secret_keys
-  sensitive   = false
-}
+# output "debug_ssm_xxx_keys" {
+#   value       = local.ssm_secret_keys
+#   sensitive   = false
+# }
