@@ -51,6 +51,6 @@ output "debug_ssm_secrets_nonsensitive" {
 }
 
 output "debug_ssm_xxx_keys" {
-  value       = local.ssm_xxx_keys
+  value       = local.ssm_secret_keys
   sensitive   = false
 }
