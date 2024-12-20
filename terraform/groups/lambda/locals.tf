@@ -30,7 +30,7 @@ locals {
   }
   ssm_secrets_keys = {
     for k in keys(local.ssm_secrets_nonsensitive) :
-    k => k
+    k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
   }
   # MONGO SETTINGS
   mongo_protocol = "mongodb+srv"
