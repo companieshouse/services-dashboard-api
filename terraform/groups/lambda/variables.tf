@@ -1,10 +1,5 @@
 
 # ---------------- MANDATORY VARIABLES ----------------
-variable "github_read_token" {
-  type        = string
-  description = "GitHub access token to read repos' info from both 'repo' or 'public_repo' scopes"
-}
-
 variable "aws_profile" {
   type        = string
   description = "The AWS profile name; used as a prefix for Vault secrets"
