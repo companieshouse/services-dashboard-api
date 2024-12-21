@@ -223,7 +223,8 @@
                <artifactId>spring-boot-maven-plugin</artifactId>
                <version>${spring-boot-maven-plugin.version}</version>
                <configuration>
-                  <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
+                  <skip>true</skip>     <!-- skip (to create a fat jar suitable for AWS Lambda) -->
+                  <!-- <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass> -->
                </configuration>
                <executions>
                   <execution>
