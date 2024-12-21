@@ -223,8 +223,9 @@
                <artifactId>spring-boot-maven-plugin</artifactId>
                <version>${spring-boot-maven-plugin.version}</version>
                <configuration>
-                  <!-- <skip>true</skip> -->
                   <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
+                  <layout>NONE</layout> <!-- Use plain JAR layout (suitable for AWS lambda, which expects calsses to be in /
+                                             instead of nested in the Spring boot structure: BOOT-INF/)-->
                </configuration>
                <executions>
                   <execution>
