@@ -18,9 +18,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 
 @Mapper
 public interface MergeInfoMapper {
-   MergeInfoMapper INSTANCE = Mappers.getMapper(MergeInfoMapper.class);
-
-// public interface DepTrackProjectMapper {
+    MergeInfoMapper INSTANCE = Mappers.getMapper(MergeInfoMapper.class);
 
     @Mappings({
         @Mapping(source = "tags", target = "lang", qualifiedByName = "extractLang"),

@@ -16,12 +16,10 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackMetricsInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoGitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoGitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoMetricsInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
@@ -39,7 +37,7 @@ public interface ProjectInfoMapper {
     List<MongoVersionInfo> mapVersionInfoList(List<VersionInfo> versionInfoList);
 
     // Map each VersionInfo to MongoVersionInfo
-       // Custom mapping metrics & Long to Date
+    // Custom mapping metrics & Long to Date
    @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
    @Mapping(source = "depTrackMetrics", target = "metrics")
     MongoVersionInfo mapVersionInfoToMongoVersionInfo(VersionInfo versionInfo);

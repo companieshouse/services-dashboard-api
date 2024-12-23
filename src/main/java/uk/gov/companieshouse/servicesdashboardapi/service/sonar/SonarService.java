@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 

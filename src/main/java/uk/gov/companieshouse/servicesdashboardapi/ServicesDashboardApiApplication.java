@@ -33,7 +33,7 @@ public class ServicesDashboardApiApplication {
     return event -> {
       if (event.getAction().equals("loadAllInfo")) {
         servicesController.loadAllInfo();
-        System.out.println("loadAllInfo");
+        ApiLogger.info("loadAllInfo");
       }
       return null;
     };

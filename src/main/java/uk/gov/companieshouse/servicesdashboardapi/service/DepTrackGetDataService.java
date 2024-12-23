@@ -47,7 +47,7 @@ public abstract class DepTrackGetDataService<T> {
    }
 
    public String setUri(List<Map.Entry<String, String>> queryParams) {
-      UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.baseUrl + this.endPoint);
+      UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(this.baseUrl + this.endPoint);
 
       for (Map.Entry<String, String> param : queryParams) {
           builder.queryParam(param.getKey(), param.getValue());

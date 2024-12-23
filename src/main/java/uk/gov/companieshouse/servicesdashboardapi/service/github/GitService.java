@@ -16,13 +16,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitCustomProperty;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
-import org.springframework.http.HttpHeaders;
 
 @Service
 public class GitService {

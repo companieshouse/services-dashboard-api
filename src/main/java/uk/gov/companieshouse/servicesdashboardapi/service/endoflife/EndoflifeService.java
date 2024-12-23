@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-
-import org.springframework.http.ResponseEntity;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
