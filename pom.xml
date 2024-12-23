@@ -26,35 +26,48 @@
 
       <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
       <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-      <!-- <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version> -->
-      <!-- <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version> -->
+      <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
       <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
-
-      <!-- <dependency-track-client.version>1.0.1</dependency-track-client.version> -->
 
       <aws.java.sdk.version>2.29.36</aws.java.sdk.version>
       <aws.lambda.core.version>1.2.2</aws.lambda.core.version>
       <aws.lambda.events.version>3.11.0</aws.lambda.events.version>
 
       <aws.spring.adapter.version>4.2.0</aws.spring.adapter.version>
-      <!-- <spring-cloud-function.version>4.2.0</spring-cloud-function.version> -->
 
       <aws.java.ssm.version>2.29.35</aws.java.ssm.version>
    </properties>
 
    <profiles>
       <profile>
-            <id>sonar-pr-analysis</id>
-            <properties>
-               <sonar.pullrequest.base>main</sonar.pullrequest.base>
-            </properties>
+            <id>local</id>
+            <build>
+               <plugins>
+                  <!-- Package -->
+                  <plugin>
+                     <groupId>org.springframework.boot</groupId>
+                     <artifactId>spring-boot-maven-plugin</artifactId>
+                     <version>${spring-boot-maven-plugin.version}</version>
+                     <configuration>
+                        <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
+                     </configuration>
+                     <executions>
+                        <execution>
+                              <goals>
+                                 <goal>repackage</goal>
+                              </goals>
+                        </execution>
+                     </executions>
+                  </plugin>
+               </plugins>
+            </build>
       </profile>
       <profile>
             <id>lambda</id>
             <activation>
                <activeByDefault>true</activeByDefault>
             </activation>
-            <!-- <dependencies>
+            <dependencies>
                   <dependency>
                         <groupId>com.amazonaws</groupId>
                         <artifactId>aws-lambda-java-core</artifactId>
@@ -65,13 +78,56 @@
                         <artifactId>aws-lambda-java-events</artifactId>
                         <version>${aws.lambda.events.version}</version>
                   </dependency>
-                   Spring Cloud Function Adapter for AWS Lambda
+                   <!-- Spring Cloud Function Adapter for AWS Lambda -->
                   <dependency>
                      <groupId>org.springframework.cloud</groupId>
                      <artifactId>spring-cloud-function-adapter-aws</artifactId>
                      <version>${aws.spring.adapter.version}</version>
                   </dependency>
-            </dependencies> -->
+            </dependencies>
+            <build>
+               <plugins>
+                  <!-- Package -->
+                  <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>${spring-boot-maven-plugin.version}</version>
+                        <configuration>
+                           <layers>false</layers>
+                        </configuration>
+                  </plugin>
+
+                  <!-- Maven Shade Plugin (for Lambda JAR 'shade' layout)-->
+                  <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>${maven-shade-plugin.version}</version>
+                        <executions>
+                           <execution>
+                              <phase>package</phase>
+                              <goals>
+                                    <goal>shade</goal>
+                              </goals>
+                              <configuration>
+                                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                                    <transformers>
+                                       <!-- main class in MANIFEST.MF  -->
+                                       <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                          <mainClass>org.springframework.cloud.function.adapter.aws.FunctionInvoker</mainClass>
+                                       </transformer>
+                                    </transformers>
+                              </configuration>
+                           </execution>
+                        </executions>
+                  </plugin>
+               </plugins>
+            </build>
+      </profile>
+      <profile>
+            <id>sonar-pr-analysis</id>
+            <properties>
+               <sonar.pullrequest.base>main</sonar.pullrequest.base>
+            </properties>
       </profile>
 
    </profiles>
@@ -190,24 +246,6 @@
             <scope>test</scope>
       </dependency>
 
-
-                  <dependency>
-                        <groupId>com.amazonaws</groupId>
-                        <artifactId>aws-lambda-java-core</artifactId>
-                        <version>${aws.lambda.core.version}</version>
-                  </dependency>
-                  <dependency>
-                        <groupId>com.amazonaws</groupId>
-                        <artifactId>aws-lambda-java-events</artifactId>
-                        <version>${aws.lambda.events.version}</version>
-                  </dependency>
-                  <!-- Spring Cloud Function Adapter for AWS Lambda -->
-                  <dependency>
-                     <groupId>org.springframework.cloud</groupId>
-                     <artifactId>spring-cloud-function-adapter-aws</artifactId>
-                     <version>${aws.spring.adapter.version}</version>
-                  </dependency>
-
    </dependencies>
 
    <build>
@@ -230,80 +268,6 @@
                </configuration>
             </plugin>
 
-            <!-- Package -->
-            <plugin>
-               <groupId>org.springframework.boot</groupId>
-               <artifactId>spring-boot-maven-plugin</artifactId>
-               <version>${spring-boot-maven-plugin.version}</version>
-               <configuration>
-                  <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
-               </configuration>
-               <executions>
-                  <execution>
-                        <goals>
-                           <goal>repackage</goal>
-                        </goals>
-                  </execution>
-               </executions>
-            </plugin>
-            <!-- <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-shade-plugin</artifactId>
-               <version>${maven-shade-plugin.version}</version>
-               <executions>
-                  <execution>
-                        <phase>package</phase>
-                        <goals>
-                           <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                           <createDependencyReducedPom>false</createDependencyReducedPom>
-                           <filters>
-                              <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                       <exclude>META-INF/*.SF</exclude>
-                                       <exclude>META-INF/*.DSA</exclude>
-                                       <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                              </filter>
-                           </filters>
-                           <transformers>
-                              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.springframework.cloud.function.adapter.aws.FunctionInvoker</mainClass>
-                              </transformer>
-                           </transformers>
-                        </configuration>
-                  </execution>
-               </executions>
-            </plugin> -->
-            <!-- <plugin> -->
-                <!-- <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven-assembly-plugin.version}</version>
-                <configuration> -->
-                    <!-- get all project dependencies -->
-                    <!-- <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive> -->
-                        <!-- needed for test harness as runnable JAR -->
-                        <!-- <manifest>
-                            <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id> -->
-                        <!-- bind to the packaging phase -->
-                        <!-- <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
       </plugins>
    </build>
 </project>
