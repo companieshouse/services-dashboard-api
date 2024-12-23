@@ -1,3 +1,8 @@
+//====================================================================
+// this service is no more used as this is done by
+// https://github.com/companieshouse/services-dashboard-ecs
+//====================================================================
+/*
 package uk.gov.companieshouse.servicesdashboardapi.service.aws;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,3 +146,4 @@ import java.util.regex.Pattern;
       }
    }
 }
+*/

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>uk.gov.companieshouse</groupId>
@@ -12,22 +13,32 @@
    <version>unversioned</version>
    <name>services-dashboard-api</name>
    <description>Services Dashboard API</description>
+
    <properties>
       <java.version>21</java.version>
-      <log4j.version>2.17.2</log4j.version>
-      <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-      <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-      <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
-      <sonar.java.binaries>${project.basedir}/target,${project.basedir}/target/*</sonar.java.binaries>
-      <spring-boot-dependencies.version>3.2.4</spring-boot-dependencies.version>
-      <spring-boot-maven-plugin.version>3.2.4</spring-boot-maven-plugin.version>
+
+      <log4j.version>2.24.3</log4j.version>
       <structured-logging.version>2.0.3</structured-logging.version>
-      <jackson-databind.version>2.16.1</jackson-databind.version>
-      <dependency-track-client.version>1.0.1</dependency-track-client.version>
+      <jackson-databind.version>2.18.2</jackson-databind.version>
+      <org.mapstruct.version>1.6.3</org.mapstruct.version>
+      <sonar.java.binaries>${project.basedir}/target,${project.basedir}/target/*</sonar.java.binaries>
+      <spring-boot-dependencies.version>3.4.1</spring-boot-dependencies.version>
+
+      <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
+      <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+      <!-- <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version> -->
+      <!-- <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version> -->
+      <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
+
+      <!-- <dependency-track-client.version>1.0.1</dependency-track-client.version> -->
+
       <aws.java.sdk.version>2.29.36</aws.java.sdk.version>
-      <aws.spring.adapter.version>4.0.2</aws.spring.adapter.version>
       <aws.lambda.core.version>1.2.2</aws.lambda.core.version>
       <aws.lambda.events.version>3.11.0</aws.lambda.events.version>
+
+      <aws.spring.adapter.version>4.2.0</aws.spring.adapter.version>
+      <!-- <spring-cloud-function.version>4.2.0</spring-cloud-function.version> -->
+
       <aws.java.ssm.version>2.29.35</aws.java.ssm.version>
    </properties>
 
@@ -38,6 +49,31 @@
                <sonar.pullrequest.base>main</sonar.pullrequest.base>
             </properties>
       </profile>
+      <profile>
+            <id>lambda</id>
+            <activation>
+               <activeByDefault>true</activeByDefault>
+            </activation>
+            <!-- <dependencies>
+                  <dependency>
+                        <groupId>com.amazonaws</groupId>
+                        <artifactId>aws-lambda-java-core</artifactId>
+                        <version>${aws.lambda.core.version}</version>
+                  </dependency>
+                  <dependency>
+                        <groupId>com.amazonaws</groupId>
+                        <artifactId>aws-lambda-java-events</artifactId>
+                        <version>${aws.lambda.events.version}</version>
+                  </dependency>
+                   Spring Cloud Function Adapter for AWS Lambda
+                  <dependency>
+                     <groupId>org.springframework.cloud</groupId>
+                     <artifactId>spring-cloud-function-adapter-aws</artifactId>
+                     <version>${aws.spring.adapter.version}</version>
+                  </dependency>
+            </dependencies> -->
+      </profile>
+
    </profiles>
 
    <repositories>
@@ -72,14 +108,25 @@
             </dependency>
       </dependencies>
    </dependencyManagement>
+
    <dependencies>
+      <!-- Spring * (start)-->
+      <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+      </dependency>
 
       <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- <exclusions>
+               <exclusion>
+                     <groupId>org.springframework.boot</groupId>
+                     <artifactId>spring-boot-starter-tomcat</artifactId>
+               </exclusion>
+            </exclusions> -->
       </dependency>
-
-      <dependency>
+      <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
       </dependency>
@@ -87,12 +134,7 @@
       <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-      </dependency>
-
-      <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-      </dependency>
+      </dependency> -->
 
       <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,23 +152,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
       </dependency>
+      <!-- Spring * (end)-->
 
       <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
-      </dependency>
-
-      <dependency>
-            <groupId>org.owasp.encoder</groupId>
-            <artifactId>encoder</artifactId>
-            <version>1.2.3</version>
-      </dependency>
-
-      <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
       </dependency>
 
       <dependency>
@@ -141,31 +172,11 @@
             </exclusions>
       </dependency>
 
-      <dependency>
+      <!-- <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-      </dependency>
-
-      <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>5.2.0</version>
-            <scope>test</scope>
-      </dependency>
-
-      <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-      </dependency>
-
-      <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
-      </dependency>
+            <version>3.17.0</version>
+      </dependency> -->
 
       <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -173,68 +184,70 @@
             <version>${jackson-databind.version}</version>
       </dependency>
 
-      <dependency>
+      <!-- Dependency Track -->
+      <!-- <dependency>
             <groupId>org.dependencytrack</groupId>
             <artifactId>public-api-java</artifactId>
             <version>${dependency-track-client.version}</version>
-      </dependency>
+      </dependency> -->
 
       <!-- AWS dependencies -->
-         <dependency>
+      <!-- <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>ecs</artifactId>
             <version>${aws.java.sdk.version}</version>
-         </dependency>
-         <dependency>
+      </dependency> -->
+      <!-- <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sso</artifactId>
             <version>${aws.java.sdk.version}</version>
-         </dependency>
-         <dependency>
+      </dependency> -->
+      <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>ssm</artifactId>
             <version>${aws.java.ssm.version}</version>
-         </dependency>
+      </dependency>
 
-         <!-- AWS lambda (start) -->
-         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-function-adapter-aws</artifactId>
-            <version>${aws.spring.adapter.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-lambda-java-core</artifactId>
-            <version>${aws.lambda.core.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-lambda-java-events</artifactId>
-            <version>${aws.lambda.events.version}</version>
-         </dependency>
-         <!-- AWS lambda (end) -->
+      <!-- Unit test -->
+      <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+      </dependency>
+
+      <!-- Sonar -->
+      <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+            <scope>test</scope>
+      </dependency>
+
+
+                  <dependency>
+                        <groupId>com.amazonaws</groupId>
+                        <artifactId>aws-lambda-java-core</artifactId>
+                        <version>${aws.lambda.core.version}</version>
+                  </dependency>
+                  <dependency>
+                        <groupId>com.amazonaws</groupId>
+                        <artifactId>aws-lambda-java-events</artifactId>
+                        <version>${aws.lambda.events.version}</version>
+                  </dependency>
+                  <!-- Spring Cloud Function Adapter for AWS Lambda -->
+                  <dependency>
+                     <groupId>org.springframework.cloud</groupId>
+                     <artifactId>spring-cloud-function-adapter-aws</artifactId>
+                     <version>${aws.spring.adapter.version}</version>
+                  </dependency>
+
 
    </dependencies>
 
    <build>
       <plugins>
-            <plugin>
-               <groupId>org.springframework.boot</groupId>
-               <artifactId>spring-boot-maven-plugin</artifactId>
-               <version>${spring-boot-maven-plugin.version}</version>
-               <configuration>
-                  <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
-                  <layout>NONE</layout> <!-- Use plain JAR layout (suitable for AWS lambda, which expects calsses to be in /
-                                             instead of nested in the Spring boot structure: BOOT-INF/)-->
-               </configuration>
-               <executions>
-                  <execution>
-                        <goals>
-                           <goal>repackage</goal>
-                        </goals>
-                  </execution>
-               </executions>
-            </plugin>
+            <!-- Compile -->
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-compiler-plugin</artifactId>
@@ -251,7 +264,81 @@
                   </annotationProcessorPaths>
                </configuration>
             </plugin>
+
+            <!-- Package -->
+            <plugin>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-maven-plugin</artifactId>
+               <version>${spring-boot-maven-plugin.version}</version>
+               <configuration>
+                  <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
+               </configuration>
+               <executions>
+                  <execution>
+                        <goals>
+                           <goal>repackage</goal>
+                        </goals>
+                  </execution>
+               </executions>
+            </plugin>
+            <!-- <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-shade-plugin</artifactId>
+               <version>${maven-shade-plugin.version}</version>
+               <executions>
+                  <execution>
+                        <phase>package</phase>
+                        <goals>
+                           <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                           <createDependencyReducedPom>false</createDependencyReducedPom>
+                           <filters>
+                              <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                       <exclude>META-INF/*.SF</exclude>
+                                       <exclude>META-INF/*.DSA</exclude>
+                                       <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                              </filter>
+                           </filters>
+                           <transformers>
+                              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.springframework.cloud.function.adapter.aws.FunctionInvoker</mainClass>
+                              </transformer>
+                           </transformers>
+                        </configuration>
+                  </execution>
+               </executions>
+            </plugin> -->
+            <!-- <plugin> -->
+                <!-- <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <configuration> -->
+                    <!-- get all project dependencies -->
+                    <!-- <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive> -->
+                        <!-- needed for test harness as runnable JAR -->
+                        <!-- <manifest>
+                            <mainClass>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> -->
+                        <!-- bind to the packaging phase -->
+                        <!-- <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> -->
       </plugins>
    </build>
-
 </project>

@@ -13,7 +13,7 @@ public class ProjectInfo {
    private String sonarKey;
    private Map<String, Integer> sonarMetrics;
    private GitInfo gitInfo;
-   private Map<String, Set<String>> ecs;
+   // private Map<String, Set<String>> ecs;
 
 
    // Getters and setters
@@ -61,13 +61,13 @@ public class ProjectInfo {
       this.gitInfo = gitInfo;
    }
 
-   public Map<String, Set<String>> getEcs() {
-      return ecs;
-   }
+   // public Map<String, Set<String>> getEcs() {
+   //    return ecs;
+   // }
 
-   public void setEcs(Map<String, Set<String>> ecs) {
-         this.ecs = ecs;
-   }
+   // public void setEcs(Map<String, Set<String>> ecs) {
+   //       this.ecs = ecs;
+   // }
 
    @Override
    public String toString() {
