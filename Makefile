@@ -1,6 +1,6 @@
 artifact_name := services-dashboard-api
 version       := unversioned
-profile       ?= lambda
+profile       ?= local
 
 .PHONY: clean
 clean:

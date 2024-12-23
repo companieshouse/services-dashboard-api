@@ -21,13 +21,14 @@
       <structured-logging.version>2.0.3</structured-logging.version>
       <jackson-databind.version>2.18.2</jackson-databind.version>
       <org.mapstruct.version>1.6.3</org.mapstruct.version>
-      <sonar.java.binaries>${project.basedir}/target,${project.basedir}/target/*</sonar.java.binaries>
       <spring-boot-dependencies.version>3.4.1</spring-boot-dependencies.version>
 
       <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
       <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
       <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
-      <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
+
+      <!-- <sonar.java.binaries>${project.basedir}/target,${project.basedir}/target/*</sonar.java.binaries>
+      <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version> -->
 
       <aws.java.sdk.version>2.29.36</aws.java.sdk.version>
       <aws.lambda.core.version>1.2.2</aws.lambda.core.version>
@@ -123,12 +124,12 @@
                </plugins>
             </build>
       </profile>
-      <profile>
+      <!-- <profile>
             <id>sonar-pr-analysis</id>
             <properties>
                <sonar.pullrequest.base>main</sonar.pullrequest.base>
             </properties>
-      </profile>
+      </profile> -->
 
    </profiles>
 
@@ -239,12 +240,12 @@
       </dependency>
 
       <!-- Sonar -->
-      <dependency>
+      <!-- <dependency>
             <groupId>org.sonarsource.scanner.maven</groupId>
             <artifactId>sonar-maven-plugin</artifactId>
             <version>${sonar-maven-plugin.version}</version>
             <scope>test</scope>
-      </dependency>
+      </dependency> -->
 
    </dependencies>
 
