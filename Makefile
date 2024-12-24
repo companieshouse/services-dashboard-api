@@ -37,7 +37,6 @@ endif
 	$(info Packaging version: $(version))
 	mvn versions:set  -P $(profile) -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package  -P $(profile) -DskipTests=true
-	# cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name)-$(version).zip
 	cp ./target/$(artifact_name)-$(version).jar ./$(artifact_name)-$(version).zip
 
 .PHONY: dist
