@@ -56,7 +56,6 @@ resource "aws_lambda_function" "java_lambda" {
       MONGODB_PROTOCOL  = local.mongo_protocol
       MONGODB_DBNAME    = local.mongo_dbname
       DT_SERVER_BASEURL = local.dt_server_baseurl
-      MAIN_CLASS        = var.lambda_handler_name
     }
   }
 

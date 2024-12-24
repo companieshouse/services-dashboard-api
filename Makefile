@@ -17,7 +17,6 @@ build:
 	@echo "Running build"
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -Dmaven.test.skip=true
-	cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name).jar
 	cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name)-$(version).jar
 	@echo "Finished build"
 
