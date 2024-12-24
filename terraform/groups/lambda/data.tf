@@ -23,6 +23,22 @@ data "aws_iam_policy_document" "lambda_trust" {
   }
 }
 
+# allow to write logs to CloudWatch
+data "aws_iam_policy_document" "lambda_policy" {
+  statement {
+    sid    = "AllowLambdaToWriteLogs"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = [
+      "arn:aws:logs:*:*:*"
+    ]
+  }
+}
+
 # Policy to allow Lambda to access SSM Parameter Store
 data "aws_iam_policy_document" "ssm_access_policy" {
   statement {

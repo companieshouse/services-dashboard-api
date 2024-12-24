@@ -5,6 +5,15 @@ resource "aws_iam_role" "lambda_execution_role" {
   assume_role_policy = data.aws_iam_policy_document.lambda_trust.json
 }
 
+# Create a policy to attach to the IAM role for the Lambda function
+resource "aws_iam_role_policy" "lambda_execution_role_policy" {
+  name = "${local.lambda_function_name}-log-policy"
+  role = aws_iam_role.lambda_execution_role.id
+
+  policy = data.aws_iam_policy_document.lambda_policy.json
+}
+
+
 # Create a policy to allow Lambda to access SSM Parameter Store
 resource "aws_iam_policy" "ssm_access_policy" {
   name        = "${local.lambda_function_name}-access-policy"
@@ -21,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 
 # SSM Parameters
 resource "aws_ssm_parameter" "secrets" {
-  for_each = local.ssm_secret_keys    # Use the cleared/nonsensitive map to loop over the keys
+  for_each = local.ssm_secret_keys # Use the cleared/nonsensitive map to loop over the keys
 
   name  = "${local.ssm_prefix}/${each.key}"
   value = local.ssm_secrets[each.key]

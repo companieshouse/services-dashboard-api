@@ -41,7 +41,7 @@ variable "lambda_handler_name" {
   type        = string
   description = "The lambda function entrypoint"
   # default     = "uk.gov.companieshouse.servicesdashboardapi.lambda.HandlerCronEvent::handleRequest"
-  default     = "org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest"
+  default = "org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest"
 }
 
 
