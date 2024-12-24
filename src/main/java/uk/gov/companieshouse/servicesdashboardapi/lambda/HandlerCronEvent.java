@@ -23,21 +23,23 @@ public class HandlerCronEvent implements RequestHandler<ScheduledEvent, Void> {
 
         LambdaLogger logger = context.getLogger();
         logger.log("triggering event received\n");
-        Map<String, Object> detail = event.getDetail();
+        ServicesController.loadAllInfo();
 
-        if (detail.containsKey("action") && detail.get("action") instanceof String) {
+        // Map<String, Object> detail = event.getDetail();
 
-            String action = (String) detail.get("action");
-            logger.log("Action value: " + action + "\n");
+        // if (detail.containsKey("action") && detail.get("action") instanceof String) {
 
-            if (action.equals("loadAllInfo")) {
-                ServicesController.loadAllInfo();
-                System.out.println("loadAllInfo");
-            }
+        //     String action = (String) detail.get("action");
+        //     logger.log("Action value: " + action + "\n");
 
-        } else {
-            logger.log("'action' field is missing or not a string\n");
-        }
+        //     if (action.equals("loadAllInfo")) {
+        //         ServicesController.loadAllInfo();
+        //         System.out.println("loadAllInfo");
+        //     }
+
+        // } else {
+        //     logger.log("'action' field is missing or not a string\n");
+        // }
         return null;
     }
 }
