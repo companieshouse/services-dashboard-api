@@ -31,10 +31,12 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) {
 
+        ApiLogger.info("Loading secrets from AWS Param Store");
         ConfigurableEnvironment environment = beanFactory.getBean(ConfigurableEnvironment.class);
 
         String lambdaFunctionName = System.getenv("AWS_LAMBDA_FUNCTION_NAME");
         if (lambdaFunctionName != null && !lambdaFunctionName.isEmpty()) {
+            ApiLogger.info("Running as Lambda function: " + lambdaFunctionName);
             MutablePropertySources propertySources = environment.getPropertySources();
 
             // Access properties from application.properties
@@ -48,6 +50,7 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
             // Set, from Param. Store, the properties ending with ".secret"
             properties.forEach((key, value) -> {
                 String keyStr = key.toString();
+                ApiLogger.info("reading SSM param (key: " + keyStr + " value: " + getSecret(keyStr));
                 if (keyStr.endsWith(".secret")) {
                     properties.setProperty(keyStr, getSecret(keyStr));
                 }
