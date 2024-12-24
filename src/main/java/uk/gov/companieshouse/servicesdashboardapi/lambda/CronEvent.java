@@ -1,14 +1,14 @@
-package uk.gov.companieshouse.servicesdashboardapi.lambda;
+// package uk.gov.companieshouse.servicesdashboardapi.lambda;
 
-public class CronEvent {
-    private String action;
+// public class CronEvent {
+//     private String action;
 
-    // Getters and setters
-    public String getAction() {
-        return action;
-    }
+//     // Getters and setters
+//     public String getAction() {
+//         return action;
+//     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
-}
+//     public void setAction(String action) {
+//         this.action = action;
+//     }
+// }

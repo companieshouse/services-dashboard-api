@@ -15,7 +15,10 @@ clean:
 .PHONY: build
 build:
 	@echo "Running build"
-	$(MAKE) package
+	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
+	mvn package -Dmaven.test.skip=true
+	cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name).jar
+	cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name)-$(version).jar
 	@echo "Finished build"
 
 .PHONY: test
@@ -36,11 +39,13 @@ ifndef version
 endif
 	$(info Packaging version: $(version))
 	mvn versions:set  -P $(profile) -DnewVersion=$(version) -DgenerateBackupPoms=false
-	mvn package  -P $(profile) -DskipTests=true
-	cp ./target/$(artifact_name)-$(version).jar ./$(artifact_name)-$(version).zip
+	@test -s ./$(artifact_name).jar || { echo "ERROR: Service JAR not found"; exit 1; }
+	cp ./$(artifact_name).jar ./$(artifact_name).zip
+	cp ./$(artifact_name)-$(version).jar ./$(artifact_name)-$(version).zip
+	@echo "Finished package"
 
 .PHONY: dist
-dist: clean package
+dist: clean build package
 
 .PHONY: sonar
 sonar:
