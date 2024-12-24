@@ -51,8 +51,9 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
             properties.forEach((key, value) -> {
                 String keyStr = key.toString();
                 if (keyStr.endsWith(".secret")) {
-                    ApiLogger.info("reading SSM param (key: " + keyStr + " value: " + getSecret(keyStr));
-                    properties.setProperty(keyStr, getSecret(keyStr));
+                    String secretName = String.format("/%s/%s", lambdaFunctionName, keyStr);
+                    ApiLogger.info("reading SSM param (key: " + keyStr + " value: " + getSecret(secretName));
+                    properties.setProperty(keyStr, getSecret(secretName));
                 }
             });
 
