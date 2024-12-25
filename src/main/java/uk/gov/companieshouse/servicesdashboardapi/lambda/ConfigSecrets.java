@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.lang.NonNull;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
@@ -24,6 +25,7 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 // This handler is only used when running as a Lambda function (env var "AWS_LAMBDA_FUNCTION_NAME" defined)
 
 @Component
+@PropertySource("classpath:application.properties")
 public class ConfigSecrets implements BeanFactoryPostProcessor {
 
     private final SsmClient ssmClient = SsmClient.create();
