@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
 @Service
@@ -41,11 +42,11 @@ public class EndoflifeService {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             if (response.getStatusCode().is2xxSuccessful()) {
                   endOfLifeInfoList = jsonMapper.readValue(response.getBody(), new TypeReference<List<EndofLifeInfo>>() {});
-                  System.out.println(endOfLifeInfoList);
+                  ApiLogger.info("" + endOfLifeInfoList);
                   endofLivesInfo.put(project, endOfLifeInfoList);
             }
          } catch (Exception e) {
-            System.err.println("Failed to fetch endofLives while processing project " + project + ": " + e.getMessage());
+            ApiLogger.errorContext("Failed to fetch endofLives while processing project " + project + ": " + e.getMessage(), e);
          }
       }
 

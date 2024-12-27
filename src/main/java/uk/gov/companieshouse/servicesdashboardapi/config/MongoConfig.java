@@ -63,9 +63,8 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate() {
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory()), new MongoMappingContext());
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory(), converter);
 
-        return mongoTemplate;
+        return new MongoTemplate(mongoDbFactory(), converter);
     }
 }
 

@@ -30,7 +30,6 @@ import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndoflifeSer
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
-// import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @RestController
@@ -78,7 +77,7 @@ public class ServicesDashboardController {
    @GetMapping("/services-dashboard/list-services")
    public ResponseEntity<List<ProjectInfo>> listServices( ) {
       Map<String, ProjectInfo> projectInfoMap = loadListServices();
-      return new ResponseEntity<List<ProjectInfo>>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
+      return new ResponseEntity<>(new ArrayList<>(projectInfoMap.values()), HttpStatus.OK);
    }
 
    @GetMapping("/services-dashboard/endol")
@@ -112,7 +111,7 @@ public class ServicesDashboardController {
          GitInfo gitInfo = gitService.getRepoInfo(name);
          projectInfo.setGitInfo(gitInfo);
 
-         System.out.println(projectInfo);
+          ApiLogger.info("---------projectInfo: " + projectInfo);
       });
 
       // this is now done by https://github.com/companieshouse/services-dashboard-ecs
@@ -136,7 +135,7 @@ public class ServicesDashboardController {
 
    // when triggered by a scheduler/lambda, load both lists
    public void loadAllInfo( ) {
-      Map<String, ProjectInfo> projectInfoMap = loadListServices();
+      loadListServices();
       loadListEol();
    }
 
