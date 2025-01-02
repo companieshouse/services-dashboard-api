@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HandlerCronEvent implements RequestHandler<ScheduledEvent, Void> {
 
+    private static final String ACTION = "action";
     private ServicesDashboardController servicesController;
 
     public HandlerCronEvent(ServicesDashboardController servicesController) {
@@ -28,14 +29,13 @@ public class HandlerCronEvent implements RequestHandler<ScheduledEvent, Void> {
 
         Map<String, Object> detail = event.getDetail();
 
-        if (detail.containsKey("action") && detail.get("action") instanceof String) {
+        if (detail.containsKey(ACTION) && detail.get(ACTION) instanceof String action) {
 
-            String action = (String) detail.get("action");
             logger.log("Action value: " + action + "\n");
 
             if (action.equals("loadAllInfo")) {
                 servicesController.loadAllInfo();
-                System.out.println("loadAllInfo");
+                logger.log("loadAllInfo");
             }
 
         } else {

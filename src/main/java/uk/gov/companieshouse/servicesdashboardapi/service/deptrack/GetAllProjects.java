@@ -80,9 +80,12 @@ public class GetAllProjects extends DepTrackGetDataService <List<DepTrackProject
          allProjects.addAll(result);
 
          // Get the total count from the response headers
-         if (totalCount == 0 && response.getHeaders().containsKey(headerTotalCount)) {
-               totalCount = Integer.parseInt(response.getHeaders().get(headerTotalCount).get(0));
-         }
+          if (totalCount == 0 && response.getHeaders().containsKey(headerTotalCount)) {
+              List<String> count = response.getHeaders().get(headerTotalCount);
+              if (null != count && !count.isEmpty() && null != count.getFirst()) {
+                  totalCount = Integer.parseInt(count.getFirst());
+              }
+          }
 
          offset += result.size();
 

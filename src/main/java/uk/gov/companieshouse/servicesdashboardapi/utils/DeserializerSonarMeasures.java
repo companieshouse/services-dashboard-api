@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.servicesdashboardapi.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,7 +13,7 @@ public class DeserializerSonarMeasures extends JsonDeserializer<Map<String, Inte
 
    @Override
    public Map<String, Integer> deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
       Map<String, Integer> measuresMap = new HashMap<>();
       JsonNode node = jp.getCodec().readTree(jp);

@@ -74,11 +74,11 @@ public class SonarService {
             if (response.getStatusCode().is2xxSuccessful()) {
                   sonarInfo = jsonMapper.readValue(response.getBody(), new TypeReference<SonarProjectInfo>() {});
 
-                  System.out.println(sonarInfo);
+                  ApiLogger.info("" + sonarInfo);
                   break; // Stop the loop on the first successful response
             }
          } catch (Exception e) {
-            System.err.println("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage());
+            ApiLogger.errorContext("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage(), e);
       }
       }
       return sonarInfo;
