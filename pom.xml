@@ -132,19 +132,18 @@
                               <createDependencyReducedPom>false</createDependencyReducedPom>
                               <shadedArtifactAttached>false</shadedArtifactAttached>
                               <transformers>
-                                 <!-- Aggregates spring.factories from all dependencies -->
+                                 <!-- Append the new AutoConfiguration metadata for Spring Boot 3 -->
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/spring.factories</resource>
+                                    <resource>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</resource>
                                  </transformer>
+                                 <!-- Append other spring resources -->
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/spring.handlers</resource>
                                  </transformer>
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/spring.schemas</resource>
                                  </transformer>
-                                 <!-- Aggregates services (META-INF/services/*) -->
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                 <!-- Ensures the JAR is executable by specifying the main class -->
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>${main-class}</mainClass>
                                  </transformer>
@@ -152,15 +151,7 @@
                            </configuration>
                            <!-- <configuration>
                               <transformers>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.factories</resource>
-                                 </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.handlers</resource>
-                                 </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.schemas</resource>
-                                 </transformer>
+
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                        <resource>META-INF/spring.tooling</resource>
                                  </transformer>
@@ -170,9 +161,7 @@
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                        <resource>META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports</resource>
                                  </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                       <mainClass>${main-class}</mainClass>
+
                                  </transformer>
                               </transformers>
                            </configuration> -->
