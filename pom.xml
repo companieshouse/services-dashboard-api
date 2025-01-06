@@ -95,8 +95,8 @@
                      <version>${spring-function-context.version}</version>
                   </dependency>
             </dependencies>
-            <!-- <build>
-               <plugins> -->
+            <build>
+               <plugins>
                   <!-- Package -->
                   <!-- <plugin>
                         <groupId>org.springframework.boot</groupId>
@@ -106,11 +106,11 @@
                            <layers>false</layers>
                         </configuration>
                   </plugin> -->
-                  <!-- <plugin>  maven-shade-plugin START
+                  <plugin>
                      <groupId>org.apache.maven.plugins</groupId>
                      <artifactId>maven-shade-plugin</artifactId>
                      <version>${maven-shade-plugin.version}</version>
-                     <configuration>
+                     <!-- <configuration>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <shadedClassifierName>lambda</shadedClassifierName>
@@ -121,15 +121,36 @@
                               <artifactId>spring-boot-maven-plugin</artifactId>
                               <version>${spring-boot-maven-plugin.version}</version>
                         </dependency>
-                     </dependencies>
+                     </dependencies> -->
                      <executions>
                         <execution>
                            <phase>package</phase>
                            <goals>
                               <goal>shade</goal>
                            </goals>
-
                            <configuration>
+                              <createDependencyReducedPom>false</createDependencyReducedPom>
+                              <shadedArtifactAttached>false</shadedArtifactAttached>
+                              <transformers>
+                                 <!-- Aggregates spring.factories from all dependencies -->
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.factories</resource>
+                                 </transformer>
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                 </transformer>
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                 </transformer>
+                                 <!-- Aggregates services (META-INF/services/*) -->
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                 <!-- Ensures the JAR is executable by specifying the main class -->
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main-class}</mainClass>
+                                 </transformer>
+                              </transformers>
+                           </configuration>
+                           <!-- <configuration>
                               <transformers>
                                  <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                        <resource>META-INF/spring.factories</resource>
@@ -154,10 +175,10 @@
                                        <mainClass>${main-class}</mainClass>
                                  </transformer>
                               </transformers>
-                           </configuration>
+                           </configuration> -->
                         </execution>
                      </executions>
-                  </plugin> maven-shade-plugin END -->
+                  </plugin>
 
                   <!-- <plugin>
                      <groupId>org.apache.maven.plugins</groupId>
@@ -186,8 +207,8 @@
                         </execution>
                      </executions>
                   </plugin> -->
-               <!-- </plugins>
-            </build> -->
+               </plugins>
+            </build>
       </profile>
       <!-- <profile>
             <id>sonar-pr-analysis</id>
@@ -316,25 +337,6 @@
 
    <build>
       <plugins>
-         <!-- Spring Boot Maven Plugin -->
-         <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <version>${spring-boot-maven-plugin.version}</version>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>repackage</goal>
-                  </goals>
-                  <configuration>
-                     <!-- Include all dependencies in the fat JAR -->
-                     <layout>ZIP</layout>
-                     <outputDirectory>${project.build.directory}</outputDirectory>
-                     <executable>true</executable>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
 
          <!-- Maven Compiler Plugin -->
          <plugin>
