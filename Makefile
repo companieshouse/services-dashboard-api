@@ -1,13 +1,15 @@
-artifact_name := services-dashboard-api
+service_name  := services-dashboard-api
 version       := unversioned
+artifact_name := $(service_name)-$(version)
+
 profile       ?= lambda
+shadedClassifierName := -lambda
 
 .PHONY: clean
 clean:
 	@echo "Running clean"
 	mvn clean
-	rm -f ./$(artifact_name).jar
-	rm -f ./$(artifact_name)-*.zip
+	rm -f ./$(artifact_name)*.jar
 	rm -rf ./build-*
 	rm -f ./build.log
 	@echo "Finished clean"
@@ -17,8 +19,7 @@ build:
 	@echo "Running build"
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -Dmaven.test.skip=true
-	cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name).jar
-	cp ./target/$(artifact_name)-$(version)-jar-with-dependencies.jar ./$(artifact_name)-$(version).jar
+	cp ./target/$(artifact_name)${shadedClassifierName}.jar .
 	@echo "Finished build"
 
 .PHONY: test
@@ -39,9 +40,8 @@ ifndef version
 endif
 	$(info Packaging version: $(version))
 	mvn versions:set  -P $(profile) -DnewVersion=$(version) -DgenerateBackupPoms=false
-	@test -s ./$(artifact_name).jar || { echo "ERROR: Service JAR not found"; exit 1; }
-	cp ./$(artifact_name).jar ./$(artifact_name).zip
-	cp ./$(artifact_name)-$(version).jar ./$(artifact_name)-$(version).zip
+	@test -s ./$(artifact_name)$(shadedClassifierName).jar || { echo "ERROR: Service JAR not found"; exit 1; }
+	cp ./$(artifact_name)$(shadedClassifierName).jar ./$(artifact_name).zip
 	@echo "Finished package"
 
 .PHONY: dist
