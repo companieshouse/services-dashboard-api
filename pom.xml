@@ -110,18 +110,18 @@
                      <groupId>org.apache.maven.plugins</groupId>
                      <artifactId>maven-shade-plugin</artifactId>
                      <version>${maven-shade-plugin.version}</version>
-                     <configuration>
+                     <!-- <configuration>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <shadedClassifierName>lambda</shadedClassifierName>
-                     </configuration>
-                     <!--dependencies>
+                     </configuration> -->
+                     <dependencies>
                         <dependency>
                               <groupId>org.springframework.boot</groupId>
                               <artifactId>spring-boot-maven-plugin</artifactId>
                               <version>${spring-boot-maven-plugin.version}</version>
                         </dependency>
-                     </dependencies> -->
+                     </dependencies>
                      <executions>
                         <execution>
                            <phase>package</phase>
