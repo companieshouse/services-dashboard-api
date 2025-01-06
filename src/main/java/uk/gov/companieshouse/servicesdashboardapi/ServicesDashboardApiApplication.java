@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import uk.gov.companieshouse.servicesdashboardapi.lambda.CronEvent;
 
 
 @SpringBootApplication
+@EnableAutoConfiguration
 public class ServicesDashboardApiApplication {
 
   public static final String SDAPI_APP_NAMESPACE = "services-dashboard-api";
