@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Bean;
 import uk.gov.companieshouse.servicesdashboardapi.controller.ServicesDashboardController;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
+import java.net.InetAddress;
 import java.util.function.Function;
+import java.net.UnknownHostException;
 
 import uk.gov.companieshouse.servicesdashboardapi.lambda.CronEvent;
 
@@ -24,6 +26,12 @@ public class ServicesDashboardApiApplication {
 
   public ServicesDashboardApiApplication(ServicesDashboardController servicesController) {
     this.servicesController = servicesController;
+    try {
+      InetAddress address = InetAddress.getByName("dependency-track.companieshouse.gov.uk");
+      ApiLogger.info("Resolved address: " + address);
+    } catch (Exception e) {
+      ApiLogger.info("Failed to resolve address: " + e.getMessage());
+    }
   }
 
   public static void main(String[] args) {
