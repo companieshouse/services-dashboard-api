@@ -110,11 +110,11 @@
                      <groupId>org.apache.maven.plugins</groupId>
                      <artifactId>maven-shade-plugin</artifactId>
                      <version>${maven-shade-plugin.version}</version>
-                     <!-- <configuration>
+                     <configuration>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <shadedClassifierName>lambda</shadedClassifierName>
-                     </configuration> -->
+                     </configuration>
                      <dependencies>
                         <dependency>
                               <groupId>org.springframework.boot</groupId>
@@ -128,43 +128,33 @@
                            <goals>
                               <goal>shade</goal>
                            </goals>
+
                            <configuration>
-                              <createDependencyReducedPom>false</createDependencyReducedPom>
-                              <shadedArtifactAttached>false</shadedArtifactAttached>
-                              <transformers>
-                                 <!-- Append the new AutoConfiguration metadata for Spring Boot 3 -->
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</resource>
-                                 </transformer>
-                                 <!-- Append other spring resources -->
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/spring.handlers</resource>
-                                 </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/spring.schemas</resource>
-                                 </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                 <transformers>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                       <resource>META-INF/spring.handlers</resource>
+                                    </transformer>
+                                    <transformer implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
+                                       <resource>META-INF/spring.factories</resource>
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                       <resource>META-INF/spring.schemas</resource>
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                        <resource>META-INF/spring.tooling</resource>
-                                 </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>${main-class}</mainClass>
-                                 </transformer>
-                              </transformers>
-                           </configuration>
-                           <!-- <configuration>
-                              <transformers>
-
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                        <resource>INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</resource>
-                                 </transformer>
-                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                        <resource>META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports</resource>
-                                 </transformer>
-
-                                 </transformer>
-                              </transformers>
-                           </configuration> -->
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                       <mainClass>${main-class}</mainClass>
+                                    </transformer>
+                                 </transformers>
+                           </configuration>
                         </execution>
                      </executions>
                   </plugin>
@@ -326,24 +316,24 @@
 
    <build>
       <plugins>
+            <!-- Compile -->
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>${maven-compiler-plugin.version}</version>
+               <configuration>
+                  <source>${java.version}</source>
+                  <target>${java.version}</target>
+                  <annotationProcessorPaths>
+                        <path>
+                           <groupId>org.mapstruct</groupId>
+                           <artifactId>mapstruct-processor</artifactId>
+                           <version>${org.mapstruct.version}</version>
+                        </path>
+                  </annotationProcessorPaths>
+               </configuration>
+            </plugin>
 
-         <!-- Maven Compiler Plugin -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${maven-compiler-plugin.version}</version>
-            <configuration>
-               <source>${java.version}</source>
-               <target>${java.version}</target>
-               <annotationProcessorPaths>
-                  <path>
-                     <groupId>org.mapstruct</groupId>
-                     <artifactId>mapstruct-processor</artifactId>
-                     <version>${org.mapstruct.version}</version>
-                  </path>
-               </annotationProcessorPaths>
-            </configuration>
-         </plugin>
       </plugins>
    </build>
 </project>

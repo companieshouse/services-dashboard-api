@@ -3,8 +3,7 @@ version       := unversioned
 artifact_name := $(service_name)-$(version)
 
 profile       ?= lambda
-#shadedClassifierName := -lambda
-shadedClassifierName :=
+shadedClassifierName := -lambda
 
 .PHONY: clean
 clean:
