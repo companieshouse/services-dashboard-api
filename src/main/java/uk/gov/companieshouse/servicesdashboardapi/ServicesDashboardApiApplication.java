@@ -26,14 +26,20 @@ public class ServicesDashboardApiApplication {
 
   public ServicesDashboardApiApplication(ServicesDashboardController servicesController) {
     this.servicesController = servicesController;
+    logHostInfo("dependency-track.companieshouse.gov.uk");
+    logHostInfo("code-analysis.platform.aws.chdev.org");
+    logHostInfo("api.github.com");
+    logHostInfo("endoflife.date");
+  }
+
+  private static void logHostInfo(String hostName) {
     try {
-      InetAddress address = InetAddress.getByName("dependency-track.companieshouse.gov.uk");
+      InetAddress address = InetAddress.getByName(hostName);
       ApiLogger.info("Resolved address: " + address);
     } catch (Exception e) {
       ApiLogger.info("Failed to resolve address: " + e.getMessage());
     }
   }
-
   public static void main(String[] args) {
     SpringApplication.run(ServicesDashboardApiApplication.class, args);
   }
