@@ -31,14 +31,14 @@ public class ServicesDashboardApiApplication {
   }
 
   @Bean
-	public Function<CronEvent, Void> handleEvent() {
-    ApiLogger.info("triggering event received");
-    return event -> {
-      if (event.getAction().equals("loadAllInfo")) {
-        servicesController.loadAllInfo();
-        ApiLogger.info("loadAllInfo");
-      }
-      return null;
-    };
+  public Function<CronEvent, Void> handleEvent() {
+      ApiLogger.info("triggering event received");
+      return event -> {
+          if (event.getDetail() != null && "loadAllInfo".equals(event.getDetail().getAction())) {
+              servicesController.loadAllInfo();
+              ApiLogger.info("loadAllInfo");
+          }
+          return null;
+      };
   }
 }
