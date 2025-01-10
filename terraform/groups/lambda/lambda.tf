@@ -4,6 +4,28 @@ resource "aws_iam_role" "lambda_execution_role" {
   name               = "${local.lambda_function_name}-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_trust.json
 }
+# Create a policy (document) to include EC2 permissions
+# (to create and manage network interfaces when deployed inside the VPC).
+data "aws_iam_policy_document" "lambda_policy" {
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface"
+    ]
+
+    resources = ["*"]
+  }
+}
+# To attach the managed policy: AWSLambdaVPCAccessExecutionRole,
+# (which contains the required permissions for VPC access).
+resource "aws_iam_role_policy_attachment" "vpc_access_policy_attachment" {
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
 
 # Create a policy to attach to the IAM role for the Lambda function
 resource "aws_iam_role_policy" "lambda_execution_role_policy" {
@@ -113,7 +135,7 @@ resource "aws_security_group" "services_dashboard_lambda_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [ "0.0.0.0/0" ]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
