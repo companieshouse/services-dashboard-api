@@ -72,6 +72,10 @@ resource "aws_lambda_function" "java_lambda" {
     Name        = local.lambda_function_name
     Environment = var.environment
   }
+  vpc_config {
+    subnet_ids         = local.application_subnet_ids
+    security_group_ids = [aws_security_group.services_dashboard_lambda_sg.id]
+  }
 }
 
 # Create a CloudWatch Event Rule to trigger the Lambda function at scheduled intervals
@@ -97,4 +101,23 @@ resource "aws_lambda_permission" "allow_eventbridge" {
   function_name = aws_lambda_function.java_lambda.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.daily_load_all.arn
+}
+
+
+resource "aws_security_group" "services_dashboard_lambda_sg" {
+  name        = "${lambda_function_name}-lambda-sg"
+  description = "Security group for Lambda function access to VPC resources"
+  vpc_id      = data.aws_vpc.vpc.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  tags = {
+    Name        = "${lambda_function_name}-lambda"
+    Environment = var.environment
+  }
 }

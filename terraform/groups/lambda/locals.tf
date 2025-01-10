@@ -4,6 +4,11 @@ locals {
   lambda_function_name = "${local.service_name}-${var.environment}"
   ssm_prefix           = "/${local.lambda_function_name}"
 
+  vpc_name             = "Test & Development"
+  application_subnet_ids      = data.aws_subnets.application.ids
+  application_subnet_pattern  = local.service_secrets["application_subnet_pattern"]
+
+
   # Secrets
   stack_secrets   = jsondecode(data.vault_generic_secret.stack_secrets.data_json)
   service_secrets = jsondecode(data.vault_generic_secret.service_secrets.data_json)

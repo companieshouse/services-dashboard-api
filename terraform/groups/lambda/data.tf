@@ -52,3 +52,11 @@ data "aws_iam_policy_document" "ssm_access_policy" {
     resources = ["*"]
   }
 }
+
+
+data "aws_vpc" "vpc" {
+  filter {
+    name   = "tag:Name"
+    values = [local.vpc_name]
+  }
+}
