@@ -37,6 +37,17 @@ data "aws_iam_policy_document" "lambda_policy" {
       "arn:aws:logs:*:*:*"
     ]
   }
+
+  statement {
+    sid    = "AllowLambdaVpcAccess"
+    effect = "Allow"
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface"
+    ]
+    resources = ["*"]
+  }
 }
 
 # Policy to allow Lambda to access SSM Parameter Store
