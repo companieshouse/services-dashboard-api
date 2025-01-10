@@ -105,7 +105,7 @@ resource "aws_lambda_permission" "allow_eventbridge" {
 
 
 resource "aws_security_group" "services_dashboard_lambda_sg" {
-  name        = "${lambda_function_name}-lambda-sg"
+  name        = "${local.lambda_function_name}-lambda-sg"
   description = "Security group for Lambda function access to VPC resources"
   vpc_id      = data.aws_vpc.vpc.id
 
@@ -117,7 +117,7 @@ resource "aws_security_group" "services_dashboard_lambda_sg" {
   }
 
   tags = {
-    Name        = "${lambda_function_name}-lambda"
+    Name        = "${local.lambda_function_name}-lambda"
     Environment = var.environment
   }
 }
