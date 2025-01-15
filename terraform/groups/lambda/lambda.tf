@@ -65,8 +65,7 @@ resource "aws_lambda_function" "java_lambda" {
   runtime = var.lambda_runtime
 
   memory_size = var.lambda_memory_size
-  # timeout     = var.lambda_timeout_seconds
-  timeout     = 600
+  timeout     = var.lambda_timeout_seconds
 
   environment {
     variables = {
