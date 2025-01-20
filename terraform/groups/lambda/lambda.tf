@@ -89,7 +89,7 @@ resource "aws_lambda_function" "java_lambda" {
 resource "aws_cloudwatch_event_rule" "daily_load_all" {
   name                = "${local.lambda_function_name}-loadall"
   description         = "Trigger Lambda at 06:00AM daily"
-  schedule_expression = "cron(0 6 * * ? *)"
+  schedule_expression = "cron(45 6 ? * MON-FRI *)"
 }
 
 # Create a CloudWatch Event Target to trigger the Lambda function
