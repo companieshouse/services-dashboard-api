@@ -1,5 +1,10 @@
 package uk.gov.companieshouse.servicesdashboardapi.repository;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -26,6 +31,11 @@ public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigReposit
    @Override
    public void saveConfigInfo(MongoConfigInfo configInfo) {
       configInfo.setId(singletonId);
+      configInfo.setLastScan(
+         LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(System.currentTimeMillis()),
+            ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
       mongoTemplate.save(configInfo, collectionName);
    }
 }

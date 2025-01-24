@@ -16,7 +16,13 @@ public class MongoConfigInfo {
    @Field("endol")
    private Map<String, List<MongoEndoflifeInfo>> endol;
 
+   @Field("lastScan")
+   private String lastScan;
+
    // Getters and Setters
+   public String getId() {
+      return id;
+   }
    public void setId(String id) {
       this.id = id;
    }
@@ -29,8 +35,15 @@ public class MongoConfigInfo {
       this.endol = endol;
    }
 
+   public String getLastScan() {
+      return lastScan;
+   }
+   public void setLastScan(String lastScan) {
+      this.lastScan = lastScan;
+   }
+
    @Override
    public String toString() {
-      return String.format("{endol:{%s},", endol);
+      return String.format("endol:{%s},lastScan=%s", endol, lastScan);
    }
 }

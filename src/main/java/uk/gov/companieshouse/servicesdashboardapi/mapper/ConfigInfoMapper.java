@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.mapstruct.Mapper;
-// import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
