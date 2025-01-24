@@ -88,7 +88,7 @@ resource "aws_lambda_function" "java_lambda" {
 # Create a CloudWatch Event Rule to trigger the Lambda function at scheduled intervals
 resource "aws_cloudwatch_event_rule" "daily_load_all" {
   name                = "${local.lambda_function_name}-loadall"
-  description         = "Trigger Lambda at 06:00AM daily"
+  description         = "Trigger Lambda at regular intervals"
   schedule_expression = "cron(45 6 ? * MON-FRI *)"
 }
 
@@ -98,7 +98,9 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
   arn  = aws_lambda_function.java_lambda.arn
 
   input = jsonencode({
-    action = "loadAllInfo"
+    "detail": {
+      "action": "loadAllInfo"
+    }
   })
 }
 # Allow the CloudWatch Event Rule to trigger the Lambda function

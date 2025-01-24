@@ -10,7 +10,7 @@
  export DT_SERVER_APIKEY="${DT_SERVER_APIKEY}"
  export DT_SERVER_BASEURL='https://dependency-track.companieshouse.gov.uk'
  export SONAR_TOKEN="${DT_SONAR_TOKEN}"
- export GH_TOKEN="${MY_GITHUB_TOKEN}"
+ export GH_TOKEN="${GH_LAMBDA_TOKEN}"
 
  export AWS_PROFILE=dev
  export AWS_ENVS=cidev,staging
