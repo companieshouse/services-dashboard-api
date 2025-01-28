@@ -127,11 +127,13 @@ public class ServicesDashboardController {
    }
 
    private void loadListEol( ) {
+      ApiLogger.info("loadListEol START");
       Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();
       ConfigInfo configInfo = new ConfigInfo ();
       configInfo.setEndol(endolMap);
       MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
       customMongoConfigRepository.saveConfigInfo(mongoConfigInfo);
+      ApiLogger.info("loadListEol END");
    }
 
    // when triggered by a scheduler/lambda, load both lists
@@ -139,7 +141,6 @@ public class ServicesDashboardController {
       Map<String, ProjectInfo> projectInfoMap = loadListServices();
       loadListEol();
    }
-
 }
 
 

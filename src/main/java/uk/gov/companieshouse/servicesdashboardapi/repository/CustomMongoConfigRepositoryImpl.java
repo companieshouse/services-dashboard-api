@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import uk.gov.companieshouse.servicesdashboardapi.config.MongoConfig;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @Repository
 public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigRepository {
@@ -30,6 +31,7 @@ public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigReposit
 
    @Override
    public void saveConfigInfo(MongoConfigInfo configInfo) {
+      ApiLogger.info("saveConfigInfo START");
       configInfo.setId(singletonId);
       configInfo.setLastScan(
          LocalDateTime.ofInstant(
@@ -37,5 +39,6 @@ public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigReposit
             ZoneId.systemDefault())
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
       mongoTemplate.save(configInfo, collectionName);
+      ApiLogger.info("saveConfigInfo END");
    }
 }
