@@ -112,7 +112,7 @@ public class ServicesDashboardController {
          GitInfo gitInfo = gitService.getRepoInfo(name);
          projectInfo.setGitInfo(gitInfo);
 
-         System.out.println(projectInfo);
+         ApiLogger.info(projectInfo.toString());
       });
 
       // this is now done by https://github.com/companieshouse/services-dashboard-ecs

@@ -2,7 +2,7 @@ package uk.gov.companieshouse.servicesdashboardapi.model.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GitLastReleaseInfo {
+public class GitReleaseInfo {
 
    @JsonProperty("tag_name")
    private String version;

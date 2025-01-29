@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.github;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import org.springframework.http.HttpHeaders;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitCustomProperty;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
@@ -41,6 +43,9 @@ public class GitService {
 
    @Value("${gh.header.accept}")
    String headerAccept;
+
+   @Value("${gh.releases.perPage}")
+   Integer releasesPerPage;
 
    @Autowired
    private CustomJsonMapper jsonMapper;
@@ -118,13 +123,16 @@ public class GitService {
             }
          }
 
-         // Get the latest release information
+         // Get the releases info
+         String uri = UriComponentsBuilder.fromUriString(repoEndpoint + "releases").queryParam("per_page", releasesPerPage).toUriString();
          response = restTemplate.exchange(
-            repoEndpoint + "releases/latest",
-            HttpMethod.GET, httpEntity, String.class);
-         if (response.getStatusCode().is2xxSuccessful()) {
-            GitLastReleaseInfo  lastReleaseInfo = jsonMapper.readValue(response.getBody(), new TypeReference<GitLastReleaseInfo>() {});
-            gitInfo.setLastRelease(lastReleaseInfo);
+            uri,
+            HttpMethod.GET,
+            httpEntity,
+            String.class);
+         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            List<GitReleaseInfo> releases = jsonMapper.readValue(response.getBody(), new TypeReference<List<GitReleaseInfo>>() {});
+            gitInfo.setReleases(releases);
          }
 
          // add repo's owner

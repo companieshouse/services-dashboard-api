@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 
-public class MongoGitLastReleaseInfo {
+public class MongoGitReleaseInfo {
 
    @Field("version")
    private String version;

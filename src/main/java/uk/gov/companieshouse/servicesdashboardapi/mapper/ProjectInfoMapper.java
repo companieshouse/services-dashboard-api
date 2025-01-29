@@ -16,11 +16,11 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackMetricsInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.github.GitLastReleaseInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoGitLastReleaseInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoGitReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoMetricsInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoVersionInfo;
@@ -57,15 +57,18 @@ public interface ProjectInfoMapper {
         return mapProjectInfoList(new ArrayList<>(projectInfoMap.values()));
     }
 
-   // Custom mapping Release (String to Date)
-   @Mapping(source = "date", target = "date", qualifiedByName = "stringToDate")
-   MongoGitLastReleaseInfo toMongoGitLastReleaseInfo(GitLastReleaseInfo gitLastReleaseInfo);
+    // Custom mapping Release (single entry)  (String to Date)
+    @Mapping(source = "date", target = "date", qualifiedByName = "stringToDate")
+    MongoGitReleaseInfo toMongoGitReleaseInfo(GitReleaseInfo gitReleaseInfo);
 
-   // Long to Date
-   @Named("longToDate")
-     static Date longToDate(long epoch) {
-      return new Date(epoch);
-   }
+    // mapping Releases (full List)
+    List<MongoGitReleaseInfo> toMongoGitReleaseInfoList(List<GitReleaseInfo> releases);
+
+    // Long to Date
+    @Named("longToDate")
+        static Date longToDate(long epoch) {
+        return new Date(epoch);
+    }
 
    // String to Date
    @Named("stringToDate")
