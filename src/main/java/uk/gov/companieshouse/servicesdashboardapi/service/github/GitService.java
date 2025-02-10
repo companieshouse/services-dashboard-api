@@ -87,7 +87,7 @@ public class GitService {
       } catch (Exception e) {
          ApiLogger.info("Failed to retrieve Git Repo Owner " + project + ": " + e.getMessage());
       }
-      return "<No Owner>";
+      return "No-Owner";
    }
 
    public GitInfo getRepoInfo(String project) {
