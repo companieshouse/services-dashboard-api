@@ -38,11 +38,11 @@ public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigReposit
       Query query = new Query(Criteria.where("id").is(singletonId));
       Update update = new Update()
          .set("lastScan", LocalDateTime.ofInstant(
-               Instant.ofEpochMilli(System.currentTimeMillis()),
-               ZoneId.systemDefault())
-               .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            Instant.ofEpochMilli(System.currentTimeMillis()),
+            ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
-      mongoTemplate.upsert(query, update, MongoConfigInfo.class, collectionName);
+      mongoTemplate.updateFirst(query, update, collectionName);
       ApiLogger.info("saveConfigInfo END");
    }
 }
