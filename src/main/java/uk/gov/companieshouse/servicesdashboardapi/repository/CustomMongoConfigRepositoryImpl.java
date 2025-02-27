@@ -38,9 +38,6 @@ public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigReposit
          .set("lastScan", LocalDateTime.now()
          .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
-      System.out.println("Query: " + query);
-      System.out.println("Update: " + update);
-
       // Try first to update if the doc exists
       if (mongoTemplate.updateFirst(query, update, collectionName).getModifiedCount() == 0) {
          // If nothing was updated --> create it
