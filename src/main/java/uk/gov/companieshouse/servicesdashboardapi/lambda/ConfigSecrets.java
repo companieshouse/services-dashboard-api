@@ -2,7 +2,6 @@ package uk.gov.companieshouse.servicesdashboardapi.lambda;
 
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.PropertySource;
@@ -28,14 +27,17 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 @PropertySource("classpath:application.properties")
 public class ConfigSecrets implements BeanFactoryPostProcessor {
 
-    @Value("${aws.ssm_prefix}")
-    private String ssmPrefix;
+    private final String ssmPrefix = System.getenv("SSM_PREFIX");
 
     private final SsmClient ssmClient = SsmClient.create();
 
     @Override
     public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) {
 
+        if (ssmPrefix == null || ssmPrefix.isEmpty()) {
+            ApiLogger.info("Environment variable 'SSM_PREFIX' is not defined");
+            throw new IllegalStateException("Environment variable 'SSM_PREFIX' is not defined");
+        }
         ApiLogger.info("Loading secrets from AWS Param Store (prefix: " + ssmPrefix + ")");
         ConfigurableEnvironment environment = beanFactory.getBean(ConfigurableEnvironment.class);
 
