@@ -2,6 +2,7 @@ package uk.gov.companieshouse.servicesdashboardapi.lambda;
 
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.PropertySource;
@@ -17,7 +18,6 @@ import software.amazon.awssdk.services.ssm.model.GetParameterResponse;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 
-
 // Config init handler that modifies properties in "application.properties" with custom values
 // for properties ending with ".secret" and which are retrieved from AWS Paramet Store.
 // This handler is executed before the application context is loaded, and so all the @Value
@@ -27,6 +27,9 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 @Component
 @PropertySource("classpath:application.properties")
 public class ConfigSecrets implements BeanFactoryPostProcessor {
+
+    @Value("${aws.ssm_prefix}")
+    private String ssmPrefix;
 
     private final SsmClient ssmClient = SsmClient.create();
 
@@ -53,7 +56,7 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
             properties.forEach((key, value) -> {
                 String keyStr = key.toString();
                 if (keyStr.endsWith(".secret")) {
-                    String secretName = String.format("/%s/%s", lambdaFunctionName, keyStr);
+                    String secretName = String.format("/%s/%s", ssmPrefix, keyStr);
                     ApiLogger.info("reading SSM param (key: " + keyStr);
                     properties.setProperty(keyStr, getSecret(secretName));
                 }
