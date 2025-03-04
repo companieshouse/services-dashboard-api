@@ -22,22 +22,16 @@ locals {
   # which can be overwritten by service specific needs
   vault_secrets = merge(local.stack_secrets, local.service_secrets)
 
-  # Generate SSM secret names from vault names & appending ".secret" suffix
-  # ssm_secrets = {
-  #   for k, v in local.vault_secrets :
-  #   "${k}.secret" => v
-  # }
-
-  # The map 'ssm_secrets' cannot be used directly in a for_each loop because
+  # The map 'vault_secrets' cannot be used directly in a for_each loop because
   # Terraform does not allow loops with sensitive values.
   # Terraform’s sensitivity propagation continues with nested or derived values.
   # A working solution is to use a "cleared" map with the same keys but with nonsensitive values
   # then loop on the cleared map and access the sensitive values using the key.
   ssm_secret_keys = nonsensitive(tomap({
-    # for k in keys(local.ssm_secrets) :
     for k in keys(local.vault_secrets) :
     k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
   }))
+
   # MONGO SETTINGS
   mongo_protocol = "mongodb+srv"
   mongo_dbname   = "services_dashboard"
