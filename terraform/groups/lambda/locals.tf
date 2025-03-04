@@ -9,7 +9,7 @@ locals {
 
   vpc_name                   = local.vault_secrets["vpc_name"]
   application_subnet_ids     = data.aws_subnets.application.ids
-  application_subnet_pattern = local.service_secrets["application_subnet_pattern"]
+  application_subnet_pattern = local.vault_secrets["application_subnet_pattern"]
 
   # Secrets
   stack_secrets   = jsondecode(data.vault_generic_secret.stack_secrets.data_json)
