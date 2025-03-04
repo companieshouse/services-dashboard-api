@@ -36,7 +36,7 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) {
 
-        ApiLogger.info("Loading secrets from AWS Param Store");
+        ApiLogger.info("Loading secrets from AWS Param Store (prefix: " + ssmPrefix + ")");
         ConfigurableEnvironment environment = beanFactory.getBean(ConfigurableEnvironment.class);
 
         String lambdaFunctionName = System.getenv("AWS_LAMBDA_FUNCTION_NAME");
