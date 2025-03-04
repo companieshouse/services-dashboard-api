@@ -40,7 +40,7 @@ resource "aws_ssm_parameter" "secrets" {
   for_each = local.ssm_secret_keys # Use the cleared/nonsensitive map to loop over the keys
 
   name  = "${local.ssm_prefix}/${each.key}"
-  value = local.ssm_secrets[each.key]
+  value = local.vault_secrets[each.key]
   type  = "SecureString"
 }
 
