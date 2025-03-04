@@ -98,8 +98,8 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
   arn  = aws_lambda_function.java_lambda.arn
 
   input = jsonencode({
-    "detail": {
-      "action": "loadAllInfo"
+    "detail" : {
+      "action" : "loadAllInfo"
     }
   })
 }
