@@ -69,8 +69,8 @@ resource "aws_lambda_function" "java_lambda" {
 
   environment {
     variables = {
-      MONGODB_PROTOCOL    = local.mongo_protocol
-      MONGODB_DBNAME      = local.mongo_dbname
+      MONGODB_PROTOCOL    = local.vault_secrets["mongo_protocol"]
+      MONGODB_DBNAME      = local.vault_secrets["mongo_dbname"]
       DT_SERVER_BASEURL   = local.dt_server_baseurl
       SSM_PREFIX          = local.ssm_prefix
     }

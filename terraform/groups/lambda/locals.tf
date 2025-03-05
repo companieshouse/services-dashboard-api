@@ -5,7 +5,7 @@ locals {
   lambda_function_name = "${local.service_name}-${var.environment}"
   stack_secrets_path   = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}"
   service_secrets_path = "${local.stack_secrets_path}/services-dashboard"
-  ssm_prefix           = "/services-dashboard" # shared by WEB and ECS
+  ssm_prefix           = "/${local.service_name}"
 
   vpc_name                   = local.vault_secrets["vpc_name"]
   application_subnet_ids     = data.aws_subnets.application.ids
@@ -31,10 +31,6 @@ locals {
     for k in keys(local.vault_secrets) :
     k => (can(nonsensitive(k)) ? nonsensitive(k) : k)
   }))
-
-  # MONGO SETTINGS
-  mongo_protocol = "mongodb+srv"
-  mongo_dbname   = "services_dashboard"
 
   # DEPENDENCY-TRACK SETTINGS
   dt_server_baseurl = "https://dependency-track.companieshouse.gov.uk"
