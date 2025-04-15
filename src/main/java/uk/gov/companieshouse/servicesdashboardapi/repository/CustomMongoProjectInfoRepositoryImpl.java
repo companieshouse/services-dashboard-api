@@ -44,8 +44,16 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
       return mongoTemplate.exists(query, MongoProjectInfo.class, collectionName);
    }
 
-    @Override
-    public Optional<MongoProjectInfo> findByName(String name) {
+   @Override
+   public boolean existsByUuid(String name, String uuid) {
+      Query query = new Query();
+      query.addCriteria(Criteria.where("name").is(name)
+                               .and("versions.uuid").is(uuid));
+      return mongoTemplate.exists(query, MongoProjectInfo.class, collectionName);
+   }
+
+   @Override
+   public Optional<MongoProjectInfo> findByName(String name) {
       Query query = new Query();
       query.addCriteria(Criteria.where("name").is(name));
       MongoProjectInfo result = mongoTemplate.findOne(query, MongoProjectInfo.class);

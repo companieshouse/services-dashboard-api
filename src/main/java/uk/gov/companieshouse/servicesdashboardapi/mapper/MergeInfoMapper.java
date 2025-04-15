@@ -18,6 +18,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 
 @Mapper
 public interface MergeInfoMapper {
+
     MergeInfoMapper INSTANCE = Mappers.getMapper(MergeInfoMapper.class);
 
     @Mappings({

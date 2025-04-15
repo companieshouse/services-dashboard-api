@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 
-import java.net.URLEncoder;
+// import java.net.URLEncoder;
 
 import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
@@ -66,7 +66,7 @@ public class SonarService {
          try {
             String url = String.format("%s/%s?component=%s&metricKeys=%s",
                                        sonarUrl, endpointMeasures, projectKey, metrics);
-            ApiLogger.info("----- Sendig SonarQube request: " + url);
+            ApiLogger.info("----- Sending SonarQube request: " + url);
             ResponseEntity<String> response = restTemplate.exchange(
                // URLEncoder.encode(url, StandardCharsets.UTF_8.toString()),
                url,

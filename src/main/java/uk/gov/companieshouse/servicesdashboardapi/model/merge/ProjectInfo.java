@@ -2,7 +2,7 @@ package uk.gov.companieshouse.servicesdashboardapi.model.merge;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+// import java.util.Set;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 

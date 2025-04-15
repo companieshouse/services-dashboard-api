@@ -18,6 +18,7 @@ public class CronEvent {
 
     public static class Detail {
         private String action;
+        private boolean deepscan = false; // Default value is false
 
         public String getAction() {
             return action;
@@ -25,6 +26,14 @@ public class CronEvent {
 
         public void setAction(String action) {
             this.action = action;
+        }
+
+        public boolean isDeepscan() {
+            return deepscan;
+        }
+
+        public void setDeepscan(boolean deepscan) {
+            this.deepscan = deepscan;
         }
     }
 }

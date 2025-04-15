@@ -25,6 +25,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarComponent;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoConfigRepository;
+import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoProjectInfoRepository;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
 import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndoflifeService;
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
@@ -42,6 +43,9 @@ public class ServicesDashboardController {
    @Value("${aws.envs}")
    private String[] awsEnvs;
 
+   @Value("${deepScan.enabled}")
+   private Boolean deepScanEnabled;
+
    @Autowired
    private SonarService serviceSonar;
 
@@ -58,6 +62,9 @@ public class ServicesDashboardController {
    private EndoflifeService endolService;
    @Autowired
    private CustomMongoConfigRepository customMongoConfigRepository;
+   @Autowired
+   private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
+
 
 
    @Autowired
@@ -94,9 +101,24 @@ public class ServicesDashboardController {
          ApiLogger.info("Failure in integer conversion of Response's header total projects");
    }
 
+   private void filterList(List<DepTrackProjectInfo> listDepTrack) {
+      // if deepScanEnabled is false, then avoid querying (Sonar & GitHub)-apis for
+      // uuids already known in Mongo
+      if (!deepScanEnabled) {
+         listDepTrack.removeIf(entry -> {
+            boolean exists = customMongoProjectInfoRepository.existsByUuid(entry.getName(), entry.getUuid());
+            if (exists) {
+                  ApiLogger.info("Skipping [" + entry.getName() + "][" + entry.getUuid() + "] as it already exists in the database");
+            }
+            return exists;
+         });
+      }
+  }
+
    private Map<String, ProjectInfo> loadListServices( ) {
       ApiLogger.info("---------list-services START");
       List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
+      filterList(listDepTrack);
 
       Map<String, ProjectInfo> projectInfoMap = servicesInfo.setProjectInfoMap(listDepTrack);
 
@@ -137,7 +159,8 @@ public class ServicesDashboardController {
    }
 
    // when triggered by a scheduler/lambda, load both lists
-   public void loadAllInfo( ) {
+   public void loadAllInfo(boolean deepscan ) {
+      deepScanEnabled = deepscan;
       Map<String, ProjectInfo> projectInfoMap = loadListServices();
       loadListEol();
    }

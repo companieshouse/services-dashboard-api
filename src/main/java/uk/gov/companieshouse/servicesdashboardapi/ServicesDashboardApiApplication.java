@@ -49,7 +49,7 @@ public class ServicesDashboardApiApplication {
       ApiLogger.info("triggering event received");
       return event -> {
           if (event.getDetail() != null && "loadAllInfo".equals(event.getDetail().getAction())) {
-              servicesController.loadAllInfo();
+              servicesController.loadAllInfo(event.getDetail().isDeepscan());
               ApiLogger.info("loadAllInfo");
           }
           return null;
