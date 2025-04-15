@@ -1,4 +1,3 @@
-
 # Create an IAM role for the Lambda function
 resource "aws_iam_role" "lambda_execution_role" {
   name               = "${local.lambda_function_name}-lambda-role"
@@ -90,7 +89,7 @@ resource "aws_lambda_function" "java_lambda" {
 resource "aws_cloudwatch_event_rule" "daily_load_all" {
   name                = "${local.lambda_function_name}-loadall"
   description         = "Trigger Lambda at regular intervals"
-  schedule_expression = "cron(45 6 ? * MON-FRI *)"
+  schedule_expression = "cron(45 6-17 ? * MON-FRI *)"
 }
 
 # Create a CloudWatch Event Target to trigger the Lambda function
