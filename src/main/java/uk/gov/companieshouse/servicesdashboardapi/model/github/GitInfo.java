@@ -40,12 +40,12 @@ public class GitInfo {
    }
 
    public void setReleases(List<GitReleaseInfo> gitReleases) {
-      this.releases = filterReleases(gitReleases);
+      this.releases = gitReleases.isEmpty() ? new ArrayList<>() : filterReleases(gitReleases);
    }
 
    @Override
    public String toString() {
-      return String.format("{r:%s l:%s o:%s [R:%s]}", repo, lang, owner, releases.toString());
+      return String.format("{r:%s l:%s o:%s [R:%s]}", repo, lang, owner, (releases == null || releases.isEmpty()) ? "unknown" : releases.toString());
    }
 
 
