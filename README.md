@@ -13,8 +13,8 @@ It also retrieves information about the life cycle of libraries and frameworks o
 ![mongo config info](https://github.com/companieshouse/services-dashboard-api/blob/7779a9d/images/mongo.config.png?raw=true)
 
 ## Deployed as lambda function
-This service is released as a lambda function. The reason for running it as a lambda function instead of another resource (example ECS) is that it is currently designed to be executed once a day. 
-Current values, of 302 projects, give a total execution time of `~ 212822 ms` (3 minutes and 33 seconds). It is therefore convenient and economical to use AWS resources only for this daily time 
+This service is released as a lambda function. The reason for running it as a lambda function instead of another resource (example ECS) is that it is currently designed to be executed once a day.
+Current values, of 302 projects, give for a full deep scan, a total execution time of `~ 212822 ms` (3 minutes and 33 seconds). It is therefore convenient and economical to use AWS resources only for this daily time
 rather than keeping them busy and unused for longer.
 
 ### Number of projects monitored in Dependecy Track:
@@ -29,6 +29,7 @@ In addition to this API that plays the role of main information in Mongo, other 
 
 - [services-dashboard-web](https://github.com/companieshouse/services-dashboard-web): the frontend that displays the actual dashboard
 - [services-dashboard-ecs](https://github.com/companieshouse/services-dashboard-ecs): responsible for collecting information about tasks running on the various ECS clusters (cidev / staging / live)
+- [services-dashboard-tidyup](https://github.com/companieshouse/services-dashboard-tidyup): responsible for removing old versions from both Dep. Track and Mongo)
 
 The DB is a meeting point for other components of the services dashboard.
 In general, the services dashboard is therefore extensible with any other components that add information to the DB.
@@ -38,3 +39,38 @@ Depending on what they do, the various components have different needs to be dep
 - `services-dashboard-api`: one instance is sufficient (currently deployed in cidev)
 - `services-dashboard-web`: one instance is sufficient (currently deployed in cidev)
 - `services-dashboard-ecs`: one instance is required for each AWS account (and relatedf ECS clusters) that needs to be inspected (so 3 instances: cidev/staging/live)
+- `services-dashboard-tidyup`: one instance is sufficient (currently deployed in cidev)
+
+
+## AWS trigger/ manual test
+
+The default execution ("light" scan) is triggered by [this json](https://github.com/companieshouse/services-dashboard-api/blob/5f167bd62a2a6bbdb7d6fc022430504522131e13/terraform/groups/lambda/lambda.tf#L100-L104):
+```javascript
+{
+  "detail": {
+    "action": "loadAllInfo"
+  }
+}
+```
+a different (manual) "deepscan" execution can instead be triggered with this :
+```javascript
+{
+  "detail": {
+    "action": "loadAllInfo",
+    "deepscan": "true"
+  }
+}
+```
+
+### The lambda function performs this procedure:
+1. it gets the whole list of projects/versions from Dep.Track (it's a list of their `uuids`)
+2. all the uuids already stored/known in Mongo are removed, leaving a shorter (possible empty) list, with only the "new" [new=since the last run] projects.
+3. for every entry of the list, the associated info (from GitHub and Sonar) are retrieved and the entry is stored in Mongo.
+
+### "light" vs "deep" scan:
+- light scan:
+    - performs the above 2nd step.
+    - An average light scan takes a few seconds.
+- deep scan:
+    - skips the 2nd step. This will query GitHub and Sonar for every entry. Possible use cases: some info in GitHub for that project have changed (ex. the scrum/owner of the repo is changed), a new version of Sonar (ex. different server-url becomes available and we want to refresh the data in Mongo [this happened])
+    - A deepscan takes slightly more than `1min/100uuids`
