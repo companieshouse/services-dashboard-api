@@ -85,16 +85,22 @@ resource "aws_lambda_function" "java_lambda" {
   }
 }
 
-# Create a CloudWatch Event Rule to trigger the Lambda function at scheduled intervals
-resource "aws_cloudwatch_event_rule" "daily_load_all" {
-  name                = "${local.lambda_function_name}-loadall"
-  description         = "Trigger Lambda at regular intervals"
+# Create a CloudWatch Event Rules to trigger the Lambda function at scheduled intervals
+resource "aws_cloudwatch_event_rule" "ligthscan" {
+  name                = "${local.lambda_function_name}-lightscan"
+  description         = "Trigger Lambda often for light scans"
   schedule_expression = "cron(45 6-17 ? * MON-FRI *)"
 }
+resource "aws_cloudwatch_event_rule" "deepscan" {
+  name                = "${local.lambda_function_name}-deepscan"
+  description         = "Trigger Lambda seldom for deep scans"
+  schedule_expression = "cron(15 7 ? 1/1 TUE#1 *)"
+}
 
-# Create a CloudWatch Event Target to trigger the Lambda function
-resource "aws_cloudwatch_event_target" "lambda_target" {
-  rule = aws_cloudwatch_event_rule.daily_load_all.name
+
+# Create CloudWatch Event Targets (light & deep scans) to trigger the Lambda function
+resource "aws_cloudwatch_event_target" "lambda_target_lightscan" {
+  rule = aws_cloudwatch_event_rule.ligth_scan.name
   arn  = aws_lambda_function.java_lambda.arn
 
   input = jsonencode({
@@ -103,15 +109,34 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
     }
   })
 }
-# Allow the CloudWatch Event Rule to trigger the Lambda function
-resource "aws_lambda_permission" "allow_eventbridge" {
-  statement_id  = "AllowEventBridgeToInvokeLambda"
+resource "aws_cloudwatch_event_target" "lambda_target_deepscan" {
+  rule = aws_cloudwatch_event_rule.deepscan.name
+  arn  = aws_lambda_function.java_lambda.arn
+
+  input = jsonencode({
+    "detail": {
+      "action": "loadAllInfo",
+      "deepscan": "true"
+    }
+  })
+}
+
+# Allow the CloudWatch Event Rules to trigger the Lambda function
+resource "aws_lambda_permission" "allow_eventbridge_lightscan" {
+  statement_id  = "AllowEventBridgeToInvokeLambdaLightScan"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.java_lambda.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.daily_load_all.arn
+  source_arn    = aws_cloudwatch_event_rule.ligthscan.arn
 }
 
+resource "aws_lambda_permission" "allow_eventbridge_deepscan" {
+  statement_id  = "AllowEventBridgeToInvokeLambdaDeepScan"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.java_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.deepscan.arn
+}
 
 resource "aws_security_group" "services_dashboard_lambda_sg" {
   name        = "${local.lambda_function_name}-lambda-sg"
