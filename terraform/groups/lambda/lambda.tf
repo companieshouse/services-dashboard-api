@@ -100,7 +100,7 @@ resource "aws_cloudwatch_event_rule" "deepscan" {
 
 # Create CloudWatch Event Targets (light & deep scans) to trigger the Lambda function
 resource "aws_cloudwatch_event_target" "lambda_target_lightscan" {
-  rule = aws_cloudwatch_event_rule.ligth_scan.name
+  rule = aws_cloudwatch_event_rule.ligthscan.name
   arn  = aws_lambda_function.java_lambda.arn
 
   input = jsonencode({
