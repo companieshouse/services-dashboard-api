@@ -17,7 +17,9 @@ public interface ConfigInfoMapper {
 
     ConfigInfoMapper INSTANCE = Mappers.getMapper(ConfigInfoMapper.class);
 
-    // Map ConfigInfo to MongoConfigInfo
+    // Map ConfigInfo to MongoConfigInfo, ignoring 'id' and 'lastScan' so their values are preserved in MongoConfigInfo
+    @org.mapstruct.Mapping(target = "id", ignore = true)
+    @org.mapstruct.Mapping(target = "lastScan", ignore = true)
     MongoConfigInfo configInfoToMongoConfigInfo(ConfigInfo configInfo);
 
     // Map lists of EndofLifeInfo and MongoEndoflifeInfo
