@@ -96,7 +96,11 @@ resource "aws_cloudwatch_event_rule" "deepscan" {
   description         = "Trigger Lambda seldom for deep scans"
   schedule_expression = "cron(15 7 ? 1/1 TUE#1 *)"
 }
-
+resource "aws_cloudwatch_event_rule" "load_endol" {
+  name                = "${local.lambda_function_name}-load-endol"
+  description         = "Trigger Lambda daily for End of Life scans"
+  schedule_expression = "cron(0 7 ? * MON-FRI *)"
+}
 
 # Create CloudWatch Event Targets (light & deep scans) to trigger the Lambda function
 resource "aws_cloudwatch_event_target" "lambda_target_lightscan" {
@@ -121,6 +125,16 @@ resource "aws_cloudwatch_event_target" "lambda_target_deepscan" {
   })
 }
 
+resource "aws_cloudwatch_event_target" "lambda_target_endolscan" {
+  rule = aws_cloudwatch_event_rule.load_endol.name
+  arn  = aws_lambda_function.java_lambda.arn
+
+  input = jsonencode({
+    "detail": {
+      "action": "loadEol",
+    }
+  })
+}
 # Allow the CloudWatch Event Rules to trigger the Lambda function
 resource "aws_lambda_permission" "allow_eventbridge_lightscan" {
   statement_id  = "AllowEventBridgeToInvokeLambdaLightScan"
@@ -136,6 +150,14 @@ resource "aws_lambda_permission" "allow_eventbridge_deepscan" {
   function_name = aws_lambda_function.java_lambda.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.deepscan.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge_endolscan" {
+  statement_id  = "AllowEventBridgeToInvokeLambdaEndolScan"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.java_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.load_endol.arn
 }
 
 resource "aws_security_group" "services_dashboard_lambda_sg" {

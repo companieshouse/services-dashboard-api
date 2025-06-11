@@ -148,7 +148,7 @@ public class ServicesDashboardController {
       return projectInfoMap;
    }
 
-   private void loadListEol( ) {
+   public void loadListEol( ) {
       ApiLogger.info("loadListEol START");
       Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();
       ConfigInfo configInfo = new ConfigInfo ();

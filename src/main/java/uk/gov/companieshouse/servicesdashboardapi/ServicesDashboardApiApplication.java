@@ -46,11 +46,27 @@ public class ServicesDashboardApiApplication {
 
   @Bean
   public Function<CronEvent, Void> handleEvent() {
-      ApiLogger.info("triggering event received");
+      ApiLogger.info("trigger event received");
       return event -> {
-          if (event.getDetail() != null && "loadAllInfo".equals(event.getDetail().getAction())) {
-              servicesController.loadAllInfo(event.getDetail().isDeepscan());
-              ApiLogger.info("loadAllInfo");
+            if (event.getDetail() != null) {
+
+            String action = event.getDetail().getAction();
+            if (action == null) {
+              ApiLogger.info("Action is undefined/null");
+            } else {
+              ApiLogger.info("Action: " + action);
+              switch (action) {
+                case "loadAllInfo":
+                  servicesController.loadAllInfo(event.getDetail().isDeepscan());
+                  break;
+                case "loadEol":
+                  servicesController.loadListEol();
+                  break;
+                default:
+                  ApiLogger.info("Unsupported action");
+                  break;
+              }
+            }
           }
           return null;
       };
