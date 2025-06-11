@@ -35,7 +35,7 @@ public class CustomMongoConfigRepositoryImpl implements CustomMongoConfigReposit
 
       Query query = new Query(Criteria.where("_id").is(singletonId));
       Update update = new Update()
-         .set("lastScan", LocalDateTime.now()
+         .set("lastScan", LocalDateTime.now(java.time.ZoneId.of("Europe/London"))
          .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
       // Try first to update if the doc exists
