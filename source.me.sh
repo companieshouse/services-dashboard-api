@@ -17,4 +17,4 @@
 
  export SONAR_URL='https://sonarqube.companieshouse.gov.uk'
  #export SONAR_TOKEN="${DT_SONAR_TOKEN}"
- export SONAR_TOKEN="${DT_SONAR_TOKEN_NEW}"
+ export SONAR_TOKEN="${DT_SONAR_TOKEN_NEW_PLATFORM}"
