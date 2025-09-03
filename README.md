@@ -35,10 +35,10 @@ The DB is a meeting point for other components of the services dashboard.
 In general, the services dashboard is therefore extensible with any other components that add information to the DB.
 
 ## Deployments
-Depending on what they do, the various components have different needs to be deployed in the various environments:
+The various services are currently deployed in AWS/cidev. They work together to update Mongo, whose Atlas cluster must then be accessible from that AWS account.
 - `services-dashboard-api`: one instance is sufficient (currently deployed in cidev)
 - `services-dashboard-web`: one instance is sufficient (currently deployed in cidev)
-- `services-dashboard-ecs`: one instance is required for each AWS account (and relatedf ECS clusters) that needs to be inspected (so 3 instances: cidev/staging/live)
+- `services-dashboard-ecs`: one instance is sufficient (currently deployed in cidev)
 - `services-dashboard-tidyup`: one instance is sufficient (currently deployed in cidev)
 
 
