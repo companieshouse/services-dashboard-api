@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 import uk.gov.companieshouse.servicesdashboardapi.config.MongoConfig;
@@ -68,28 +71,34 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
       MongoProjectInfo existingInfo = mongoTemplate.findOne(query, MongoProjectInfo.class, collectionName);
 
       if (existingInfo != null) {
-            List<MongoVersionInfo> existingVersions = existingInfo.getVersions();
-            List<MongoVersionInfo> newVersions = newInfo.getVersions();
+         List<MongoVersionInfo> existingVersions = existingInfo.getVersions();
+         List<MongoVersionInfo> newVersions = newInfo.getVersions();
 
-            // Find versions that are not present in the existing document
-            for (MongoVersionInfo newVersion : newVersions) {
-               boolean versionExists = existingVersions.stream()
-                        .anyMatch(existingVersion -> existingVersion.getVersion().equals(newVersion.getVersion()));
-               if (!versionExists) {
-                  existingVersions.add(newVersion);
-               }
+         // A map to merge versions by version key
+         Map<String, MongoVersionInfo> versionMap = new HashMap<>();
+         if (existingVersions != null) {
+            for (MongoVersionInfo v : existingVersions) {
+               versionMap.put(v.getVersion(), v);
             }
+         }
+         if (newVersions != null) {
+            for (MongoVersionInfo v : newVersions) {
+               versionMap.put(v.getVersion(), v); // override or add
+            }
+         }
 
-            // Update the document with the new versions
-            Update update = new Update();
-            update.set("versions", existingVersions);
+         List<MongoVersionInfo> mergedVersions = new ArrayList<>(versionMap.values());
 
-            // Update the other fields
-            update.set("sonarKey", newInfo.getSonarKey());
-            update.set("sonarMetrics", newInfo.getSonarMetrics());
-            update.set("gitInfo", newInfo.getGitInfo());
+         // Update the document with the merged versions
+         Update update = new Update();
+         update.set("versions", mergedVersions);
 
-            mongoTemplate.updateFirst(query, update, MongoProjectInfo.class, collectionName);
+         // Update the other fields
+         update.set("sonarKey", newInfo.getSonarKey());
+         update.set("sonarMetrics", newInfo.getSonarMetrics());
+         update.set("gitInfo", newInfo.getGitInfo());
+
+         mongoTemplate.updateFirst(query, update, MongoProjectInfo.class, collectionName);
       }
    }
 }
