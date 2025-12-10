@@ -21,7 +21,7 @@ provider "aws" {
 module "secrets" {
   source = "git@github.com:companieshouse/terraform-modules//aws/parameter-store?ref=1.0.360"
 
-  name_prefix = "services-dashboard-api"
+  name_prefix = local.service_name
   kms_key_id  = data.aws_kms_key.kms_key.id
   secrets     = nonsensitive(merge(local.service_secrets, local.stack_secrets))
 }
@@ -45,7 +45,7 @@ module "lambda" {
     MONGODB_PROTOCOL    = local.service_secrets["mongo_protocol"]
     MONGODB_DBNAME      = local.service_secrets["mongo_dbname"]
     DT_SERVER_BASEURL   = local.dt_server_baseurl
-    SSM_PREFIX          = "services-dashboard-api"
+    SSM_PREFIX          = local.service_name
   }
 
   lambda_cloudwatch_event_rules = local.lambda_cloudwatch_event_rules

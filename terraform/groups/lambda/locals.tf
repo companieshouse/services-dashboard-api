@@ -35,8 +35,10 @@ locals {
   ]
 
   # Secrets
-  stack_secrets   = data.vault_generic_secret.stack_secrets.data
-  service_secrets = data.vault_generic_secret.service_secrets.data
+  stack_secrets        = data.vault_generic_secret.stack_secrets.data
+  stack_secrets_path   = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}"
+  service_secrets      = data.vault_generic_secret.service_secrets.data
+  service_secrets_path = "${local.stack_secrets_path}/services-dashboard"
 
   # DEPENDENCY-TRACK SETTINGS
   dt_server_baseurl = "https://dependency-track.companieshouse.gov.uk"

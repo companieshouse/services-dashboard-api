@@ -1,9 +1,9 @@
 data "vault_generic_secret" "stack_secrets" {
-  path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}"
+  path = local.stack_secrets_path
 }
 
 data "vault_generic_secret" "service_secrets" {
-  path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}/services-dashboard"
+  path = local.service_secrets_path
 }
 
 data "aws_kms_key" "kms_key" {
@@ -11,33 +11,6 @@ data "aws_kms_key" "kms_key" {
 }
 
 data "aws_caller_identity" "aws_identity" {}
-
-# allow to write logs to CloudWatch
-data "aws_iam_policy_document" "lambda_policy" {
-  statement {
-    sid    = "AllowLambdaToWriteLogs"
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = [
-      "arn:aws:logs:*:*:*"
-    ]
-  }
-
-  statement {
-    sid    = "AllowLambdaVpcAccess"
-    effect = "Allow"
-    actions = [
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DeleteNetworkInterface"
-    ]
-    resources = ["*"]
-  }
-}
 
 # Policy to allow Lambda to access SSM Parameter Store
 data "aws_iam_policy_document" "ssm_access_policy" {
