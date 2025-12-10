@@ -17,3 +17,48 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+module "secrets" {
+  source = "git@github.com:companieshouse/terraform-modules//aws/parameter-store?ref=1.0.360"
+
+  name_prefix = "services-dashboard-api"
+  kms_key_id  = data.aws_kms_key.kms_key.id
+  secrets     = nonsensitive(merge(local.service_secrets, local.stack_secrets))
+}
+
+module "lambda" {
+  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.361"
+
+  environment           = var.environment
+  function_name         = local.lambda_function_name
+  lambda_runtime        = var.lambda_runtime
+  lambda_handler        = var.lambda_handler_name
+
+  lambda_code_s3_bucket = var.release_bucket_name
+  lambda_code_s3_key    = var.release_artifact_key
+
+  lambda_memory_size         = var.lambda_memory_size
+  lambda_timeout_seconds     = var.lambda_timeout_seconds
+  lambda_logs_retention_days = var.lambda_logs_retention_days
+
+  lambda_env_vars = {
+    MONGODB_PROTOCOL    = local.service_secrets["mongo_protocol"]
+    MONGODB_DBNAME      = local.service_secrets["mongo_dbname"]
+    DT_SERVER_BASEURL   = local.dt_server_baseurl
+    SSM_PREFIX          = "services-dashboard-api"
+  }
+
+  lambda_cloudwatch_event_rules = local.lambda_cloudwatch_event_rules
+  
+  additional_policies = local.additional_iam_policies_json
+
+  lambda_sg_egress_rule = {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lambda_vpc_access_subnet_ids = local.lambda_vpc_access_subnet_ids
+  lambda_vpc_id                = data.aws_vpc.vpc.id
+}

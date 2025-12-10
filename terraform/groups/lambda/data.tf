@@ -1,27 +1,16 @@
 data "vault_generic_secret" "stack_secrets" {
-  path = local.stack_secrets_path
+  path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}"
 }
 
 data "vault_generic_secret" "service_secrets" {
-  path = local.service_secrets_path
+  path = "applications/${var.aws_profile}/${var.environment}/${local.stack_name}/services-dashboard"
 }
 
-# Policy to attach to the IAM role for the Lambda function
-data "aws_iam_policy_document" "lambda_trust" {
-  statement {
-    sid    = "LambdaCanAssumeThisRole"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole"
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "lambda.amazonaws.com"
-      ]
-    }
-  }
+data "aws_kms_key" "kms_key" {
+  key_id = local.kms_alias
 }
+
+data "aws_caller_identity" "aws_identity" {}
 
 # allow to write logs to CloudWatch
 data "aws_iam_policy_document" "lambda_policy" {
@@ -64,7 +53,6 @@ data "aws_iam_policy_document" "ssm_access_policy" {
   }
 }
 
-
 data "aws_vpc" "vpc" {
   filter {
     name   = "tag:Name"
@@ -75,7 +63,24 @@ data "aws_vpc" "vpc" {
 #Get application subnet IDs
 data "aws_subnets" "application" {
   filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.vpc.id]
+  }
+
+  filter {
     name   = "tag:Name"
     values = [local.application_subnet_pattern]
   }
+}
+
+data "local_file" "lightscan" {
+  filename = "${local.json_folder}/lightscan.json"
+}
+
+data "local_file" "deepscan" {
+  filename = "${local.json_folder}/deepscan.json"
+}
+
+data "local_file" "endolscan" {
+  filename = "${local.json_folder}/endolscan.json"
 }
