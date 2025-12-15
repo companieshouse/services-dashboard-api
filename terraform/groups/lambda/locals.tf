@@ -2,13 +2,12 @@ locals {
 
   service_name         = "services-dashboard-api"
   stack_name           = "rand-pocs-stack"
-  lambda_function_name = "${local.service_name}"
+  lambda_function_name = local.service_name
   kms_alias            = "alias/aws/ssm"
   json_folder          = "input_json/${var.aws_profile}"
 
   vpc_name                     = local.stack_secrets["vpc_name"]
   lambda_vpc_access_subnet_ids = data.aws_subnets.application.ids
-  application_subnet_ids       = data.aws_subnets.application.ids
   application_subnet_pattern   = local.stack_secrets["application_subnet_pattern"]
 
   additional_iam_policies_json = [data.aws_iam_policy_document.ssm_access_policy.json]

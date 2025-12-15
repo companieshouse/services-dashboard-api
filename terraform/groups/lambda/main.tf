@@ -1,12 +1,15 @@
 terraform {
   backend "s3" {
   }
+
   required_version = "~> 1.3"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 5.72.0"
     }
+
     vault = {
       source  = "hashicorp/vault"
       version = "~> 3.18.0"
@@ -19,7 +22,7 @@ provider "aws" {
 }
 
 module "secrets" {
-  source = "git@github.com:companieshouse/terraform-modules//aws/parameter-store?ref=1.0.360"
+  source = "git@github.com:companieshouse/terraform-modules//aws/parameter-store?ref=1.0.363"
 
   name_prefix = local.service_name
   kms_key_id  = data.aws_kms_key.kms_key.id
@@ -27,12 +30,12 @@ module "secrets" {
 }
 
 module "lambda" {
-  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.361"
+  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.363"
 
-  environment           = var.environment
-  function_name         = local.lambda_function_name
-  lambda_runtime        = var.lambda_runtime
-  lambda_handler        = var.lambda_handler_name
+  environment    = var.environment
+  function_name  = local.lambda_function_name
+  lambda_runtime = var.lambda_runtime
+  lambda_handler = var.lambda_handler_name
 
   lambda_code_s3_bucket = var.release_bucket_name
   lambda_code_s3_key    = var.release_artifact_key
@@ -42,15 +45,14 @@ module "lambda" {
   lambda_logs_retention_days = var.lambda_logs_retention_days
 
   lambda_env_vars = {
-    MONGODB_PROTOCOL    = local.service_secrets["mongo_protocol"]
-    MONGODB_DBNAME      = local.service_secrets["mongo_dbname"]
-    DT_SERVER_BASEURL   = local.dt_server_baseurl
-    SSM_PREFIX          = local.service_name
+    MONGODB_PROTOCOL  = local.service_secrets["mongo_protocol"]
+    MONGODB_DBNAME    = local.service_secrets["mongo_dbname"]
+    DT_SERVER_BASEURL = local.dt_server_baseurl
+    SSM_PREFIX        = local.service_name
   }
 
   lambda_cloudwatch_event_rules = local.lambda_cloudwatch_event_rules
-  
-  additional_policies = local.additional_iam_policies_json
+  additional_policies           = local.additional_iam_policies_json
 
   lambda_sg_egress_rule = {
     from_port   = 0
