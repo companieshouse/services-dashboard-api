@@ -4,7 +4,7 @@ locals {
   stack_name           = "rand-pocs-stack"
   lambda_function_name = local.service_name
   kms_alias            = "alias/aws/ssm"
-  json_folder          = "input_json/${var.aws_profile}"
+  json_folder          = "input_json/${var.aws_profile}/${var.environment}"
 
   vpc_name                     = local.stack_secrets["vpc_name"]
   lambda_vpc_access_subnet_ids = data.aws_subnets.application.ids
