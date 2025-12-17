@@ -6,49 +6,11 @@ data "vault_generic_secret" "service_secrets" {
   path = local.service_secrets_path
 }
 
-# Policy to attach to the IAM role for the Lambda function
-data "aws_iam_policy_document" "lambda_trust" {
-  statement {
-    sid    = "LambdaCanAssumeThisRole"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole"
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "lambda.amazonaws.com"
-      ]
-    }
-  }
+data "aws_kms_key" "kms_key" {
+  key_id = local.kms_alias
 }
 
-# allow to write logs to CloudWatch
-data "aws_iam_policy_document" "lambda_policy" {
-  statement {
-    sid    = "AllowLambdaToWriteLogs"
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = [
-      "arn:aws:logs:*:*:*"
-    ]
-  }
-
-  statement {
-    sid    = "AllowLambdaVpcAccess"
-    effect = "Allow"
-    actions = [
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DeleteNetworkInterface"
-    ]
-    resources = ["*"]
-  }
-}
+data "aws_caller_identity" "aws_identity" {}
 
 # Policy to allow Lambda to access SSM Parameter Store
 data "aws_iam_policy_document" "ssm_access_policy" {
@@ -64,7 +26,6 @@ data "aws_iam_policy_document" "ssm_access_policy" {
   }
 }
 
-
 data "aws_vpc" "vpc" {
   filter {
     name   = "tag:Name"
@@ -75,7 +36,24 @@ data "aws_vpc" "vpc" {
 #Get application subnet IDs
 data "aws_subnets" "application" {
   filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.vpc.id]
+  }
+
+  filter {
     name   = "tag:Name"
     values = [local.application_subnet_pattern]
   }
+}
+
+data "local_file" "lightscan" {
+  filename = "${local.json_folder}/lightscan.json"
+}
+
+data "local_file" "deepscan" {
+  filename = "${local.json_folder}/deepscan.json"
+}
+
+data "local_file" "endolscan" {
+  filename = "${local.json_folder}/endolscan.json"
 }

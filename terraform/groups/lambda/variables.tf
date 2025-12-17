@@ -14,6 +14,7 @@ variable "release_bucket_name" {
   type        = string
   description = "The name of the S3 bucket containing the release artifact for the Lambda function"
 }
+
 variable "release_artifact_key" {
   type        = string
   description = "Key of the Lambda code object in the S3 bucket"
@@ -25,25 +26,25 @@ variable "aws_account" {
   description = "The AWS account name"
   default     = "development"
 }
+
 variable "aws_region" {
   type        = string
   description = "The AWS region in which resources will be created"
   default     = "eu-west-2"
 }
 
-
 variable "lambda_runtime" {
   type        = string
   description = "The lambda runtime to use for the function"
   default     = "java21"
 }
+
 variable "lambda_handler_name" {
   type        = string
   description = "The lambda function entrypoint"
   # default     = "uk.gov.companieshouse.servicesdashboardapi.lambda.HandlerCronEvent::handleRequest"
   default = "org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest"
 }
-
 
 variable "lambda_memory_size" {
   type        = number
@@ -56,7 +57,6 @@ variable "lambda_timeout_seconds" {
   description = "The amount of time the lambda function is allowed to run before being stopped"
   default     = 600
 }
-
 
 variable "lambda_logs_retention_days" {
   type        = number
