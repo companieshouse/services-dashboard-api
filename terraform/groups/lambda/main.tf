@@ -49,6 +49,8 @@ module "lambda" {
     MONGODB_DBNAME    = local.service_secrets["mongo_dbname"]
     DT_SERVER_BASEURL = local.dt_server_baseurl
     SSM_PREFIX        = local.service_name
+    OTEL_LOG_ENABLED  = true
+    OTEL_EXPORTER_OTLP_ENDPOINT = "https://otel-collector.cidev.aws.chdev.org"
   }
 
   lambda_cloudwatch_event_rules = local.lambda_cloudwatch_event_rules
