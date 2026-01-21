@@ -30,7 +30,7 @@ module "secrets" {
 }
 
 module "lambda" {
-  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.363"
+  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=66b32bc1ff308973a0504d303febae7fce9148e3"
 
   environment    = var.environment
   function_name  = local.lambda_function_name
