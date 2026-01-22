@@ -14,19 +14,19 @@ locals {
 
   lambda_cloudwatch_event_rules = [
     {
-      name                = "${local.lambda_function_name}-lightscan"
+      name                = "${local.lambda_function_name}-${var.environment}-lightscan"
       description         = "Trigger Lambda often for light scans"
       schedule_expression = "cron(45 6-17 ? * MON-FRI *)"
       target_input        = data.local_file.lightscan.content
     },
     {
-      name                = "${local.lambda_function_name}-deepscan"
+      name                = "${local.lambda_function_name}-${var.environment}-deepscan"
       description         = "Trigger Lambda seldom for deep scans"
       schedule_expression = "cron(15 7 ? 1/1 TUE#1 *)"
       target_input        = data.local_file.deepscan.content
     },
     {
-      name                = "${local.lambda_function_name}-load-endol"
+      name                = "${local.lambda_function_name}-${var.environment}-load-endol"
       description         = "Trigger Lambda daily for End of Life scans"
       schedule_expression = "cron(0 7 ? * MON-FRI *)"
       target_input        = data.local_file.endolscan.content
