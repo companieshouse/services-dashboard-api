@@ -45,8 +45,6 @@ module "lambda" {
   lambda_logs_retention_days = var.lambda_logs_retention_days
 
   lambda_env_vars = {
-    MONGODB_PROTOCOL  = local.service_secrets["mongo_protocol"]
-    MONGODB_DBNAME    = local.service_secrets["mongo_dbname"]
     DT_SERVER_BASEURL = local.dt_server_baseurl
     SSM_PREFIX        = "/${local.service_name}"
     OTEL_LOG_ENABLED  = true
