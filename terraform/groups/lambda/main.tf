@@ -49,6 +49,7 @@ module "lambda" {
     SSM_PREFIX        = "/${local.service_name}"
     OTEL_LOG_ENABLED  = true
     OTEL_EXPORTER_OTLP_ENDPOINT = "https://otel-collector.cidev.aws.chdev.org"
+    OTEL_SERVICE_NAME = "services-dashboard-api"
   }
 
   lambda_cloudwatch_event_rules = local.lambda_cloudwatch_event_rules
