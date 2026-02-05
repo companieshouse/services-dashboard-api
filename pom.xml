@@ -22,12 +22,12 @@
       <structured-logging.version>3.0.38</structured-logging.version>
       <jackson-databind.version>2.18.2</jackson-databind.version>
       <org.mapstruct.version>1.6.3</org.mapstruct.version>
-      <spring-boot-dependencies.version>3.4.1</spring-boot-dependencies.version>
+      <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
 
       <spring-function-context.version>4.2.0</spring-function-context.version>
       <spring-function-adapter.version>4.2.0</spring-function-adapter.version>
 
-      <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
+      <spring-boot-maven-plugin.version>3.5.10</spring-boot-maven-plugin.version>
       <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
       <maven-assembly-plugin.version>3.2.0</maven-assembly-plugin.version>
       <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
