@@ -17,8 +17,12 @@ public class MongoProperties {
     @Value("${mongo.hostandport.secret}")
     private String hostandport;
 
+    @Value("${mongo.protocol.secret}")
     private String protocol;
+
+    @Value("${mongo.dbname.secret}")
     private String dbname;
+
     private String collectionNameProj;
     private String collectionNameConf;
 
