@@ -21,8 +21,8 @@ locals {
     },
     {
       name                = "${local.lambda_function_name}-${var.environment}-deepscan"
-      description         = "Trigger Lambda seldom for deep scans"
-      schedule_expression = "cron(15 7 ? 1/1 TUE#1 *)"
+      description         = "Trigger Lambda each evening for deep scans"
+      schedule_expression = "cron(00 20 ? * MON-FRI *)"
       target_input        = data.local_file.deepscan.content
     },
     {
