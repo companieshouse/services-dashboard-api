@@ -39,6 +39,12 @@
       <aws.lambda.core.version>1.2.2</aws.lambda.core.version>
       <aws.lambda.events.version>3.11.0</aws.lambda.events.version>
 
+      <!-- Sonar config -->
+      <sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
+      <sonar.login></sonar.login>
+      <sonar.password></sonar.password>
+      <sonar.projectKey>uk.gov.companieshouse:services-dashboard-api</sonar.projectKey>
+      <sonar.projectName>services-dashboard-api</sonar.projectName>
 
       <aws.java.ssm.version>2.29.35</aws.java.ssm.version>
       <main-class>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</main-class>
