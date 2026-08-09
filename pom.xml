@@ -20,7 +20,7 @@
 
       <log4j.version>2.24.3</log4j.version>
       <structured-logging.version>3.0.38</structured-logging.version>
-      <jackson-databind.version>2.18.2</jackson-databind.version>
+      <jackson-databind.version>2.18.9</jackson-databind.version>
       <org.mapstruct.version>1.6.3</org.mapstruct.version>
       <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
 
