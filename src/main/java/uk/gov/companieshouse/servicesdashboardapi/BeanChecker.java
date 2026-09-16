@@ -11,10 +11,9 @@ import java.util.Arrays;
 @Component
 public class BeanChecker implements CommandLineRunner {
 
-   @Value("${loglevel}")
-   String logLevel;
-
     private final ApplicationContext applicationContext;
+    @Value("${loglevel}")
+    String logLevel;
 
     public BeanChecker(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -22,12 +21,12 @@ public class BeanChecker implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-      if (logLevel.equals("debug")) {
-         String[] beanNames = applicationContext.getBeanDefinitionNames();
-         Arrays.sort(beanNames);
-         for (String beanName : beanNames) {
-               System.out.println(beanName);
-         }
-      }
-   }
+        if (logLevel.equals("debug")) {
+            String[] beanNames = applicationContext.getBeanDefinitionNames();
+            Arrays.sort(beanNames);
+            for (String beanName : beanNames) {
+                System.out.println(beanName);
+            }
+        }
+    }
 }

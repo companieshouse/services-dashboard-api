@@ -1,9 +1,8 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.sonar;
 
-import uk.gov.companieshouse.servicesdashboardapi.utils.DeserializerSonarMeasures;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import uk.gov.companieshouse.servicesdashboardapi.utils.DeserializerSonarMeasures;
 
 import java.util.Map;
 
@@ -17,7 +16,7 @@ public class SonarComponent {
 
     @JsonProperty("measures")
     @JsonDeserialize(using = DeserializerSonarMeasures.class)
-    private Map<String, Integer>measures;
+    private Map<String, Integer> measures;
 
     // Getters and Setters
 

@@ -1,15 +1,14 @@
 package uk.gov.companieshouse.servicesdashboardapi.mapper;
 
-import java.util.List;
-import java.util.Map;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoEndoflifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Mapper

@@ -1,10 +1,10 @@
 package uk.gov.companieshouse.servicesdashboardapi.utils;
 
+import org.junit.jupiter.api.Test;
+import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Test;
-
-import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,7 +42,7 @@ class GitUtilsTest {
         releases.add(matchingAlphabetic);
         releases.add(differentPattern);
 
-       List<GitReleaseInfo> result = GitUtils.filterReleases(releases);
+        List<GitReleaseInfo> result = GitUtils.filterReleases(releases);
 
         assertEquals(2, result.size());
         assertSame(first, result.get(0));
@@ -92,7 +92,7 @@ class GitUtilsTest {
 
     @Test
     void shouldKeepFirstReleaseAndFirstDifferentReleaseCycle() {
-       GitReleaseInfo first = new GitReleaseInfo();
+        GitReleaseInfo first = new GitReleaseInfo();
         first.setVersion("ecs-service-1.0.22");
         first.setDate("2026-01-22");
 

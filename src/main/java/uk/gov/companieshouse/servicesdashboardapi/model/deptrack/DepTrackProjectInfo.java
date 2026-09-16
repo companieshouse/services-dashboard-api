@@ -1,8 +1,8 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.deptrack;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 /*
  * Example of Info:
@@ -60,82 +60,83 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
  */
 
-public class DepTrackProjectInfo  {
+public class DepTrackProjectInfo {
 
-   @JsonProperty("name")
-   private String name;
+    @JsonProperty("name")
+    private String name;
 
-   @JsonProperty("version")
-   private String version;
+    @JsonProperty("version")
+    private String version;
 
-   @JsonProperty("uuid")
-   private String uuid;
+    @JsonProperty("uuid")
+    private String uuid;
 
-   @JsonProperty("lastBomImport")
-   private long lastBomImport;
+    @JsonProperty("lastBomImport")
+    private long lastBomImport;
 
-   @JsonProperty("tags")
-   private List<DepTrackTag> tags;
+    @JsonProperty("tags")
+    private List<DepTrackTag> tags;
 
-   @JsonProperty("metrics")
-   private DepTrackMetricsInfo metrics;
+    @JsonProperty("metrics")
+    private DepTrackMetricsInfo metrics;
 
-   // Getters and Setters
-   public String getName() {
-       return name;
-   }
+    // Getters and Setters
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name) {
-       this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getVersion() {
-      return version;
-   }
+    public String getVersion() {
+        return version;
+    }
 
-   public void setVersion(String version) {
-      this.version = version;
-   }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   public String getUuid() {
-      return uuid;
-   }
+    public String getUuid() {
+        return uuid;
+    }
 
-   public void setUuid(String uuid) {
-      this.uuid = uuid;
-   }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-   public long getLastBomImport() {
-      return lastBomImport;
-   }
+    public long getLastBomImport() {
+        return lastBomImport;
+    }
 
-   public void setLastBomImport(long lastBomImport) {
-      this.lastBomImport = lastBomImport;
-   }
-   public List<DepTrackTag> getTags() {
-      return tags;
-   }
+    public void setLastBomImport(long lastBomImport) {
+        this.lastBomImport = lastBomImport;
+    }
 
-   public void setTags(List<DepTrackTag> tags) {
-         this.tags = tags;
-   }
+    public List<DepTrackTag> getTags() {
+        return tags;
+    }
 
-   public DepTrackMetricsInfo getMetrics() {
-      return metrics;
-   }
+    public void setTags(List<DepTrackTag> tags) {
+        this.tags = tags;
+    }
 
-  public void setMetrics(DepTrackMetricsInfo metrics) {
-      this.metrics = metrics;
-   }
+    public DepTrackMetricsInfo getMetrics() {
+        return metrics;
+    }
 
-   @Override
-   public String toString() {
-      return String.format("DepTrackProjectInfo{n:%s,v:%s,id:%s,imp:%s,tags:[%s],m:%s}",
-      name,
-      version,
-      uuid,
-      lastBomImport,
-      tags,
-      metrics);
-   }
+    public void setMetrics(DepTrackMetricsInfo metrics) {
+        this.metrics = metrics;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DepTrackProjectInfo{n:%s,v:%s,id:%s,imp:%s,tags:[%s],m:%s}",
+                name,
+                version,
+                uuid,
+                lastBomImport,
+                tags,
+                metrics);
+    }
 }

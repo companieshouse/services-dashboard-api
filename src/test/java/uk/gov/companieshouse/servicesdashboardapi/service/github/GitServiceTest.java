@@ -36,14 +36,14 @@ class GitServiceTest {
         serviceArea.setPropertyName("service-code-owner");
         serviceArea.setValue("Common Components");
 
-        GitCustomProperty[] expected = new GitCustomProperty[] {owner, serviceArea};
+        GitCustomProperty[] expected = new GitCustomProperty[]{owner, serviceArea};
         String endpoint = "https://api.github.com/repos/companieshouse/my-service/properties/values";
 
         when(restTemplate.exchange(
-            eq(endpoint),
-            eq(HttpMethod.GET),
-            any(HttpEntity.class),
-            eq(GitCustomProperty[].class)
+                eq(endpoint),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(GitCustomProperty[].class)
         )).thenReturn(ResponseEntity.ok(expected));
 
         GitCustomProperty[] result = gitService.getCustomProperties("my-service");
@@ -64,10 +64,10 @@ class GitServiceTest {
         String endpoint = "https://api.github.com/repos/companieshouse/my-service/properties/values";
 
         when(restTemplate.exchange(
-            eq(endpoint),
-            eq(HttpMethod.GET),
-            any(HttpEntity.class),
-            eq(GitCustomProperty[].class)
+                eq(endpoint),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(GitCustomProperty[].class)
         )).thenThrow(new RuntimeException("GitHub API unavailable"));
 
         GitCustomProperty[] result = gitService.getCustomProperties("my-service");
@@ -87,7 +87,7 @@ class GitServiceTest {
         otherProperty.setPropertyName("service-code-owner");
         otherProperty.setValue("Common Components");
 
-        String owner = gitService.getRepoOwner(new GitCustomProperty[] {otherProperty, teamOwner});
+        String owner = gitService.getRepoOwner(new GitCustomProperty[]{otherProperty, teamOwner});
 
         assertEquals("team-photon", owner);
     }
@@ -95,7 +95,7 @@ class GitServiceTest {
     @Test
     void shouldReturnNoOwnerFromCustomProperties() {
         GitService gitService = new GitService();
-        
+
         assertEquals("No-Owner", gitService.getRepoOwner(new GitCustomProperty[0]));
         assertEquals("No-Owner", gitService.getRepoOwner(null));
     }
@@ -103,7 +103,7 @@ class GitServiceTest {
     @Test
     void shouldReturnNoServiceAreaFromCustomProperties() {
         GitService gitService = new GitService();
-        
+
         assertEquals("No-Service-Area", gitService.getServiceArea(new GitCustomProperty[0]));
         assertEquals("No-Service-Area", gitService.getServiceArea(null));
     }
@@ -120,7 +120,7 @@ class GitServiceTest {
         serviceArea.setPropertyName("service-code-owner");
         serviceArea.setValue("Common Components");
 
-        String area = gitService.getServiceArea(new GitCustomProperty[] {teamOwner, serviceArea});
+        String area = gitService.getServiceArea(new GitCustomProperty[]{teamOwner, serviceArea});
 
         assertEquals("Common Components", area);
     }
