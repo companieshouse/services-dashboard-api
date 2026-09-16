@@ -68,8 +68,7 @@ public class SonarService {
                         url,
                         HttpMethod.GET, entity, String.class);
                 if (response.getStatusCode().is2xxSuccessful()) {
-                    sonarInfo = jsonMapper.readValue(response.getBody(), new TypeReference<SonarProjectInfo>() {
-                    });
+                    sonarInfo = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
 
                     ApiLogger.info(sonarInfo.toString());
                     break; // Stop the loop on the first successful response

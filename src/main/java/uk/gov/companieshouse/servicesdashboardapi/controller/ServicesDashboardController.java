@@ -32,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// import uk.gov.companieshouse.servicesdashboardapi.service.aws.EcsService;
-
 @RestController
 public class ServicesDashboardController {
 
@@ -55,13 +53,12 @@ public class ServicesDashboardController {
     @Autowired
     private GitService gitService;
 
-    // @Autowired
-    // private EcsService ecsService;
-
     @Autowired
     private EndoflifeService endolService;
+
     @Autowired
     private CustomMongoConfigRepository customMongoConfigRepository;
+
     @Autowired
     private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
 
@@ -72,14 +69,6 @@ public class ServicesDashboardController {
         this.servicesDashboardService = servicesDashboardService;
         this.servicesDepTrack = servicesDepTrack;
     }
-
-    //   @GetMapping("/services-dashboard/ecs")
-    //   public ResponseEntity<String> sourceEcs( ) {
-    //       for (String env : awsEnvs) {
-    //          ecsService.fetchClusterInfo(env);
-    //       }
-    //       return new ResponseEntity<>("ECS ok", HttpStatus.OK);
-    //    }
 
     @GetMapping("/services-dashboard/list-services")
     public ResponseEntity<List<ProjectInfo>> listServices() {
@@ -135,11 +124,6 @@ public class ServicesDashboardController {
 
             ApiLogger.info(projectInfo.toString());
         });
-
-        // this is now done by https://github.com/companieshouse/services-dashboard-ecs
-        // for (String env : awsEnvs) {
-        //    ecsService.fetchClusterInfo(env);
-        // }
 
         servicesDashboardService.createServicesDashboard();
 

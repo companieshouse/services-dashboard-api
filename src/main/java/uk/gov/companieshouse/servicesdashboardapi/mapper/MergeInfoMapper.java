@@ -33,7 +33,6 @@ public interface MergeInfoMapper {
             @Mapping(target = "sonarKey", ignore = true),  // no mapping required. Field set later
             @Mapping(target = "sonarMetrics", ignore = true),  // no mapping required. Field set later
             @Mapping(target = "gitInfo", ignore = true),  // no mapping required. Field set later
-            // @Mapping(target = "ecs",              ignore = true)   // no mapping required. Field set later
     })
     ProjectInfo mapToProjectInfo(DepTrackProjectInfo depTrackProjectInfo);
 

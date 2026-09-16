@@ -16,7 +16,6 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +66,8 @@ public class GetAllProjects extends DepTrackGetDataService<List<DepTrackProjectI
             List<DepTrackProjectInfo> result;
             ApiLogger.debug(".....SENDING REQ - offset=" + offset);
             try {
-                result = jsonMapper.readValue(response.getBody(), new TypeReference<List<DepTrackProjectInfo>>() {
-                });
+                result = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
             } catch (IOException e) {
-                e.printStackTrace();
                 ApiLogger.debug("Failed to parse Dependency Track JSON response");
                 result = Collections.emptyList();
             }

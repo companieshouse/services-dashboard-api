@@ -39,8 +39,7 @@ public class EndoflifeService {
                 String url = String.format("%s/%s.json", endolUrl, project);
                 ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
                 if (response.getStatusCode().is2xxSuccessful()) {
-                    endOfLifeInfoList = jsonMapper.readValue(response.getBody(), new TypeReference<List<EndofLifeInfo>>() {
-                    });
+                    endOfLifeInfoList = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
                     ApiLogger.info(endOfLifeInfoList.toString());
                     endofLivesInfo.put(project, endOfLifeInfoList);
                 }

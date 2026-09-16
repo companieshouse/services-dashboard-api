@@ -141,8 +141,7 @@ public class GitService {
                     httpEntity,
                     String.class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                List<GitReleaseInfo> releases = jsonMapper.readValue(response.getBody(), new TypeReference<List<GitReleaseInfo>>() {
-                });
+                List<GitReleaseInfo> releases = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
                 gitInfo.setReleases(releases);
             }
 
