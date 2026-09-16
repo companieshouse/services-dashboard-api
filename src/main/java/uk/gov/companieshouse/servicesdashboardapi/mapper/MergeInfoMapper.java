@@ -1,20 +1,19 @@
 package uk.gov.companieshouse.servicesdashboardapi.mapper;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-
-import org.mapstruct.factory.Mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
-
+import org.mapstruct.factory.Mappers;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackTag;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MergeInfoMapper {
@@ -22,19 +21,19 @@ public interface MergeInfoMapper {
     MergeInfoMapper INSTANCE = Mappers.getMapper(MergeInfoMapper.class);
 
     @Mappings({
-        @Mapping(source = "tags", target = "lang", qualifiedByName = "extractLang"),
-        @Mapping(source = "tags", target = "runtime", qualifiedByName = "extractRuntime"),
-        @Mapping(source = "metrics", target = "depTrackMetrics"),
+            @Mapping(source = "tags", target = "lang", qualifiedByName = "extractLang"),
+            @Mapping(source = "tags", target = "runtime", qualifiedByName = "extractRuntime"),
+            @Mapping(source = "metrics", target = "depTrackMetrics"),
     })
     VersionInfo mapToVersionInfo(DepTrackProjectInfo depTrackProjectInfo);
 
     @Mappings({
-        @Mapping(source = "name", target = "name"),
-        @Mapping(target = "depTrackVersions", ignore = true),  // handled manually, down here
-        @Mapping(target = "sonarKey",         ignore = true),  // no mapping required. Field set later
-        @Mapping(target = "sonarMetrics",     ignore = true),  // no mapping required. Field set later
-        @Mapping(target = "gitInfo",          ignore = true),  // no mapping required. Field set later
-        // @Mapping(target = "ecs",              ignore = true)   // no mapping required. Field set later
+            @Mapping(source = "name", target = "name"),
+            @Mapping(target = "depTrackVersions", ignore = true),  // handled manually, down here
+            @Mapping(target = "sonarKey", ignore = true),  // no mapping required. Field set later
+            @Mapping(target = "sonarMetrics", ignore = true),  // no mapping required. Field set later
+            @Mapping(target = "gitInfo", ignore = true),  // no mapping required. Field set later
+            // @Mapping(target = "ecs",              ignore = true)   // no mapping required. Field set later
     })
     ProjectInfo mapToProjectInfo(DepTrackProjectInfo depTrackProjectInfo);
 

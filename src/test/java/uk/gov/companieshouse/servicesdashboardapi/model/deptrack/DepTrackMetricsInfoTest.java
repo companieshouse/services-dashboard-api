@@ -12,39 +12,39 @@ class DepTrackMetricsInfoTest {
     @Test
     void shouldParseMetricsJsonIntoDepTrackMetricsInfo() throws Exception {
         String json = """
-            {
-                "critical": 8,
-                "high": 26,
-                "medium": 23,
-                "low": 5,
-                "unassigned": 7,
-                "vulnerabilities": 69,
-                "vulnerableComponents": 42,
-                "components": 230,
-                "suppressed": 0,
-                "findingsTotal": 69,
-                "findingsAudited": 0,
-                "findingsUnaudited": 69,
-                "inheritedRiskScore": 319.0,
-                "policyViolationsFail": 1,
-                "policyViolationsWarn": 2,
-                "policyViolationsInfo": 0,
-                "policyViolationsTotal": 3,
-                "policyViolationsAudited": 0,
-                "policyViolationsUnaudited": 0,
-                "policyViolationsSecurityTotal": 0,
-                "policyViolationsSecurityAudited": 0,
-                "policyViolationsSecurityUnaudited": 0,
-                "policyViolationsLicenseTotal": 0,
-                "policyViolationsLicenseAudited": 0,
-                "policyViolationsLicenseUnaudited": 0,
-                "policyViolationsOperationalTotal": 0,
-                "policyViolationsOperationalAudited": 0,
-                "policyViolationsOperationalUnaudited": 0,
-                "firstOccurrence": 1724366983276,
-                "lastOccurrence": 1725015967214
-            }
-            """;
+                {
+                    "critical": 8,
+                    "high": 26,
+                    "medium": 23,
+                    "low": 5,
+                    "unassigned": 7,
+                    "vulnerabilities": 69,
+                    "vulnerableComponents": 42,
+                    "components": 230,
+                    "suppressed": 0,
+                    "findingsTotal": 69,
+                    "findingsAudited": 0,
+                    "findingsUnaudited": 69,
+                    "inheritedRiskScore": 319.0,
+                    "policyViolationsFail": 1,
+                    "policyViolationsWarn": 2,
+                    "policyViolationsInfo": 0,
+                    "policyViolationsTotal": 3,
+                    "policyViolationsAudited": 0,
+                    "policyViolationsUnaudited": 0,
+                    "policyViolationsSecurityTotal": 0,
+                    "policyViolationsSecurityAudited": 0,
+                    "policyViolationsSecurityUnaudited": 0,
+                    "policyViolationsLicenseTotal": 0,
+                    "policyViolationsLicenseAudited": 0,
+                    "policyViolationsLicenseUnaudited": 0,
+                    "policyViolationsOperationalTotal": 0,
+                    "policyViolationsOperationalAudited": 0,
+                    "policyViolationsOperationalUnaudited": 0,
+                    "firstOccurrence": 1724366983276,
+                    "lastOccurrence": 1725015967214
+                }
+                """;
 
         CustomJsonMapper mapper = new CustomJsonMapper();
         DepTrackMetricsInfo metricsInfo = mapper.readValue(json, DepTrackMetricsInfo.class);

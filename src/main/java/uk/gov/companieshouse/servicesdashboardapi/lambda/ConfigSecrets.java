@@ -1,20 +1,19 @@
 package uk.gov.companieshouse.servicesdashboardapi.lambda;
 
-import java.util.Properties;
-
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.lang.NonNull;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
 import software.amazon.awssdk.services.ssm.SsmClient;
 import software.amazon.awssdk.services.ssm.model.GetParameterRequest;
 import software.amazon.awssdk.services.ssm.model.GetParameterResponse;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+
+import java.util.Properties;
 
 
 // Config init handler that modifies properties in "application.properties" with custom values
@@ -75,9 +74,9 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
         try {
             // Fetch the secret value
             GetParameterRequest request = GetParameterRequest.builder()
-                .name(secretName)
-                .withDecryption(true)
-                .build();
+                    .name(secretName)
+                    .withDecryption(true)
+                    .build();
 
             GetParameterResponse response = ssmClient.getParameter(request);
             return response.parameter().value();

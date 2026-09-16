@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.sonar;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 /*
  * Here how a response to
  * /api/measures/component?component=uk.gov.companieshouse:api-sdk-java&metricKeys=vulnerabilities,bugs,code_smells,coverage
@@ -36,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
   }
 }
  */
-public class SonarProjectInfo  {
+public class SonarProjectInfo {
 
     @JsonProperty("component")
     private SonarComponent component;
