@@ -30,11 +30,15 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
 
     private String lambdaFunctionNameOverride;
 
-    public void setLambdaFunctionNameOverride(String name) {
-        this.lambdaFunctionNameOverride = name;
+    private final SsmClient ssmClient;
+
+    public ConfigSecrets() {
+        ssmClient = SsmClient.create();
     }
 
-    private final SsmClient ssmClient = SsmClient.create();
+    public ConfigSecrets(SsmClient ssmClient) {
+        this.ssmClient = ssmClient;
+    }
 
     @Override
     public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) {
@@ -56,8 +60,8 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
             // Access properties from application.properties
             Properties properties = new Properties();
             propertySources.forEach(propertySource -> {
-                if (propertySource instanceof PropertiesPropertySource) {
-                    properties.putAll(((PropertiesPropertySource) propertySource).getSource());
+                if (propertySource instanceof PropertiesPropertySource propertiesPropertySource) {
+                    properties.putAll(propertiesPropertySource.getSource());
                 }
             });
 
@@ -93,6 +97,10 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
             ApiLogger.info("Error fetching secret: " + secretName + " - " + e.getMessage());
             return "";
         }
+    }
+
+    public void setLambdaFunctionNameOverride(String name) {
+        this.lambdaFunctionNameOverride = name;
     }
 
 }

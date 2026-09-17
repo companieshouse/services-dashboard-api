@@ -42,8 +42,7 @@ class ConfigSecretsTest {
         when(beanFactoryMock.getBean(ConfigurableEnvironment.class)).thenReturn(environmentMock);
         when(environmentMock.getPropertySources()).thenReturn(propertySourcesMock);
 
-        configSecrets = new ConfigSecrets();
-        ReflectionTestUtils.setField(configSecrets, "ssmClient", ssmClientMock);
+        configSecrets = new ConfigSecrets(ssmClientMock);
         ReflectionTestUtils.setField(configSecrets, "ssmPrefix", "/test/prefix");
     }
 
