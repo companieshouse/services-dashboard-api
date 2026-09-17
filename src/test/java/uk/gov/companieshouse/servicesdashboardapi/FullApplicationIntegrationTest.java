@@ -56,11 +56,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FullApplicationIntegrationTest {
 
     private static final WireMockServer EXTERNAL_APIS = new WireMockServer(WireMockConfiguration.options().dynamicPort());
+    private static final String AWS_REGION_PROPERTY = "aws.region";
+    private static final String PREVIOUS_AWS_REGION = System.getProperty(AWS_REGION_PROPERTY);
 
     static {
         // Only needed so the real (unmocked) ConfigSecrets bean can build a real SsmClient at
         // startup; that client is never actually invoked outside of AWS Lambda (see below).
-        System.setProperty("aws.region", "eu-west-2");
+        System.setProperty(AWS_REGION_PROPERTY, "eu-west-2");
         EXTERNAL_APIS.start();
     }
 
@@ -102,6 +104,11 @@ class FullApplicationIntegrationTest {
     @AfterAll
     static void stopWireMock() {
         EXTERNAL_APIS.stop();
+        if (PREVIOUS_AWS_REGION != null) {
+            System.setProperty(AWS_REGION_PROPERTY, PREVIOUS_AWS_REGION);
+        } else {
+            System.clearProperty(AWS_REGION_PROPERTY);
+        }
     }
 
     @BeforeEach
