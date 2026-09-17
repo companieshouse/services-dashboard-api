@@ -1,90 +1,115 @@
 package uk.gov.companieshouse.servicesdashboardapi.config;
 
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import uk.gov.companieshouse.servicesdashboardapi.lambda.ConfigSecrets;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {MongoConfigTest.TestConfig.class})
+@ExtendWith(MockitoExtension.class)
 class MongoConfigTest {
 
-    @Autowired
+    @InjectMocks
     private MongoConfig mongoConfig;
 
-    @Autowired
+    @Mock
     private MongoProperties mongoProperties;
 
-    /**
-     * Tests the `mongoClient` method to ensure a valid `MongoClient` is returned.
-     */
+    private MockedStatic<MongoClients> mongoClients;
+    private MongoClient mongoClient;
+
+    @BeforeEach
+    void setUp() {
+        mongoClient = mock(MongoClient.class);
+        mongoClients = mockStatic(MongoClients.class);
+        mongoClients.when(() -> MongoClients.create(org.mockito.ArgumentMatchers.any(com.mongodb.MongoClientSettings.class)))
+                .thenReturn(mongoClient);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mongoClients.close();
+    }
+
     @Test
     void testMongoClient() {
-        // Mock property values
         when(mongoProperties.getUser()).thenReturn("testUser");
         when(mongoProperties.getPassword()).thenReturn("testPassword");
         when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("testDb");
         when(mongoProperties.getProtocol()).thenReturn("mongodb");
-        // Invoke the method under test
-        MongoClient mongoClient = mongoConfig.mongoClient();
-        // Assertions
-        assertNotNull(mongoClient, "The mongoClient should not be null");
+
+        try (MongoClient client = mongoConfig.mongoClient()) {
+            assertNotNull(client, "The mongoClient should not be null");
+        }
     }
 
     @Test
     void shouldReturnNonNullMongoDatabaseFactory() {
         when(mongoProperties.getUser()).thenReturn("");
-        when(mongoProperties.getPassword()).thenReturn("");
         when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("testDb");
         when(mongoProperties.getProtocol()).thenReturn("mongodb");
-        MongoDatabaseFactory factory = mongoConfig.mongoDbFactory();
-        assertNotNull(factory, "The MongoDatabaseFactory should not be null");
+
+        try (MongoClient client = mongoConfig.mongoClient()) {
+            MongoDatabaseFactory factory = mongoConfig.mongoDbFactory(client);
+            assertNotNull(factory, "The MongoDatabaseFactory should not be null");
+        }
     }
 
     @Test
     void shouldCreateDatabaseFactoryWithValidDatabaseName() {
         when(mongoProperties.getUser()).thenReturn("");
-        when(mongoProperties.getPassword()).thenReturn("");
         when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("myApplication");
         when(mongoProperties.getProtocol()).thenReturn("mongodb");
-        MongoDatabaseFactory factory = mongoConfig.mongoDbFactory();
-        assertNotNull(factory, "Factory should be created with valid database name");
+
+        try (MongoClient client = mongoConfig.mongoClient()) {
+            MongoDatabaseFactory factory = mongoConfig.mongoDbFactory(client);
+            assertNotNull(factory, "Factory should be created with valid database name");
+        }
     }
 
     @Test
     void shouldCreateFactoryFromValidMongoClientWithCredentials() {
         when(mongoProperties.getUser()).thenReturn("admin");
         when(mongoProperties.getPassword()).thenReturn("secret");
-        when(mongoProperties.getHostandport()).thenReturn("mongodb.example.com:27017");
+        when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("production");
         when(mongoProperties.getProtocol()).thenReturn("mongodb");
-        MongoDatabaseFactory factory = mongoConfig.mongoDbFactory();
-        assertNotNull(factory, "Factory should be created with authenticated MongoClient");
+
+        try (MongoClient client = mongoConfig.mongoClient()) {
+            MongoDatabaseFactory factory = mongoConfig.mongoDbFactory(client);
+            assertNotNull(factory, "Factory should be created with authenticated MongoClient");
+        }
     }
 
     @Test
     void shouldReturnMongoTemplateWhenConfigurationIsValid() {
         when(mongoProperties.getUser()).thenReturn("");
-        when(mongoProperties.getPassword()).thenReturn("");
         when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("servicesDashboard");
         when(mongoProperties.getProtocol()).thenReturn("mongodb");
 
-        MongoTemplate mongoTemplate = mongoConfig.mongoTemplate();
+        try (MongoClient client = mongoConfig.mongoClient()) {
+            MongoDatabaseFactory factory = mongoConfig.mongoDbFactory(client);
+            MongoTemplate mongoTemplate = mongoConfig.mongoTemplate(factory);
 
-        assertNotNull(mongoTemplate, "MongoTemplate should be created for valid configuration");
+            assertNotNull(mongoTemplate, "MongoTemplate should be created for valid configuration");
+        }
     }
 
     @Test
@@ -95,48 +120,28 @@ class MongoConfigTest {
         when(mongoProperties.getDbname()).thenReturn("servicesDashboard");
         when(mongoProperties.getProtocol()).thenReturn("mongodb");
 
-        MongoTemplate mongoTemplate = mongoConfig.mongoTemplate();
+        try (MongoClient client = mongoConfig.mongoClient()) {
+            MongoDatabaseFactory factory = mongoConfig.mongoDbFactory(client);
+            MongoTemplate mongoTemplate = mongoConfig.mongoTemplate(factory);
 
-        assertNotNull(mongoTemplate, "MongoTemplate should be created when credentials are set");
+            assertNotNull(mongoTemplate, "MongoTemplate should be created when credentials are set");
+        }
     }
 
     @Test
     void shouldThrowExceptionWhenDatabaseNameIsEmptyForMongoTemplate() {
-        when(mongoProperties.getUser()).thenReturn("");
-        when(mongoProperties.getPassword()).thenReturn("");
-        when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("");
-        when(mongoProperties.getProtocol()).thenReturn("mongodb");
 
-        assertThrows(IllegalArgumentException.class, () -> mongoConfig.mongoTemplate());
+        assertThrows(IllegalArgumentException.class, () -> mongoConfig.mongoDbFactory(mongoClient));
     }
 
     @Test
     void shouldThrowExceptionWhenProtocolIsInvalidForMongoTemplate() {
         when(mongoProperties.getUser()).thenReturn("");
-        when(mongoProperties.getPassword()).thenReturn("");
         when(mongoProperties.getHostandport()).thenReturn("localhost:27017");
         when(mongoProperties.getDbname()).thenReturn("servicesDashboard");
         when(mongoProperties.getProtocol()).thenReturn("not-a-valid-protocol");
 
-        assertThrows(IllegalArgumentException.class, () -> mongoConfig.mongoTemplate());
-    }
-
-    @Configuration
-    static class TestConfig {
-        @Bean
-        public ConfigSecrets configSecrets() {
-            return mock(ConfigSecrets.class);
-        }
-
-        @Bean
-        public MongoConfig mongoConfig() {
-            return new MongoConfig();
-        }
-
-        @Bean
-        public MongoProperties mongoProperties() {
-            return mock(MongoProperties.class);
-        }
+        assertThrows(IllegalArgumentException.class, () -> mongoConfig.mongoClient());
     }
 }

@@ -53,19 +53,18 @@ public class MongoConfig {
     }
 
     @Bean
-    public MongoDatabaseFactory mongoDbFactory() {
-        return new SimpleMongoClientDatabaseFactory(mongoClient(), mongoProperties.getDbname());
+    public MongoDatabaseFactory mongoDbFactory(MongoClient mongoClient) {
+        return new SimpleMongoClientDatabaseFactory(mongoClient, mongoProperties.getDbname());
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() {
-        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory()), new MongoMappingContext());
+    public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDbFactory) {
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), new MongoMappingContext());
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
 
-        return new MongoTemplate(mongoDbFactory(), converter);
+        return new MongoTemplate(mongoDbFactory, converter);
     }
 }
-
 
 
 
