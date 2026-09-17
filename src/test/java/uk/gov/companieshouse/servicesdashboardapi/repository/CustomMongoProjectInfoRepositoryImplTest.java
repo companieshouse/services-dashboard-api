@@ -151,7 +151,7 @@ class CustomMongoProjectInfoRepositoryImplTest {
     @Test
     void findByNameReturnsProjectWhenPresent() {
         MongoProjectInfo existing = projectInfo("service-a", List.of(version("1.0.0", "uuid-1")), "sonar-a", Map.of("bugs", 2), gitInfo("owner-a"));
-        when(mongoTemplate.findOne(any(Query.class), eq(MongoProjectInfo.class))).thenReturn(existing);
+        when(mongoTemplate.findOne(any(Query.class), eq(MongoProjectInfo.class), eq(COLLECTION))).thenReturn(existing);
 
         assertTrue(repository.findByName("service-a").isPresent());
         assertSame(existing, repository.findByName("service-a").orElseThrow());
@@ -159,7 +159,7 @@ class CustomMongoProjectInfoRepositoryImplTest {
 
     @Test
     void findByNameReturnsEmptyWhenNotPresent() {
-        when(mongoTemplate.findOne(any(Query.class), eq(MongoProjectInfo.class))).thenReturn(null);
+        when(mongoTemplate.findOne(any(Query.class), eq(MongoProjectInfo.class), eq(COLLECTION))).thenReturn(null);
 
         assertTrue(repository.findByName("service-a").isEmpty());
     }
