@@ -66,7 +66,7 @@ class GitUtilsTest {
         List<GitReleaseInfo> result = GitUtils.filterReleases(releases);
 
         assertEquals(1, result.size());
-        assertSame(first, result.get(0));
+        assertSame(first, result.getFirst());
     }
 
     @Test

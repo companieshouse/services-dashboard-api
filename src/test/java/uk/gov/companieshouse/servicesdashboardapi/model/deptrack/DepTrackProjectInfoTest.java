@@ -75,7 +75,7 @@ class DepTrackProjectInfoTest {
 
         assertNotNull(projectInfo.getTags());
         assertEquals(2, projectInfo.getTags().size());
-        assertEquals("lang:java", projectInfo.getTags().get(0).getName());
+        assertEquals("lang:java", projectInfo.getTags().getFirst().getName());
 
         assertNotNull(projectInfo.getMetrics());
         assertEquals(8, projectInfo.getMetrics().getCritical());

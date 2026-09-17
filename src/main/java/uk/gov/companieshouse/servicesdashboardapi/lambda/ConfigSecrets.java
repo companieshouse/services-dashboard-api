@@ -15,18 +15,24 @@ import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 import java.util.Properties;
 
-
-// Config init handler that modifies properties in "application.properties" with custom values
-// for properties ending with ".secret" and which are retrieved from AWS Paramet Store.
-// This handler is executed before the application context is loaded, and so all the @Value
-// annotations are resolved with the custom values.
-// This handler is only used when running as a Lambda function (env var "AWS_LAMBDA_FUNCTION_NAME" defined)
-
+/**
+ * Config init handler that modifies properties in "application.properties" with custom values
+ * for properties ending with ".secret" and which are retrieved from AWS Parameter Store.
+ * This handler is executed before the application context is loaded, and so all the @Value
+ * annotations are resolved with the custom values.
+ * This handler is only used when running as a Lambda function (env var "AWS_LAMBDA_FUNCTION_NAME" defined)
+ **/
 @Component
 @PropertySource("classpath:application.properties")
 public class ConfigSecrets implements BeanFactoryPostProcessor {
 
     private final String ssmPrefix = System.getenv("SSM_PREFIX");
+
+    private String lambdaFunctionNameOverride;
+
+    public void setLambdaFunctionNameOverride(String name) {
+        this.lambdaFunctionNameOverride = name;
+    }
 
     private final SsmClient ssmClient = SsmClient.create();
 
@@ -40,7 +46,9 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
         ApiLogger.info("Loading secrets from AWS Param Store (prefix: " + ssmPrefix + ")");
         ConfigurableEnvironment environment = beanFactory.getBean(ConfigurableEnvironment.class);
 
-        String lambdaFunctionName = System.getenv("AWS_LAMBDA_FUNCTION_NAME");
+        String lambdaFunctionName = lambdaFunctionNameOverride != null
+                ? lambdaFunctionNameOverride
+                : System.getenv("AWS_LAMBDA_FUNCTION_NAME");
         if (lambdaFunctionName != null && !lambdaFunctionName.isEmpty()) {
             ApiLogger.info("Running as Lambda function: " + lambdaFunctionName);
             MutablePropertySources propertySources = environment.getPropertySources();

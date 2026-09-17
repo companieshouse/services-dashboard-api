@@ -23,7 +23,7 @@ import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoConfigRe
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoProjectInfoRepository;
 import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
-import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndoflifeService;
+import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndOfLifeService;
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
@@ -54,7 +54,7 @@ public class ServicesDashboardController {
     private GitService gitService;
 
     @Autowired
-    private EndoflifeService endolService;
+    private EndOfLifeService endolService;
 
     @Autowired
     private CustomMongoConfigRepository customMongoConfigRepository;
@@ -89,7 +89,7 @@ public class ServicesDashboardController {
         ApiLogger.info("Failure in integer conversion of Response's header total projects");
     }
 
-    private void filterList(List<DepTrackProjectInfo> listDepTrack) {
+    void filterList(List<DepTrackProjectInfo> listDepTrack) {
         // if deepScanEnabled is false, then avoid querying (Sonar & GitHub)-apis for
         // uuids already known in Mongo
         if (!deepScanEnabled) {
@@ -103,7 +103,7 @@ public class ServicesDashboardController {
         }
     }
 
-    private Map<String, ProjectInfo> loadListServices() {
+    Map<String, ProjectInfo> loadListServices() {
         ApiLogger.info("---------list-services START");
         List<DepTrackProjectInfo> listDepTrack = this.servicesDepTrack.fetch();
         filterList(listDepTrack);
@@ -133,7 +133,7 @@ public class ServicesDashboardController {
 
     public void loadListEol() {
         ApiLogger.info("loadListEol START");
-        Map<String, List<EndofLifeInfo>> endolMap = endolService.fetcEndofLives();
+        Map<String, List<EndofLifeInfo>> endolMap = endolService.fetchEndOfLives();
         ConfigInfo configInfo = new ConfigInfo();
         configInfo.setEndol(endolMap);
         MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
