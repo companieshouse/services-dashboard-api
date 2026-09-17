@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Health check controller for Services Dashboard API
  * <p>
- * TODO - Replace with Spring Boot Actuator health check endpoint in future
+ * TO DO - Replace with Spring Boot Actuator health check endpoint in future
  */
 @RestController
 public class HealthCheckController {

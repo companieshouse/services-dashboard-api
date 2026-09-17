@@ -59,7 +59,8 @@ class ProjectInfoTest {
     void shouldThrowWhenAddingVersionWithoutInitializingVersionList() {
         ProjectInfo projectInfo = new ProjectInfo();
 
-        assertThrows(NullPointerException.class, () -> projectInfo.addVersion(new VersionInfo()));
+        VersionInfo versionInfo = new VersionInfo();
+        assertThrows(NullPointerException.class, () -> projectInfo.addVersion(versionInfo));
     }
 
     @Test
