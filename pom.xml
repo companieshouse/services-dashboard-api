@@ -278,12 +278,13 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Source: https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-core -->
+            <!-- Source: https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-bom -->
             <dependency>
                 <groupId>org.mongodb</groupId>
-                <artifactId>mongodb-driver-core</artifactId>
+                <artifactId>mongodb-driver-bom</artifactId>
                 <version>5.11.1</version>
-                <scope>compile</scope>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- Source: https://mvnrepository.com/artifact/io.netty/netty-bom -->
@@ -448,7 +449,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <argLine>
-                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                        @{argLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
                     </argLine>
                 </configuration>
             </plugin>
