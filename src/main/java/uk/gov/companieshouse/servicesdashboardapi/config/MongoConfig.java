@@ -12,7 +12,10 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+
+import java.util.Collections;
 
 @Configuration
 public class MongoConfig {
@@ -59,8 +62,18 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDbFactory) {
-        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), new MongoMappingContext());
+        // Register the standard java.time (Jsr310) converters so types such as Instant/LocalDate
+        // used in DAO models are recognised as simple types rather than entities to introspect.
+        MongoCustomConversions customConversions = new MongoCustomConversions(Collections.emptyList());
+
+        MongoMappingContext mappingContext = new MongoMappingContext();
+        mappingContext.setSimpleTypeHolder(customConversions.getSimpleTypeHolder());
+        mappingContext.afterPropertiesSet();
+
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mappingContext);
+        converter.setCustomConversions(customConversions);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        converter.afterPropertiesSet();
 
         return new MongoTemplate(mongoDbFactory, converter);
     }

@@ -14,13 +14,12 @@ import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,10 +27,10 @@ import java.util.regex.Pattern;
 public interface ProjectInfoMapper {
     ProjectInfoMapper INSTANCE = Mappers.getMapper(ProjectInfoMapper.class);
 
-    // Long to Date
-    @Named("longToDate")
-    static Date longToDate(long epoch) {
-        return new Date(epoch);
+    // Long (epoch millis) to Instant
+    @Named("longToInstant")
+    static Instant longToInstant(long epoch) {
+        return Instant.ofEpochMilli(epoch);
     }
 
     // Map from ProjectInfo to MongoProjectInfo, with custom mapping for the "depTrackVersions" field.
@@ -42,8 +41,8 @@ public interface ProjectInfoMapper {
     List<MongoVersionInfo> mapVersionInfoList(List<VersionInfo> versionInfoList);
 
     // Map each VersionInfo to MongoVersionInfo
-    // Custom mapping metrics & Long to Date
-    @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToDate")
+    // Custom mapping metrics & Long to Instant
+    @Mapping(source = "lastBomImport", target = "lastBomImport", qualifiedByName = "longToInstant")
     @Mapping(source = "depTrackMetrics", target = "metrics")
     MongoVersionInfo mapVersionInfoToMongoVersionInfo(VersionInfo versionInfo);
 
@@ -62,19 +61,17 @@ public interface ProjectInfoMapper {
         return mapProjectInfoList(new ArrayList<>(projectInfoMap.values()));
     }
 
-    // Custom mapping Release (single entry)  (String to Date)
-    @Mapping(source = "date", target = "date", qualifiedByName = "stringToDate")
+    // Custom mapping Release (single entry)  (String to LocalDate)
+    @Mapping(source = "date", target = "date", qualifiedByName = "stringToLocalDate")
     MongoGitReleaseInfo toMongoGitReleaseInfo(GitReleaseInfo gitReleaseInfo);
 
     // mapping Releases (full List)
     List<MongoGitReleaseInfo> toMongoGitReleaseInfoList(List<GitReleaseInfo> releases);
 
-    // String to Date
-    @Named("stringToDate")
-    default Date stringToDate(String date) {
+    // String to LocalDate
+    @Named("stringToLocalDate")
+    default LocalDate stringToLocalDate(String date) {
         String defaultDateString = "1970-01-01";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String extractedDate = defaultDateString;
 
         try {
@@ -90,14 +87,10 @@ public interface ProjectInfoMapper {
         }
 
         try {
-            return sdf.parse(extractedDate);
-        } catch (ParseException e) {
+            return LocalDate.parse(extractedDate);
+        } catch (DateTimeParseException e) {
             ApiLogger.info("Failed to parse extracted date: " + extractedDate);
-            try {
-                return sdf.parse(defaultDateString);
-            } catch (ParseException ex) {
-                throw new RuntimeException("Failed to set default date", ex);
-            }
+            return LocalDate.parse(defaultDateString);
         }
     }
 }

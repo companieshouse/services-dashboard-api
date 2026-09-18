@@ -11,12 +11,11 @@ import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.VersionInfo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -61,13 +60,6 @@ class ProjectInfoMapperTest {
         return versionInfo;
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private static Date parseUtcDate(String date) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return sdf.parse(date);
-    }
-
     @Test
     void shouldMapProjectInfoToMongoProjectInfoIncludingNestedFields() {
         ProjectInfo projectInfo = initializeProjectInfo();
@@ -87,7 +79,7 @@ class ProjectInfoMapperTest {
         MongoVersionInfo mappedVersion = result.getVersions().getFirst();
         assertEquals("1.0.0", mappedVersion.getVersion());
         assertEquals("uuid-1", mappedVersion.getUuid());
-        assertEquals(new Date(1724366968904L), mappedVersion.getLastBomImport());
+        assertEquals(Instant.ofEpochMilli(1724366968904L), mappedVersion.getLastBomImport());
         assertEquals("java", mappedVersion.getLang());
         assertEquals("21.0.1", mappedVersion.getRuntime());
         assertNotNull(mappedVersion.getMetrics());
@@ -142,32 +134,32 @@ class ProjectInfoMapperTest {
 
         assertNotNull(result);
         assertEquals("v1.2.3", result.getVersion());
-        assertEquals(ProjectInfoMapper.INSTANCE.stringToDate("2026-01-23"), result.getDate());
+        assertEquals(ProjectInfoMapper.INSTANCE.stringToLocalDate("2026-01-23"), result.getDate());
     }
 
     @Test
     void shouldFallbackToDefaultDateWhenGitReleaseDateIsInvalidOrNull() {
-        assertEquals(ProjectInfoMapper.INSTANCE.stringToDate("1970-01-01"), ProjectInfoMapper.INSTANCE.stringToDate("not-a-date"));
-        assertEquals(ProjectInfoMapper.INSTANCE.stringToDate("1970-01-01"), ProjectInfoMapper.INSTANCE.stringToDate(null));
+        assertEquals(ProjectInfoMapper.INSTANCE.stringToLocalDate("1970-01-01"), ProjectInfoMapper.INSTANCE.stringToLocalDate("not-a-date"));
+        assertEquals(ProjectInfoMapper.INSTANCE.stringToLocalDate("1970-01-01"), ProjectInfoMapper.INSTANCE.stringToLocalDate(null));
     }
 
     @Test
-    void shouldParseExactIsoDateString() throws Exception {
-        Date result = ProjectInfoMapper.INSTANCE.stringToDate("2026-01-23");
+    void shouldParseExactIsoDateString() {
+        LocalDate result = ProjectInfoMapper.INSTANCE.stringToLocalDate("2026-01-23");
 
-        assertEquals(parseUtcDate("2026-01-23"), result);
+        assertEquals(LocalDate.of(2026, 1, 23), result);
     }
 
     @Test
-    void shouldParseDatePrefixWhenStringContainsAdditionalSuffix() throws Exception {
-        Date result = ProjectInfoMapper.INSTANCE.stringToDate("2026-01-23T17:45:01+01:00");
+    void shouldParseDatePrefixWhenStringContainsAdditionalSuffix() {
+        LocalDate result = ProjectInfoMapper.INSTANCE.stringToLocalDate("2026-01-23T17:45:01+01:00");
 
-        assertEquals(parseUtcDate("2026-01-23"), result);
+        assertEquals(LocalDate.of(2026, 1, 23), result);
     }
 
     @Test
     void shouldFallbackToDefaultDateWhenInputIsBlank() {
-        assertEquals(ProjectInfoMapper.INSTANCE.stringToDate("1970-01-01"), ProjectInfoMapper.INSTANCE.stringToDate(""));
+        assertEquals(ProjectInfoMapper.INSTANCE.stringToLocalDate("1970-01-01"), ProjectInfoMapper.INSTANCE.stringToLocalDate(""));
     }
 
     @Test

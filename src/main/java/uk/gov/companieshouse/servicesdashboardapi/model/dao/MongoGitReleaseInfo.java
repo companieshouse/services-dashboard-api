@@ -2,7 +2,7 @@ package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class MongoGitReleaseInfo {
 
@@ -10,7 +10,7 @@ public class MongoGitReleaseInfo {
     private String version;
 
     @Field("date")
-    private Date date;
+    private LocalDate date;
 
     // Getters and Setters
 
@@ -22,11 +22,11 @@ public class MongoGitReleaseInfo {
         this.version = version;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
