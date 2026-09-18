@@ -14,13 +14,15 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @Configuration
 public class MongoConfig {
 
-    @Autowired
-    private MongoProperties mongoProperties;
+    private final MongoProperties mongoProperties;
+
+    public MongoConfig(MongoProperties mongoProperties) {
+        this.mongoProperties = mongoProperties;
+    }
 
     public String getCollectionNameProj() {
         return mongoProperties.getCollectionNameProj();
@@ -43,7 +45,6 @@ public class MongoConfig {
                 mongoProperties.getHostandport(),
                 mongoProperties.getDbname());
 
-        ApiLogger.debug("Connection string: " + uri);
         ConnectionString connectionString = new ConnectionString(uri);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
@@ -65,6 +66,5 @@ public class MongoConfig {
         return new MongoTemplate(mongoDbFactory, converter);
     }
 }
-
 
 

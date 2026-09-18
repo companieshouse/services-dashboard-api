@@ -3,12 +3,14 @@ package uk.gov.companieshouse.servicesdashboardapi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
 import uk.gov.companieshouse.servicesdashboardapi.controller.ServicesDashboardController;
-import uk.gov.companieshouse.servicesdashboardapi.lambda.CronEvent;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 import java.net.InetAddress;
 import java.util.function.Function;
+
+import uk.gov.companieshouse.servicesdashboardapi.lambda.CronEvent;
 
 @SpringBootApplication
 public class ServicesDashboardApiApplication {

@@ -1,14 +1,20 @@
 package uk.gov.companieshouse.servicesdashboardapi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ConfigInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
@@ -16,21 +22,16 @@ import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarComponent;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoConfigRepository;
 import uk.gov.companieshouse.servicesdashboardapi.repository.CustomMongoProjectInfoRepository;
-import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.service.deptrack.GetAllProjects;
 import uk.gov.companieshouse.servicesdashboardapi.service.endoflife.EndOfLifeService;
 import uk.gov.companieshouse.servicesdashboardapi.service.github.GitService;
 import uk.gov.companieshouse.servicesdashboardapi.service.sonar.SonarService;
+import uk.gov.companieshouse.servicesdashboardapi.service.ServicesDashboardService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ServicesDashboardController {

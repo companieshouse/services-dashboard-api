@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.github;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,13 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitCustomProperty;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,13 +42,17 @@ public class GitService {
     @Value("${gh.releases.perPage}")
     Integer releasesPerPage;
 
-    @Autowired
-    private CustomJsonMapper jsonMapper;
+    private final JsonMapper jsonMapper;
 
     @Autowired
     private RestTemplate restTemplate;
 
     private HttpEntity<String> httpEntity;
+
+    public GitService(JsonMapper jsonMapper, RestTemplate restTemplate) {
+        this.jsonMapper = jsonMapper;
+        this.restTemplate = restTemplate;
+    }
 
     @PostConstruct
     private void init() {
@@ -115,25 +117,21 @@ public class GitService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 String languagesJson = response.getBody();
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode languagesNode = objectMapper.readTree(languagesJson);
+                JsonNode languagesNode = jsonMapper.readTree(languagesJson);
 
                 // Find the main language (the one with the most bytes)
+                Map<String, Integer> languagesMap = jsonMapper.convertValue(languagesNode, new TypeReference<>() {
+                });
                 int maxBytes = 0;
-                Iterator<Map.Entry<String, JsonNode>> fields = languagesNode.fields();
-                while (fields.hasNext()) {
-                    Map.Entry<String, JsonNode> field = fields.next();
-                    String languageName = field.getKey();
-                    int bytes = field.getValue().asInt();
-
-                    if (bytes > maxBytes) {
-                        maxBytes = bytes;
-                        gitInfo.setLang(languageName);
+                for (Map.Entry<String, Integer> entry : languagesMap.entrySet()) {
+                    if (entry.getValue() > maxBytes) {
+                        maxBytes = entry.getValue();
+                        gitInfo.setLang(entry.getKey());
                     }
                 }
             }
 
-            // Get the releases info
+            // Get the release info
             String uri = UriComponentsBuilder.fromUriString(repoEndpoint + "releases").queryParam("per_page", releasesPerPage).toUriString();
             response = restTemplate.exchange(
                     uri,
@@ -141,7 +139,8 @@ public class GitService {
                     httpEntity,
                     String.class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                List<GitReleaseInfo> releases = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
+                List<GitReleaseInfo> releases = jsonMapper.readValue(response.getBody(), new TypeReference<>() {
+                });
                 gitInfo.setReleases(releases);
             }
 

@@ -1,14 +1,14 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.endoflife;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -27,14 +27,14 @@ import static org.mockito.Mockito.when;
 class EndOfLifeServiceTest {
 
     private RestTemplate restTemplate;
-    private CustomJsonMapper jsonMapper;
+    private JsonMapper jsonMapper;
     private EndOfLifeService endOfLifeService;
 
     @BeforeEach
     void setUp() {
         restTemplate = mock(RestTemplate.class);
-        jsonMapper = mock(CustomJsonMapper.class);
-        endOfLifeService = new EndOfLifeService();
+        jsonMapper = mock(JsonMapper.class);
+        endOfLifeService = new EndOfLifeService(restTemplate, jsonMapper);
 
         ReflectionTestUtils.setField(endOfLifeService, "restTemplate", restTemplate);
         ReflectionTestUtils.setField(endOfLifeService, "jsonMapper", jsonMapper);

@@ -1,57 +1,60 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.endoflife;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
-import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+
 @Service
 public class EndOfLifeService {
 
-    @Value("${endol.api.url}")
-    private String endolUrl;
+   @Value("${endol.api.url}")
+   private String endolUrl;
 
-    @Value("${endol.projects}")
-    private String[] endolProjects;
+   @Value("${endol.projects}")
+   private String[] endolProjects;
 
-    @Autowired
-    private RestTemplate restTemplate;
+   private final RestTemplate restTemplate;
 
-    @Autowired
-    private CustomJsonMapper jsonMapper;
+   private final JsonMapper jsonMapper;
 
-    public Map<String, List<EndofLifeInfo>> fetchEndOfLives() {
+   public EndOfLifeService(RestTemplate restTemplate, JsonMapper jsonMapper) {
+      this.restTemplate = restTemplate;
+      this.jsonMapper = jsonMapper;
+   }
 
-        Map<String, List<EndofLifeInfo>> endOfLivesInfo = new HashMap<>();
-        List<EndofLifeInfo> endOfLifeInfoList;
+   public Map<String, List<EndofLifeInfo>> fetchEndOfLives() {
 
-        for (String project : endolProjects) {
-            try {
-                String url = String.format("%s/%s.json", endolUrl, project);
-                ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-                if (response.getStatusCode().is2xxSuccessful()) {
-                    endOfLifeInfoList = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
-                    ApiLogger.info(endOfLifeInfoList.toString());
-                    endOfLivesInfo.put(project, endOfLifeInfoList);
-                }
-            } catch (Exception e) {
-                ApiLogger.info("Failed to fetch endOfLives while processing project " + project + ": " + e.getMessage());
+      Map<String, List<EndofLifeInfo>> endofLivesInfo = new HashMap<>();
+      List<EndofLifeInfo> endOfLifeInfoList;
+
+      for (String project : endolProjects) {
+         try {
+            String url = String.format("%s/%s.json", endolUrl, project);
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                  endOfLifeInfoList = jsonMapper.readValue(response.getBody(), new TypeReference<>() {
+                  });
+                  ApiLogger.info(endOfLifeInfoList.toString());
+                  endofLivesInfo.put(project, endOfLifeInfoList);
             }
-        }
+         } catch (Exception e) {
+            ApiLogger.info("Failed to fetch endofLives while processing project " + project + ": " + e.getMessage());
+         }
+      }
 
-        return endOfLivesInfo;
-    }
-
-    public String[] getEndolProjects() {
-        return endolProjects;
-    }
+      return endofLivesInfo;
+   }
+   public String[] getEndolProjects() {
+      return endolProjects;
+   }
 }

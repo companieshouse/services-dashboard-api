@@ -1,24 +1,24 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.deptrack;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.service.DepTrackGetDataService;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
-import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class GetAllProjects extends DepTrackGetDataService<List<DepTrackProjectInfo>> {
@@ -29,14 +29,14 @@ public class GetAllProjects extends DepTrackGetDataService<List<DepTrackProjectI
     @Value("${dt.server.header.totcount}")
     String headerTotalCount;
 
-    @Autowired
-    private CustomJsonMapper jsonMapper;
+    private final JsonMapper jsonMapper;
 
-    public GetAllProjects() {
+    public GetAllProjects(JsonMapper jsonMapper) {
         super(null); // Pass a placeholder value, will be overwritten in init method
+        this.jsonMapper = jsonMapper;
     }
 
-    // PostConstruct to initialize the endPoint field from the property
+    // PostConstruct to initialise the endPoint field from the property
     @PostConstruct
     private void init() {
         this.endPoint = endPointValue;
@@ -57,7 +57,7 @@ public class GetAllProjects extends DepTrackGetDataService<List<DepTrackProjectI
         ));
 
         do {
-            queryParams.get(0).setValue(String.valueOf(offset));
+            queryParams.getFirst().setValue(String.valueOf(offset));
             String uri = this.setUri(queryParams);
 
             // Make the GET request with headers
@@ -66,16 +66,17 @@ public class GetAllProjects extends DepTrackGetDataService<List<DepTrackProjectI
             List<DepTrackProjectInfo> result;
             ApiLogger.debug(".....SENDING REQ - offset=" + offset);
             try {
-                result = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
-            } catch (IOException e) {
-                ApiLogger.debug("Failed to parse Dependency Track JSON response");
+                result = jsonMapper.readValue(response.getBody(), new TypeReference<>() {
+                });
+            } catch (JacksonException e) {
+                ApiLogger.error("Failed to parse Dependency Track JSON response", e, Map.of());
                 result = Collections.emptyList();
             }
             allProjects.addAll(result);
 
             // Get the total count from the response headers
-            if (totalCount == 0 && response.getHeaders().containsKey(headerTotalCount)) {
-                totalCount = Integer.parseInt(response.getHeaders().get(headerTotalCount).get(0));
+            if (totalCount == 0 && response.getHeaders().containsHeader(headerTotalCount)) {
+                totalCount = Integer.parseInt(Objects.requireNonNull(response.getHeaders().get(headerTotalCount)).getFirst());
             }
 
             offset += result.size();

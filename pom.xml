@@ -2,366 +2,444 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>companies-house-parent</artifactId>
-      <version>2.1.12</version>
-       <relativePath/>
-   </parent>
-   <groupId>uk.gov.companieshouse</groupId>
-   <artifactId>services-dashboard-api</artifactId>
-   <version>unversioned</version>
-   <name>services-dashboard-api</name>
-   <description>Services Dashboard API</description>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>uk.gov.companieshouse</groupId>
+        <artifactId>companies-house-parent</artifactId>
+        <version>2.1.20</version>
+        <relativePath/>
+    </parent>
+    <artifactId>services-dashboard-api</artifactId>
+    <version>unversioned</version>
+    <name>services-dashboard-api</name>
+    <description>Services Dashboard API</description>
 
-   <properties>
-      <java.version>21</java.version>
+    <properties>
+        <main-class>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</main-class>
+        <java.version>21</java.version>
 
-      <log4j.version>2.24.3</log4j.version>
-      <structured-logging.version>3.0.38</structured-logging.version>
-      <jackson-databind.version>2.18.2</jackson-databind.version>
-      <org.mapstruct.version>1.6.3</org.mapstruct.version>
-      <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot -->
+        <spring-boot.version>4.1.1</spring-boot.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
+        <tomcat.version>11.0.26</tomcat.version>
+        <!-- Source: https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom -->
+        <opentelemetry.version>2.31.1</opentelemetry.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <mockito.version>5.23.0</mockito.version>
 
-      <spring-function-context.version>4.2.0</spring-function-context.version>
-      <spring-function-adapter.version>4.2.0</spring-function-adapter.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-function-context -->
+        <spring-function-context.version>5.0.4</spring-function-context.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-function-adapter-aws -->
+        <spring-function-adapter.version>5.0.4</spring-function-adapter.version>
 
-      <spring-boot-maven-plugin.version>3.5.10</spring-boot-maven-plugin.version>
-      <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-      <maven-assembly-plugin.version>3.2.0</maven-assembly-plugin.version>
-      <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
-      <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-      <testcontainers.version>1.20.4</testcontainers.version>
-      <wiremock.version>3.13.1</wiremock.version>
+        <!-- Source: https://github.com/companieshouse/structured-logging/releases -->
+        <structured-logging.version>4.0.4</structured-logging.version>
 
-      <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-		<sonar.sources>src/main</sonar.sources>
-		<sonar.tests>src/test</sonar.tests>
-		<sonar.verbose>true</sonar.verbose>
-		<sonar.coverage.jacoco.xmlReportPaths>
-			${project.basedir}/target/site/jacoco/jacoco.xml
-		</sonar.coverage.jacoco.xmlReportPaths>
+        <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
+        <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
+        <maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+        <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
+        <!-- Source: https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+        <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
 
-      <aws.java.sdk.version>2.29.36</aws.java.sdk.version>
-      <aws.lambda.core.version>1.2.2</aws.lambda.core.version>
-      <aws.lambda.events.version>3.11.0</aws.lambda.events.version>
+    </properties>
 
-      <aws.java.ssm.version>2.29.35</aws.java.ssm.version>
-      <main-class>uk.gov.companieshouse.servicesdashboardapi.ServicesDashboardApiApplication</main-class>
-   </properties>
-
-   <profiles>
-      <profile>
+    <profiles>
+        <profile>
             <id>local</id>
             <build>
-               <plugins>
-                  <!-- Package -->
-                  <plugin>
-                     <groupId>org.springframework.boot</groupId>
-                     <artifactId>spring-boot-maven-plugin</artifactId>
-                     <version>${spring-boot-maven-plugin.version}</version>
-                     <configuration>
-                        <mainClass>${main-class}</mainClass>
-                     </configuration>
-                     <executions>
-                        <execution>
-                              <goals>
-                                 <goal>repackage</goal>
-                              </goals>
-                        </execution>
-                     </executions>
-                  </plugin>
-               </plugins>
+                <plugins>
+                    <!-- Package -->
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>${spring-boot-maven-plugin.version}</version>
+                        <configuration>
+                            <mainClass>${main-class}</mainClass>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
             </build>
-      </profile>
-      <profile>
+        </profile>
+
+        <profile>
             <id>lambda</id>
             <activation>
-               <activeByDefault>true</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
-                  <dependency>
-                        <groupId>com.amazonaws</groupId>
-                        <artifactId>aws-lambda-java-core</artifactId>
-                        <version>${aws.lambda.core.version}</version>
-                  </dependency>
-                  <dependency>
-                        <groupId>com.amazonaws</groupId>
-                        <artifactId>aws-lambda-java-events</artifactId>
-                        <version>${aws.lambda.events.version}</version>
-                  </dependency>
-                   <!-- Spring Cloud Function Adapter for AWS Lambda -->
-                  <dependency>
-                     <groupId>org.springframework.cloud</groupId>
-                     <artifactId>spring-cloud-function-adapter-aws</artifactId>
-                     <version>${spring-function-adapter.version}</version>
-                  </dependency>
-                  <dependency>
-                     <groupId>org.springframework.cloud</groupId>
-                     <artifactId>spring-cloud-function-context</artifactId>
-                     <version>${spring-function-context.version}</version>
-                  </dependency>
+                <!-- Source: https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core -->
+                <dependency>
+                    <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-lambda-java-core</artifactId>
+                    <version>1.4.0</version>
+                </dependency>
+                <!-- Source: https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-events -->
+                <dependency>
+                    <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-lambda-java-events</artifactId>
+                    <version>3.16.1</version>
+                </dependency>
+                <!-- Spring Cloud Function Adapter for AWS Lambda -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-function-adapter-aws</artifactId>
+                    <version>${spring-function-adapter.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-function-context</artifactId>
+                    <version>${spring-function-context.version}</version>
+                </dependency>
             </dependencies>
             <build>
-               <plugins>
+                <plugins>
 
-                  <!-- Package -->
-                  <plugin>
-                     <groupId>org.apache.maven.plugins</groupId>
-                     <artifactId>maven-shade-plugin</artifactId>
-                     <version>${maven-shade-plugin.version}</version>
-                     <configuration>
-                        <createDependencyReducedPom>false</createDependencyReducedPom>
-                        <shadedArtifactAttached>true</shadedArtifactAttached>
-                        <shadedClassifierName>lambda</shadedClassifierName>
-                     </configuration>
-                     <dependencies>
-                        <dependency>
-                              <groupId>org.springframework.boot</groupId>
-                              <artifactId>spring-boot-maven-plugin</artifactId>
-                              <version>${spring-boot-maven-plugin.version}</version>
-                        </dependency>
-                     </dependencies>
-                     <executions>
-                        <execution>
-                           <phase>package</phase>
-                           <goals>
-                              <goal>shade</goal>
-                           </goals>
+                    <!-- Package -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>${maven-shade-plugin.version}</version>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>lambda</shadedClassifierName>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.springframework.boot</groupId>
+                                <artifactId>spring-boot-maven-plugin</artifactId>
+                                <version>${spring-boot-maven-plugin.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
 
-                           <configuration>
-                                 <transformers>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.factories</resource>
-                                    </transformer>
-                                    <!-- Append the new AutoConfiguration metadata for Spring Boot 3 -->
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</resource>
-                                    </transformer>
+                                <configuration>
+                                    <transformers>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>META-INF/spring.factories</resource>
+                                        </transformer>
+                                        <!-- Append the new AutoConfiguration metadata for Spring Boot 3 -->
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>
+                                                META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+                                            </resource>
+                                        </transformer>
 
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.handlers</resource>
-                                    </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.schemas</resource>
-                                    </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring.tooling</resource>
-                                    </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</resource>
-                                    </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                       <resource>META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports</resource>
-                                    </transformer>
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                       <mainClass>${main-class}</mainClass>
-                                    </transformer>
-                                 </transformers>
-                           </configuration>
-                        </execution>
-                     </executions>
-                  </plugin>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>META-INF/spring.handlers</resource>
+                                        </transformer>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>META-INF/spring.schemas</resource>
+                                        </transformer>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>META-INF/spring.tooling</resource>
+                                        </transformer>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>
+                                                META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+                                            </resource>
+                                        </transformer>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>
+                                                META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports
+                                            </resource>
+                                        </transformer>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <mainClass>${main-class}</mainClass>
+                                        </transformer>
+                                    </transformers>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-               </plugins>
+                </plugins>
             </build>
-      </profile>
-      <!-- <profile>
-            <id>sonar-pr-analysis</id>
-            <properties>
-               <sonar.pullrequest.base>main</sonar.pullrequest.base>
-            </properties>
-      </profile> -->
+        </profile>
 
-   </profiles>
+    </profiles>
 
-   <repositories>
-      <repository>
+    <repositories>
+        <repository>
             <id>centralOri</id>
             <url>https://repo.maven.apache.org/maven2</url>
-      </repository>
-   </repositories>
+        </repository>
+    </repositories>
 
-   <dependencyManagement>
-      <dependencies>
-            <dependency>
-               <groupId>org.apache.logging.log4j</groupId>
-               <artifactId>log4j-bom</artifactId>
-               <version>${log4j.version}</version>
-               <scope>import</scope>
-               <type>pom</type>
-            </dependency>
-            <dependency>
-               <groupId>org.springframework.boot</groupId>
-               <artifactId>spring-boot-dependencies</artifactId>
-               <version>${spring-boot-dependencies.version}</version>
-               <type>pom</type>
-               <scope>import</scope>
-            </dependency>
-            <dependency>
-                  <groupId>software.amazon.awssdk</groupId>
-                  <artifactId>bom</artifactId>
-                  <version>${aws.java.sdk.version}</version>
-                  <type>pom</type>
-                  <scope>import</scope>
-            </dependency>
-          <dependency>
-              <groupId>io.opentelemetry.instrumentation</groupId>
-              <artifactId>opentelemetry-instrumentation-bom</artifactId>
-              <version>2.14.0</version>
-              <type>pom</type>
-              <scope>import</scope>
-          </dependency>
-      </dependencies>
-   </dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
 
-   <dependencies>
-      <!-- Spring * (start)-->
-      <dependency>
+            <!-- Source: https://mvnrepository.com/artifact/tools.jackson/jackson-bom -->
+            <dependency>
+                <groupId>tools.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>3.2.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Source: https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-bom -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>2.26.1</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!-- Source: https://mvnrepository.com/artifact/software.amazon.awssdk/bom -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.54.18</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom</artifactId>
+                <version>${opentelemetry.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+                <version>${opentelemetry.version}-alpha</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${tomcat.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>${tomcat.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!-- Source: https://mvnrepository.com/artifact/org.junit/junit-bom -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>6.1.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-bom -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>2.0.5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- Spring * (start)-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-      </dependency>
-      <dependency>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
-      <dependency>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-               <exclusion>
-                  <groupId>com.vaadin.external.google</groupId>
-                  <artifactId>android-json</artifactId>
-               </exclusion>
-            </exclusions>
-      </dependency>
-      <dependency>
+            <artifactId>spring-boot-starter-jackson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-opentelemetry</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
-      </dependency>
-      <!-- Spring * (end)-->
+        </dependency>
+        <!-- Spring * (end)-->
 
-      <dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
-      </dependency>
+        </dependency>
 
-      <dependency>
+        <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>structured-logging</artifactId>
             <version>${structured-logging.version}</version>
             <exclusions>
-               <exclusion>
-                  <groupId>org.slf4j</groupId>
-                  <artifactId>slf4j-simple</artifactId>
-               </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
             </exclusions>
-      </dependency>
+        </dependency>
 
-      <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
-      </dependency>
-
-
-      <!-- AWS dependencies -->
-      <!-- <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>ecs</artifactId>
-            <version>${aws.java.sdk.version}</version>
-      </dependency> -->
-
-      <dependency>
+        <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>ssm</artifactId>
-            <version>${aws.java.ssm.version}</version>
-      </dependency>
+        </dependency>
 
-      <!-- Unit test -->
-      <dependency>
+        <!-- Testing Dependencies -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito 5 uses the inline mock maker by default. -->
+        <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>5.2.0</version>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
-      </dependency>
+        </dependency>
 
-      <dependency>
-         <groupId>org.testcontainers</groupId>
-         <artifactId>junit-jupiter</artifactId>
-         <version>${testcontainers.version}</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.testcontainers</groupId>
-         <artifactId>mongodb</artifactId>
-         <version>${testcontainers.version}</version>
-         <scope>test</scope>
-      </dependency>
-
-      <!-- Real HTTP server used only as a stand-in for 3rd-party APIs (Dependency-Track,
-           GitHub, SonarQube, endoflife.date) in full-application integration tests, so that
-           no Spring bean needs to be mocked and no live external network calls are required. -->
-      <dependency>
-         <groupId>org.wiremock</groupId>
-         <artifactId>wiremock-standalone</artifactId>
-         <version>${wiremock.version}</version>
-         <scope>test</scope>
-      </dependency>
-
-      <!-- Sonar -->
-      <!-- <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
-      </dependency> -->
+        </dependency>
 
-       <dependency>
-           <groupId>io.opentelemetry.instrumentation</groupId>
-           <artifactId>opentelemetry-spring-boot-starter</artifactId>
-       </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-mongodb</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-   </dependencies>
+        <!-- Real HTTP server used only as a stand-in for 3rd-party APIs (Dependency-Track,
+             GitHub, SonarQube, endoflife.date) in full-application integration tests, so that
+             no Spring bean needs to be mocked and no live external network calls are required. -->
+        <!-- Source: https://mvnrepository.com/artifact/org.wiremock/wiremock-standalone -->
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>3.13.2</version>
+            <scope>test</scope>
+        </dependency>
 
-   <build>
-      <plugins>
+    </dependencies>
+
+    <build>
+        <plugins>
+
             <!-- Compile -->
             <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-compiler-plugin</artifactId>
-               <version>${maven-compiler-plugin.version}</version>
-               <configuration>
-                  <source>${java.version}</source>
-                  <target>${java.version}</target>
-                  <annotationProcessorPaths>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
                         <path>
-                           <groupId>org.mapstruct</groupId>
-                           <artifactId>mapstruct-processor</artifactId>
-                           <version>${org.mapstruct.version}</version>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
                         </path>
-                  </annotationProcessorPaths>
-               </configuration>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
+
             <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-surefire-plugin</artifactId>
-               <version>${maven-surefire-plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                    </argLine>
+                </configuration>
             </plugin>
+
             <plugin>
-               <groupId>org.jacoco</groupId>
-               <artifactId>jacoco-maven-plugin</artifactId>
-               <version>${jacoco-maven-plugin.version}</version>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
             </plugin>
+
             <plugin>
-               <groupId>org.sonarsource.scanner.maven</groupId>
-               <artifactId>sonar-maven-plugin</artifactId>
-               <version>${sonar-maven-plugin.version}</version>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
             </plugin>
-      </plugins>
-   </build>
+        </plugins>
+    </build>
 </project>
