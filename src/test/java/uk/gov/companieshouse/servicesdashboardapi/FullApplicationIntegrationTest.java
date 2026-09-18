@@ -46,6 +46,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * CI. No Spring bean, controller, service, repository or mapper is mocked or stubbed anywhere in this
  * test: every request travels through the genuine REST controller, service, mapper and repository
  * layers, and is persisted to (and re-read from) a real MongoDB.
+ * <p>
+ * Copilot Review Comment:
+ * Booting this class still performs live DNS lookups for four production hosts in ServicesDashboardApiApplication's constructor
+ * (ServicesDashboardApiApplication.java:21-24). WireMock cannot intercept those lookups, so an isolated or slow-DNS CI
+ * environment can delay this supposedly self-contained integration suite. Please make host-resolution logging
+ * disableable/injectable for tests, or otherwise prevent those lookups before the application context starts.
+ * <p>
+ * Maybe worth revisiting this at a later date to refactor and avoid the DNS lookups.
  */
 @Testcontainers
 @SpringBootTest(
