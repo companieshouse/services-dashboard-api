@@ -3,6 +3,8 @@ package uk.gov.companieshouse.servicesdashboardapi.config;
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.server.observation.OpenTelemetryServerRequestObservationConvention;
+import org.springframework.http.server.observation.ServerRequestObservationConvention;
 import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.services.ssm.SsmClient;
 import tools.jackson.databind.DeserializationFeature;
@@ -26,6 +28,18 @@ public class ApplicationConfig {
     @Bean
     public SsmClient ssmClient() {
         return SsmClient.create();
+    }
+
+    /**
+     * Replaces Spring's default {@code ServerRequestObservationConvention}, which tags spans with
+     * generic key names (e.g. "method", "status"), with one that follows the stable OpenTelemetry
+     * HTTP semantic conventions (e.g. "http.request.method", "http.response.status_code",
+     * "http.route"). Without this, exported spans are missing the attributes our OTel tracing
+     * dashboards rely on to display the request method and to flag error responses correctly.
+     */
+    @Bean
+    public ServerRequestObservationConvention serverRequestObservationConvention() {
+        return new OpenTelemetryServerRequestObservationConvention();
     }
 
 }
