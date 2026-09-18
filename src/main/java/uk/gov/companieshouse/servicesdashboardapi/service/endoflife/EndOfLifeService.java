@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class EndoflifeService {
+public class EndOfLifeService {
 
     @Value("${endol.api.url}")
     private String endolUrl;
@@ -29,9 +29,9 @@ public class EndoflifeService {
     @Autowired
     private CustomJsonMapper jsonMapper;
 
-    public Map<String, List<EndofLifeInfo>> fetcEndofLives() {
+    public Map<String, List<EndofLifeInfo>> fetchEndOfLives() {
 
-        Map<String, List<EndofLifeInfo>> endofLivesInfo = new HashMap<>();
+        Map<String, List<EndofLifeInfo>> endOfLivesInfo = new HashMap<>();
         List<EndofLifeInfo> endOfLifeInfoList;
 
         for (String project : endolProjects) {
@@ -41,14 +41,14 @@ public class EndoflifeService {
                 if (response.getStatusCode().is2xxSuccessful()) {
                     endOfLifeInfoList = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
                     ApiLogger.info(endOfLifeInfoList.toString());
-                    endofLivesInfo.put(project, endOfLifeInfoList);
+                    endOfLivesInfo.put(project, endOfLifeInfoList);
                 }
             } catch (Exception e) {
-                ApiLogger.info("Failed to fetch endofLives while processing project " + project + ": " + e.getMessage());
+                ApiLogger.info("Failed to fetch endOfLives while processing project " + project + ": " + e.getMessage());
             }
         }
 
-        return endofLivesInfo;
+        return endOfLivesInfo;
     }
 
     public String[] getEndolProjects() {

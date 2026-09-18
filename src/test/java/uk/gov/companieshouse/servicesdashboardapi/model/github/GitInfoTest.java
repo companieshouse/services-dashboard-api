@@ -42,8 +42,8 @@ class GitInfoTest {
 
         assertNotNull(gitInfo.getReleases());
         assertEquals(1, gitInfo.getReleases().size());
-        assertEquals("1.0.0", gitInfo.getReleases().get(0).getVersion());
-        assertEquals("2026-01-01", gitInfo.getReleases().get(0).getDate());
+        assertEquals("1.0.0", gitInfo.getReleases().getFirst().getVersion());
+        assertEquals("2026-01-01", gitInfo.getReleases().getFirst().getDate());
         assertEquals("{r:null l:null o:null sA:null [R:[{v:1.0.0,d:2026-01-01}]]}", gitInfo.toString());
     }
 

@@ -32,6 +32,8 @@
       <maven-assembly-plugin.version>3.2.0</maven-assembly-plugin.version>
       <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
       <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+      <testcontainers.version>1.20.4</testcontainers.version>
+      <wiremock.version>3.13.1</wiremock.version>
 
       <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.sources>src/main</sonar.sources>
@@ -286,6 +288,29 @@
             <artifactId>mockito-inline</artifactId>
             <version>5.2.0</version>
             <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.testcontainers</groupId>
+         <artifactId>junit-jupiter</artifactId>
+         <version>${testcontainers.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.testcontainers</groupId>
+         <artifactId>mongodb</artifactId>
+         <version>${testcontainers.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- Real HTTP server used only as a stand-in for 3rd-party APIs (Dependency-Track,
+           GitHub, SonarQube, endoflife.date) in full-application integration tests, so that
+           no Spring bean needs to be mocked and no live external network calls are required. -->
+      <dependency>
+         <groupId>org.wiremock</groupId>
+         <artifactId>wiremock-standalone</artifactId>
+         <version>${wiremock.version}</version>
+         <scope>test</scope>
       </dependency>
 
       <!-- Sonar -->

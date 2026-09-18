@@ -22,7 +22,7 @@ provider "aws" {
 }
 
 module "secrets" {
-  source = "git@github.com:companieshouse/terraform-modules//aws/parameter-store?ref=1.0.373"
+  source = "git@github.com:companieshouse/terraform-modules//aws/parameter-store?ref=1.0.427"
 
   name_prefix = local.service_name
   kms_key_id  = data.aws_kms_key.kms_key.id
@@ -30,7 +30,7 @@ module "secrets" {
 }
 
 module "lambda" {
-  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.373"
+  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.427"
 
   environment    = var.environment
   function_name  = local.lambda_function_name

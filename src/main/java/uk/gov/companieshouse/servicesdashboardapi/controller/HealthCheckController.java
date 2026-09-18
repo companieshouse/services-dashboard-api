@@ -5,6 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Health check controller for Services Dashboard API
+ * <p>
+ * TO DO - Replace with Spring Boot Actuator health check endpoint in future
+ */
 @RestController
 public class HealthCheckController {
 

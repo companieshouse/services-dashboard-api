@@ -57,7 +57,7 @@ public class CustomMongoProjectInfoRepositoryImpl implements CustomMongoProjectI
     public Optional<MongoProjectInfo> findByName(String name) {
         Query query = new Query();
         query.addCriteria(Criteria.where("name").is(name));
-        MongoProjectInfo result = mongoTemplate.findOne(query, MongoProjectInfo.class);
+        MongoProjectInfo result = mongoTemplate.findOne(query, MongoProjectInfo.class, collectionName);
         // Return the result wrapped in an Optional
         return Optional.ofNullable(result);
     }
