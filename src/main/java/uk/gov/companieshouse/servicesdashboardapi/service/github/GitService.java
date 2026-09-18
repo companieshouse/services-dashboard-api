@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.github;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -44,8 +43,7 @@ public class GitService {
 
     private final JsonMapper jsonMapper;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     private HttpEntity<String> httpEntity;
 

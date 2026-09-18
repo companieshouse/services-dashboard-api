@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.servicesdashboardapi.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ProjectInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
@@ -13,11 +12,14 @@ import java.util.List;
 @Service
 public class ServicesDashboardService {
 
-    @Autowired
-    private ServicesInfo servicesInfo;
+    private final ServicesInfo servicesInfo;
 
-    @Autowired
-    private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
+    private final CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
+
+    public ServicesDashboardService(ServicesInfo servicesInfo, CustomMongoProjectInfoRepository customMongoProjectInfoRepository) {
+        this.servicesInfo = servicesInfo;
+        this.customMongoProjectInfoRepository = customMongoProjectInfoRepository;
+    }
 
     public void createServicesDashboard() {
         ApiLogger.info("---------Create Serv START");

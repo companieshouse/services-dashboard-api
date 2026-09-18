@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoEndoflifeInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public interface ConfigInfoMapper {
     MongoConfigInfo configInfoToMongoConfigInfo(ConfigInfo configInfo);
 
     // Map lists of EndofLifeInfo and MongoEndoflifeInfo
-    List<MongoEndoflifeInfo> endofLifeInfoListToMongoEndoflifeInfoList(List<EndofLifeInfo> endofLifeInfoList);
+    List<MongoEndoflifeInfo> endofLifeInfoListToMongoEndoflifeInfoList(List<EndOfLifeInfo> endOfLifeInfoList);
 
     // Map the inner Map structure for the 'endol' field
-    Map<String, List<MongoEndoflifeInfo>> endolToMongoEndol(Map<String, List<EndofLifeInfo>> endol);
+    Map<String, List<MongoEndoflifeInfo>> endolToMongoEndol(Map<String, List<EndOfLifeInfo>> endol);
 }

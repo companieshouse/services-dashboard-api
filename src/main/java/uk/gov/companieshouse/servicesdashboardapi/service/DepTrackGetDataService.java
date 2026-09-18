@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.servicesdashboardapi.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,11 +23,11 @@ public abstract class DepTrackGetDataService<T> {
 
     protected String endPoint;
 
-    @Autowired
     protected RestTemplate restTemplate;
 
-    public DepTrackGetDataService(String endPoint) {
+    protected DepTrackGetDataService(@NonNull String endPoint, @NonNull RestTemplate restTemplate) {
         this.endPoint = endPoint;
+        this.restTemplate = restTemplate;
     }
 
     protected abstract T fetch();

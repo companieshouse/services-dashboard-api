@@ -4,60 +4,60 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/*
+/**
  * Example of Info:
+ * {@snippet lang = json:
  *   {
-    "name": "disqualified-officers-delta-consumer",
-    "version": "0.8.3",
-    "classifier": "APPLICATION",
-    "uuid": "0ee60287-158e-49d8-b783-946e92ac5d8d",
-    "tags": [
-      {
-        "name": "lang:java"
-      },
-      {
-        "name": "runtime:21.0.1 java-21-amazon-corretto.x86_64 spring-core:6.1.10 spring-boot-starter:3.3.1"
-      }
-    ],
-    "lastBomImport": 1724366968904,
-    "lastBomImportFormat": "CycloneDX 1.5",
-    "lastInheritedRiskScore": 319.0,
-    "active": true,
-    "metrics": {
-      "critical": 8,
-      "high": 26,
-      "medium": 23,
-      "low": 5,
-      "unassigned": 7,
-      "vulnerabilities": 69,
-      "vulnerableComponents": 42,
-      "components": 230,
-      "suppressed": 0,
-      "findingsTotal": 69,
-      "findingsAudited": 0,
-      "findingsUnaudited": 69,
-      "inheritedRiskScore": 319.0,
-      "policyViolationsFail": 0,
-      "policyViolationsWarn": 0,
-      "policyViolationsInfo": 0,
-      "policyViolationsTotal": 0,
-      "policyViolationsAudited": 0,
-      "policyViolationsUnaudited": 0,
-      "policyViolationsSecurityTotal": 0,
-      "policyViolationsSecurityAudited": 0,
-      "policyViolationsSecurityUnaudited": 0,
-      "policyViolationsLicenseTotal": 0,
-      "policyViolationsLicenseAudited": 0,
-      "policyViolationsLicenseUnaudited": 0,
-      "policyViolationsOperationalTotal": 0,
-      "policyViolationsOperationalAudited": 0,
-      "policyViolationsOperationalUnaudited": 0,
-      "firstOccurrence": 1724366983276,
-      "lastOccurrence": 1725015967214
-    }
-  }
-]
-
+ *     "name": "disqualified-officers-delta-consumer",
+ *     "version": "0.8.3",
+ *     "classifier": "APPLICATION",
+ *     "uuid": "0ee60287-158e-49d8-b783-946e92ac5d8d",
+ *     "tags": [
+ *       {
+ *         "name": "lang:java"
+ *       },
+ *       {
+ *         "name": "runtime:21.0.1 java-21-amazon-corretto.x86_64 spring-core:6.1.10 spring-boot-starter:3.3.1"
+ *       }
+ *     ],
+ *     "lastBomImport": 1724366968904,
+ *     "lastBomImportFormat": "CycloneDX 1.5",
+ *     "lastInheritedRiskScore": 319.0,
+ *     "active": true,
+ *     "metrics": {
+ *       "critical": 8,
+ *       "high": 26,
+ *       "medium": 23,
+ *       "low": 5,
+ *       "unassigned": 7,
+ *       "vulnerabilities": 69,
+ *       "vulnerableComponents": 42,
+ *       "components": 230,
+ *       "suppressed": 0,
+ *       "findingsTotal": 69,
+ *       "findingsAudited": 0,
+ *       "findingsUnaudited": 69,
+ *       "inheritedRiskScore": 319.0,
+ *       "policyViolationsFail": 0,
+ *       "policyViolationsWarn": 0,
+ *       "policyViolationsInfo": 0,
+ *       "policyViolationsTotal": 0,
+ *       "policyViolationsAudited": 0,
+ *       "policyViolationsUnaudited": 0,
+ *       "policyViolationsSecurityTotal": 0,
+ *       "policyViolationsSecurityAudited": 0,
+ *       "policyViolationsSecurityUnaudited": 0,
+ *       "policyViolationsLicenseTotal": 0,
+ *       "policyViolationsLicenseAudited": 0,
+ *       "policyViolationsLicenseUnaudited": 0,
+ *       "policyViolationsOperationalTotal": 0,
+ *       "policyViolationsOperationalAudited": 0,
+ *       "policyViolationsOperationalUnaudited": 0,
+ *       "firstOccurrence": 1724366983276,
+ *       "lastOccurrence": 1725015967214
+ *     }
+ *   }
+ *}
  */
 
 public class DepTrackProjectInfo {
@@ -80,7 +80,6 @@ public class DepTrackProjectInfo {
     @JsonProperty("metrics")
     private DepTrackMetricsInfo metrics;
 
-    // Getters and Setters
     public String getName() {
         return name;
     }

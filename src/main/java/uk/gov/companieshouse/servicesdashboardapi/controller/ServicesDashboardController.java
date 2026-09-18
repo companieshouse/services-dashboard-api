@@ -18,7 +18,7 @@ import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
 import uk.gov.companieshouse.servicesdashboardapi.mapper.ConfigInfoMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
@@ -43,32 +43,32 @@ public class ServicesDashboardController {
     private String[] awsEnvs;
 
     @Value("${deepScan.enabled}")
-    private Boolean deepScanEnabled;
+    private boolean deepScanEnabled;
 
-    @Autowired
-    private SonarService serviceSonar;
+    private final SonarService serviceSonar;
 
-    @Autowired
-    private ServicesInfo servicesInfo;
+    private final ServicesInfo servicesInfo;
 
-    @Autowired
-    private GitService gitService;
+    private final GitService gitService;
 
-    @Autowired
-    private EndOfLifeService endolService;
+    private final EndOfLifeService endolService;
 
-    @Autowired
-    private CustomMongoConfigRepository customMongoConfigRepository;
+    private final CustomMongoConfigRepository customMongoConfigRepository;
 
-    @Autowired
-    private CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
+    private final CustomMongoProjectInfoRepository customMongoProjectInfoRepository;
 
 
     @Autowired
     public ServicesDashboardController(ServicesDashboardService servicesDashboardService,
-                                       GetAllProjects servicesDepTrack) {
+                                       GetAllProjects servicesDepTrack, SonarService serviceSonar, ServicesInfo servicesInfo, GitService gitService, EndOfLifeService endolService, CustomMongoConfigRepository customMongoConfigRepository, CustomMongoProjectInfoRepository customMongoProjectInfoRepository) {
         this.servicesDashboardService = servicesDashboardService;
         this.servicesDepTrack = servicesDepTrack;
+        this.serviceSonar = serviceSonar;
+        this.servicesInfo = servicesInfo;
+        this.gitService = gitService;
+        this.endolService = endolService;
+        this.customMongoConfigRepository = customMongoConfigRepository;
+        this.customMongoProjectInfoRepository = customMongoProjectInfoRepository;
     }
 
     @GetMapping("/services-dashboard/list-services")
@@ -134,7 +134,7 @@ public class ServicesDashboardController {
 
     public void loadListEol() {
         ApiLogger.info("loadListEol START");
-        Map<String, List<EndofLifeInfo>> endolMap = endolService.fetchEndOfLives();
+        Map<String, List<EndOfLifeInfo>> endolMap = endolService.fetchEndOfLives();
         ConfigInfo configInfo = new ConfigInfo();
         configInfo.setEndol(endolMap);
         MongoConfigInfo mongoConfigInfo = ConfigInfoMapper.INSTANCE.configInfoToMongoConfigInfo(configInfo);
@@ -143,9 +143,9 @@ public class ServicesDashboardController {
     }
 
     // when triggered by a scheduler/lambda, load both lists
-    public void loadAllInfo(boolean deepscan) {
-        deepScanEnabled = deepscan;
-        Map<String, ProjectInfo> projectInfoMap = loadListServices();
+    public void loadAllInfo(boolean deepScan) {
+        deepScanEnabled = deepScan;
+        loadListServices();
         loadListEol();
     }
 }

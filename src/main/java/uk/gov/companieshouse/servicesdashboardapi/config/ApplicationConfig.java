@@ -4,6 +4,7 @@ import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomize
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import software.amazon.awssdk.services.ssm.SsmClient;
 import tools.jackson.databind.DeserializationFeature;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
@@ -20,6 +21,11 @@ public class ApplicationConfig {
     public JsonMapperBuilderCustomizer customizer() {
         return builder -> builder
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    }
+
+    @Bean
+    public SsmClient ssmClient() {
+        return SsmClient.create();
     }
 
 }

@@ -2,7 +2,8 @@ package uk.gov.companieshouse.servicesdashboardapi.model.endoflife;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/* Here the responses to the following projects
+/**
+ * Here the responses to the following projects
          nodejs
          go
          amazon-corretto
@@ -64,7 +65,7 @@ the numbers on the fields highlight the commonality of these 6 fields:
                                                                                                                             3 "lts": false,
                                                                                                                               "extendedSupport": "2023-12-31"
 */
-public class EndofLifeInfo {
+public class EndOfLifeInfo {
 
     @JsonProperty("cycle")
     private String cycle;

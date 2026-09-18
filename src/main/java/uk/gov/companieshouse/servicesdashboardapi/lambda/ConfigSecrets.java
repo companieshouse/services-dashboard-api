@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.lambda;
 
 import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.PropertySource;
@@ -32,10 +33,7 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
 
     private final SsmClient ssmClient;
 
-    public ConfigSecrets() {
-        ssmClient = SsmClient.create();
-    }
-
+    @Autowired
     public ConfigSecrets(SsmClient ssmClient) {
         this.ssmClient = ssmClient;
     }

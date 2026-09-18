@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 @Service
@@ -32,10 +32,10 @@ public class EndOfLifeService {
       this.jsonMapper = jsonMapper;
    }
 
-   public Map<String, List<EndofLifeInfo>> fetchEndOfLives() {
+   public Map<String, List<EndOfLifeInfo>> fetchEndOfLives() {
 
-      Map<String, List<EndofLifeInfo>> endofLivesInfo = new HashMap<>();
-      List<EndofLifeInfo> endOfLifeInfoList;
+      Map<String, List<EndOfLifeInfo>> endofLivesInfo = new HashMap<>();
+      List<EndOfLifeInfo> endOfLifeInfoList;
 
       for (String project : endolProjects) {
          try {

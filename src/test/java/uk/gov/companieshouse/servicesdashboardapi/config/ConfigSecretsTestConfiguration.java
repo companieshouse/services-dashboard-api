@@ -4,7 +4,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.util.ReflectionTestUtils;
+import software.amazon.awssdk.services.ssm.SsmClient;
 import uk.gov.companieshouse.servicesdashboardapi.lambda.ConfigSecrets;
+
+import static org.mockito.Mockito.mock;
 
 @TestConfiguration
 public class ConfigSecretsTestConfiguration {
@@ -19,7 +22,7 @@ public class ConfigSecretsTestConfiguration {
     @Bean
     @Primary
     ConfigSecrets configSecrets() {
-        ConfigSecrets configSecrets = new ConfigSecrets();
+        ConfigSecrets configSecrets = new ConfigSecrets(mock(SsmClient.class));
         ReflectionTestUtils.setField(configSecrets, "ssmPrefix", "/test/services-dashboard-api");
         return configSecrets;
     }

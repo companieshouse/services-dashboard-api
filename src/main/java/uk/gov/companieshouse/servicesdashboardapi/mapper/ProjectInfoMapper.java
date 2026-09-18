@@ -54,10 +54,10 @@ public interface ProjectInfoMapper {
     default List<MongoProjectInfo> mapProjectInfoList(List<ProjectInfo> projectInfoList) {
         return projectInfoList.stream()
                 .map(this::mapProjectInfoToMongoProjectInfo)
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
     }
 
-    // Map Map<String, ProjectInfo> to List<MongoProjectInfo> (only mapping the values of the Map)
+    // Map<String, ProjectInfo> to List<MongoProjectInfo> (only mapping the values of the Map)
     default List<MongoProjectInfo> mapProjectInfoMap(Map<String, ProjectInfo> projectInfoMap) {
         return mapProjectInfoList(new ArrayList<>(projectInfoMap.values()));
     }

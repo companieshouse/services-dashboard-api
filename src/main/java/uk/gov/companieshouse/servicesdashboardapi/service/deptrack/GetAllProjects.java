@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.deptrack;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
@@ -23,23 +23,16 @@ import java.util.Objects;
 @Service
 public class GetAllProjects extends DepTrackGetDataService<List<DepTrackProjectInfo>> {
 
-    @Value("${dt.server.endpoint.proj}")
-    String endPointValue;
-
     @Value("${dt.server.header.totcount}")
-    String headerTotalCount;
+    private String headerTotalCount;
 
     private final JsonMapper jsonMapper;
 
-    public GetAllProjects(JsonMapper jsonMapper) {
-        super(null); // Pass a placeholder value, will be overwritten in init method
+    public GetAllProjects(JsonMapper jsonMapper,
+                          @Value("${dt.server.endpoint.proj}") String endPointValue,
+                          RestTemplate restTemplate) {
+        super(endPointValue, restTemplate);
         this.jsonMapper = jsonMapper;
-    }
-
-    // PostConstruct to initialise the endPoint field from the property
-    @PostConstruct
-    private void init() {
-        this.endPoint = endPointValue;
     }
 
     @Override
