@@ -1,19 +1,19 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.sonar;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
-import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
-// import java.net.URLEncoder;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
+import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+
+import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
 
 @Service
 public class SonarService {
@@ -33,11 +33,14 @@ public class SonarService {
     @Value("${sonar.endpoint.measures}")
     private String endpointMeasures;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private CustomJsonMapper jsonMapper;
+    private final JsonMapper jsonMapper;
+
+    public SonarService(RestTemplate restTemplate, JsonMapper jsonMapper) {
+        this.restTemplate = restTemplate;
+        this.jsonMapper = jsonMapper;
+    }
 
     private String[] getProjKeys(String project) {
         String[] projKeys = new String[2];

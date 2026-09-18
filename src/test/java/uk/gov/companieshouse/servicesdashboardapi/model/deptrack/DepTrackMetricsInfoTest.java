@@ -2,15 +2,20 @@ package uk.gov.companieshouse.servicesdashboardapi.model.deptrack;
 
 import org.junit.jupiter.api.Test;
 
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DepTrackMetricsInfoTest {
 
+    private final JsonMapper jsonMapper = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
+
     @Test
-    void shouldParseMetricsJsonIntoDepTrackMetricsInfo() throws Exception {
+    void shouldParseMetricsJsonIntoDepTrackMetricsInfo() {
         String json = """
                 {
                     "critical": 8,
@@ -46,8 +51,7 @@ class DepTrackMetricsInfoTest {
                 }
                 """;
 
-        CustomJsonMapper mapper = new CustomJsonMapper();
-        DepTrackMetricsInfo metricsInfo = mapper.readValue(json, DepTrackMetricsInfo.class);
+        DepTrackMetricsInfo metricsInfo = jsonMapper.readValue(json, DepTrackMetricsInfo.class);
 
         assertNotNull(metricsInfo);
         assertEquals(8, metricsInfo.getCritical());

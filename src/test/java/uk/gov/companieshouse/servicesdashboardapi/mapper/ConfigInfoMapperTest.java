@@ -3,7 +3,7 @@ package uk.gov.companieshouse.servicesdashboardapi.mapper;
 import org.junit.jupiter.api.Test;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoEndoflifeInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ConfigInfo;
 
 import java.util.List;
@@ -18,11 +18,11 @@ class ConfigInfoMapperTest {
 
     @Test
     void shouldMapConfigInfoToMongoConfigInfoWithEndolValues() {
-        EndofLifeInfo javaInfo = new EndofLifeInfo();
+        EndOfLifeInfo javaInfo = new EndOfLifeInfo();
         javaInfo.setCycle("21");
         javaInfo.setLatest("21.0.4");
 
-        EndofLifeInfo nodeInfo = new EndofLifeInfo();
+        EndOfLifeInfo nodeInfo = new EndOfLifeInfo();
         nodeInfo.setCycle("20");
         nodeInfo.setLatest("20.17.0");
 
@@ -47,7 +47,7 @@ class ConfigInfoMapperTest {
 
     @Test
     void shouldMapSingleEndOfLifeInfoListToMongoEndOfLifeInfoList() {
-        EndofLifeInfo info = new EndofLifeInfo();
+        EndOfLifeInfo info = new EndOfLifeInfo();
         info.setCycle("22");
         info.setReleaseDate("2024-03-19");
         info.setLts("false");

@@ -2,7 +2,7 @@ package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class MongoVersionInfo {
 
@@ -13,7 +13,7 @@ public class MongoVersionInfo {
     private String uuid;
 
     @Field("lastBomImport")
-    private Date lastBomImport;
+    private Instant lastBomImport;
 
     @Field("metrics")
     private MongoMetricsInfo metrics;
@@ -42,11 +42,11 @@ public class MongoVersionInfo {
         this.uuid = uuid;
     }
 
-    public Date getLastBomImport() {
+    public Instant getLastBomImport() {
         return lastBomImport;
     }
 
-    public void setLastBomImport(Date lastBomImport) {
+    public void setLastBomImport(Instant lastBomImport) {
         this.lastBomImport = lastBomImport;
     }
 

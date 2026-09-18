@@ -4,7 +4,6 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -13,14 +12,19 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
+
+import java.util.Collections;
 
 @Configuration
 public class MongoConfig {
 
-    @Autowired
-    private MongoProperties mongoProperties;
+    private final MongoProperties mongoProperties;
+
+    public MongoConfig(MongoProperties mongoProperties) {
+        this.mongoProperties = mongoProperties;
+    }
 
     public String getCollectionNameProj() {
         return mongoProperties.getCollectionNameProj();
@@ -43,7 +47,6 @@ public class MongoConfig {
                 mongoProperties.getHostandport(),
                 mongoProperties.getDbname());
 
-        ApiLogger.debug("Connection string: " + uri);
         ConnectionString connectionString = new ConnectionString(uri);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
@@ -59,12 +62,21 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDbFactory) {
-        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), new MongoMappingContext());
+        // Register the standard java.time (Jsr310) converters so types such as Instant/LocalDate
+        // used in DAO models are recognised as simple types rather than entities to introspect.
+        MongoCustomConversions customConversions = new MongoCustomConversions(Collections.emptyList());
+
+        MongoMappingContext mappingContext = new MongoMappingContext();
+        mappingContext.setSimpleTypeHolder(customConversions.getSimpleTypeHolder());
+        mappingContext.afterPropertiesSet();
+
+        MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), mappingContext);
+        converter.setCustomConversions(customConversions);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        converter.afterPropertiesSet();
 
         return new MongoTemplate(mongoDbFactory, converter);
     }
 }
-
 
 

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 class BeanCheckerTest {
 
     @Test
-    void shouldPrintSortedBeanNamesWhenLogLevelIsDebug() throws Exception {
+    void shouldPrintSortedBeanNamesWhenLogLevelIsDebug() {
         ApplicationContext applicationContext = mock(ApplicationContext.class);
         when(applicationContext.getBeanDefinitionNames()).thenReturn(new String[]{"zetaBean", "alphaBean", "middleBean"});
 
@@ -27,8 +27,8 @@ class BeanCheckerTest {
 
         PrintStream originalOut = System.out;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
+        try (PrintStream printStream = new PrintStream(output, true, StandardCharsets.UTF_8)) {
+            System.setOut(printStream);
             beanChecker.run();
         } finally {
             System.setOut(originalOut);
@@ -40,15 +40,15 @@ class BeanCheckerTest {
     }
 
     @Test
-    void shouldNotPrintAnythingWhenLogLevelIsNotDebug() throws Exception {
+    void shouldNotPrintAnythingWhenLogLevelIsNotDebug() {
         ApplicationContext applicationContext = mock(ApplicationContext.class);
         BeanChecker beanChecker = new BeanChecker(applicationContext);
         ReflectionTestUtils.setField(beanChecker, "logLevel", "info");
 
         PrintStream originalOut = System.out;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
+        try (PrintStream printStream = new PrintStream(output, true, StandardCharsets.UTF_8)) {
+            System.setOut(printStream);
             beanChecker.run();
         } finally {
             System.setOut(originalOut);

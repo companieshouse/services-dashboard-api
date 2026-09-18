@@ -1,30 +1,10 @@
 package uk.gov.companieshouse.servicesdashboardapi;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import uk.gov.companieshouse.servicesdashboardapi.lambda.ConfigSecrets;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
@@ -51,79 +31,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Booting this class still performs live DNS lookups for four production hosts in ServicesDashboardApiApplication's constructor
  * (ServicesDashboardApiApplication.java:21-24). WireMock cannot intercept those lookups, so an isolated or slow-DNS CI
  * environment can delay this supposedly self-contained integration suite. Please make host-resolution logging
- * disableable/injectable for tests, or otherwise prevent those lookups before the application context starts.
+ * disableable/injectable for tests or otherwise prevent those lookups before the application context starts.
  * <p>
  * Maybe worth revisiting this at a later date to refactor and avoid the DNS lookups.
  */
-@Testcontainers
-@SpringBootTest(
-        classes = ServicesDashboardApiApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(FullApplicationIntegrationTest.ConfigSecretsTestConfiguration.class)
-@TestPropertySource(properties = "spring.main.allow-bean-definition-overriding=true")
-class FullApplicationIntegrationTest {
 
-    private static final WireMockServer EXTERNAL_APIS = new WireMockServer(WireMockConfiguration.options().dynamicPort());
-    private static final String AWS_REGION_PROPERTY = "aws.region";
-    private static final String PREVIOUS_AWS_REGION = System.getProperty(AWS_REGION_PROPERTY);
 
-    static {
-        // Only needed so the real (unmocked) ConfigSecrets bean can build a real SsmClient at
-        // startup; that client is never actually invoked outside of AWS Lambda (see below).
-        System.setProperty(AWS_REGION_PROPERTY, "eu-west-2");
-        EXTERNAL_APIS.start();
-    }
-
-    @Container
-    static final MongoDBContainer MONGO = new MongoDBContainer("mongo:7.0");
-
-    @DynamicPropertySource
-    static void applicationProperties(DynamicPropertyRegistry registry) {
-        String wireMockUrl = "http://localhost:" + EXTERNAL_APIS.port();
-
-        // Real Mongo, provided by Testcontainers
-        registry.add("mongo.protocol.secret", () -> "mongodb");
-        registry.add("mongo.user.secret", () -> "");
-        registry.add("mongo.password.secret", () -> "");
-        registry.add("mongo.hostandport.secret", () -> MONGO.getHost() + ":" + MONGO.getFirstMappedPort());
-        registry.add("mongo.dbname.secret", () -> "services-dashboard-full-it");
-        registry.add("mongo.collectionNameProj", () -> "projects");
-        registry.add("mongo.collectionNameConf", () -> "config");
-        registry.add("mongo.configObjectId", () -> "singletonConfig");
-
-        // Third-party HTTP APIs, all served by the same WireMock instance
-        registry.add("dt.server.baseurl", () -> wireMockUrl);
-        registry.add("dt.server.apikey.secret", () -> "test-dt-key");
-        registry.add("gh.api", () -> wireMockUrl);
-        registry.add("gh.token.secret", () -> "test-gh-token");
-        registry.add("sonar.url", () -> wireMockUrl);
-        registry.add("sonar.token.secret", () -> "test-sonar-token");
-        registry.add("endol.api.url", () -> wireMockUrl);
-
-        registry.add("deepScan.enabled", () -> "true");
-    }
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @AfterAll
-    static void stopWireMock() {
-        EXTERNAL_APIS.stop();
-        if (PREVIOUS_AWS_REGION != null) {
-            System.setProperty(AWS_REGION_PROPERTY, PREVIOUS_AWS_REGION);
-        } else {
-            System.clearProperty(AWS_REGION_PROPERTY);
-        }
-    }
-
-    @BeforeEach
-    void resetState() {
-        mongoTemplate.getDb().drop();
-        EXTERNAL_APIS.resetAll();
-    }
+class FullApplicationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void healthcheckRespondsOkOnTheRealRunningApplication() {
@@ -285,22 +199,4 @@ class FullApplicationIntegrationTest {
         }
     }
 
-    @TestConfiguration
-    static class ConfigSecretsTestConfiguration {
-
-        /**
-         * A real (unmocked) {@link ConfigSecrets} instance. Its bean-factory post-processing only
-         * ever does anything when running inside AWS Lambda (env var AWS_LAMBDA_FUNCTION_NAME set),
-         * which is never the case here, so this override exists solely to satisfy its constructor
-         * guard that otherwise requires the SSM_PREFIX OS environment variable - always supplied by
-         * Terraform/Vault in real deployments, but understandably absent on a local test JVM.
-         */
-        @Bean
-        @Primary
-        ConfigSecrets configSecrets() {
-            ConfigSecrets configSecrets = new ConfigSecrets();
-            ReflectionTestUtils.setField(configSecrets, "ssmPrefix", "/test/services-dashboard-api");
-            return configSecrets;
-        }
-    }
 }

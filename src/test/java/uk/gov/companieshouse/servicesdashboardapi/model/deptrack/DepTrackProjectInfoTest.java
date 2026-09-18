@@ -2,7 +2,8 @@ package uk.gov.companieshouse.servicesdashboardapi.model.deptrack;
 
 import org.junit.jupiter.api.Test;
 
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DepTrackProjectInfoTest {
 
     @Test
-    void shouldParseProjectJsonIntoDepTrackProjectInfo() throws Exception {
+    void shouldParseProjectJsonIntoDepTrackProjectInfo() {
         String json = """
                 {
                     "name": "disqualified-officers-delta-consumer",
@@ -64,8 +65,11 @@ class DepTrackProjectInfoTest {
                 }
                 """;
 
-        CustomJsonMapper mapper = new CustomJsonMapper();
-        DepTrackProjectInfo projectInfo = mapper.readValue(json, DepTrackProjectInfo.class);
+        JsonMapper jsonMapper = JsonMapper.builder()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build();
+
+        DepTrackProjectInfo projectInfo = jsonMapper.readValue(json, DepTrackProjectInfo.class);
 
         assertNotNull(projectInfo);
         assertEquals("disqualified-officers-delta-consumer", projectInfo.getName());

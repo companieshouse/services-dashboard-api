@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarComponent;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DeserializerSonarMeasuresTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     @Test
     void shouldDeserializeMeasuresFromValueAndPeriodNodes() throws Exception {
@@ -27,7 +27,7 @@ class DeserializerSonarMeasuresTest {
                 }
                 """;
 
-        SonarComponent component = objectMapper.readValue(json, SonarComponent.class);
+        SonarComponent component = jsonMapper.readValue(json, SonarComponent.class);
 
         assertEquals(514, component.getMeasures().get("code_smells"));
         assertEquals(91, component.getMeasures().get("new_coverage"));
@@ -49,7 +49,7 @@ class DeserializerSonarMeasuresTest {
                 }
                 """;
 
-        SonarComponent component = objectMapper.readValue(json, SonarComponent.class);
+        SonarComponent component = jsonMapper.readValue(json, SonarComponent.class);
         Map<String, Integer> measures = component.getMeasures();
 
         assertEquals(1, measures.size());
@@ -66,7 +66,7 @@ class DeserializerSonarMeasuresTest {
                 }
                 """;
 
-        SonarComponent component = objectMapper.readValue(json, SonarComponent.class);
+        SonarComponent component = jsonMapper.readValue(json, SonarComponent.class);
 
         assertTrue(component.getMeasures().isEmpty());
     }
@@ -83,7 +83,7 @@ class DeserializerSonarMeasuresTest {
                 }
                 """;
 
-        assertThrows(Exception.class, () -> objectMapper.readValue(json, SonarComponent.class));
+        assertThrows(Exception.class, () -> jsonMapper.readValue(json, SonarComponent.class));
     }
 
 }
