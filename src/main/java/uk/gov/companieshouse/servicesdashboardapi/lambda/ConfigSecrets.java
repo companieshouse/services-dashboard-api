@@ -38,6 +38,10 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
         this.ssmClient = ssmClient;
     }
 
+    public ConfigSecrets() {
+        this.ssmClient = SsmClient.create();
+    }
+
     @Override
     public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) {
 
