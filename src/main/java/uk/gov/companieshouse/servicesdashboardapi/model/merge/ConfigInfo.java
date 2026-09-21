@@ -1,20 +1,20 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.merge;
 
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 
 import java.util.List;
 import java.util.Map;
 
 public class ConfigInfo {
 
-    private Map<String, List<EndofLifeInfo>> endol;
+    private Map<String, List<EndOfLifeInfo>> endol;
 
     // Getters and setters
-    public Map<String, List<EndofLifeInfo>> getEndol() {
+    public Map<String, List<EndOfLifeInfo>> getEndol() {
         return endol;
     }
 
-    public void setEndol(Map<String, List<EndofLifeInfo>> endol) {
+    public void setEndol(Map<String, List<EndOfLifeInfo>> endol) {
         this.endol = endol;
     }
 

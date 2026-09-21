@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.merge;
 
 import org.junit.jupiter.api.Test;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -16,15 +16,15 @@ class ConfigInfoTest {
     void shouldSetAndGetEndolMapWithMultipleProjects() {
         ConfigInfo configInfo = new ConfigInfo();
 
-        EndofLifeInfo javaInfo = new EndofLifeInfo();
+        EndOfLifeInfo javaInfo = new EndOfLifeInfo();
         javaInfo.setCycle("21");
         javaInfo.setLatest("21.0.4");
 
-        EndofLifeInfo nodeInfo = new EndofLifeInfo();
+        EndOfLifeInfo nodeInfo = new EndOfLifeInfo();
         nodeInfo.setCycle("20");
         nodeInfo.setLatest("20.17.0");
 
-        Map<String, List<EndofLifeInfo>> endol = Map.of(
+        Map<String, List<EndOfLifeInfo>> endol = Map.of(
                 "java", List.of(javaInfo),
                 "nodejs", List.of(nodeInfo)
         );
@@ -49,9 +49,9 @@ class ConfigInfoTest {
     void shouldRenderToStringWithEndolContent() {
         ConfigInfo configInfo = new ConfigInfo();
 
-        EndofLifeInfo javaInfo = new EndofLifeInfo();
+        EndOfLifeInfo javaInfo = new EndOfLifeInfo();
         javaInfo.setCycle("21");
-        Map<String, List<EndofLifeInfo>> endol = Map.of("java", List.of(javaInfo));
+        Map<String, List<EndOfLifeInfo>> endol = Map.of("java", List.of(javaInfo));
         configInfo.setEndol(endol);
 
         assertEquals("{endol:{{java=[cycle=21, releaseDate=null, lts:null, eol=null, latest=null, latestReleaseDate:null]}},", configInfo.toString());

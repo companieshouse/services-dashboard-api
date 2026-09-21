@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoConfigInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackProjectInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndofLifeInfo;
+import uk.gov.companieshouse.servicesdashboardapi.model.endoflife.EndOfLifeInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
@@ -109,7 +109,7 @@ class ServicesDashboardControllerTest {
 
     @Test
     void sourceEndolReturnsOkStatus() {
-        Map<String, List<EndofLifeInfo>> endolMap = new HashMap<>();
+        Map<String, List<EndOfLifeInfo>> endolMap = new HashMap<>();
         when(endolService.fetchEndOfLives()).thenReturn(endolMap);
 
         ResponseEntity<String> response = controller.sourceEndol();
@@ -120,7 +120,7 @@ class ServicesDashboardControllerTest {
 
     @Test
     void sourceEndolPersistsEndofLifeInfoToMongo() {
-        Map<String, List<EndofLifeInfo>> endolMap = new HashMap<>();
+        Map<String, List<EndOfLifeInfo>> endolMap = new HashMap<>();
         when(endolService.fetchEndOfLives()).thenReturn(endolMap);
 
         controller.sourceEndol();
@@ -219,7 +219,7 @@ class ServicesDashboardControllerTest {
 
     @Test
     void loadListEolFetchesAndPersistsEndofLifeData() {
-        Map<String, List<EndofLifeInfo>> endolMap = new HashMap<>();
+        Map<String, List<EndOfLifeInfo>> endolMap = new HashMap<>();
         when(endolService.fetchEndOfLives()).thenReturn(endolMap);
 
         controller.loadListEol();

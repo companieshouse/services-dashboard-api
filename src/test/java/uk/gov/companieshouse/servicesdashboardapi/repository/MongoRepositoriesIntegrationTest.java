@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.mongodb.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.companieshouse.servicesdashboardapi.config.MongoConfig;
@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings({"SpringBootApplicationProperties", "SameParameterValue"})
 @Testcontainers
 @SpringBootTest(classes = {
         MongoRepositoriesIntegrationTest.MongoTestConfiguration.class,
@@ -42,6 +43,15 @@ class MongoRepositoriesIntegrationTest {
     @Container
     static final MongoDBContainer MONGO = new MongoDBContainer("mongo:7.0");
 
+    @Autowired
+    private CustomMongoProjectInfoRepository projectRepository;
+
+    @Autowired
+    private CustomMongoConfigRepository configRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     @DynamicPropertySource
     static void mongoProperties(DynamicPropertyRegistry registry) {
         registry.add("MONGODB_PROTOCOL", () -> "mongodb");
@@ -57,29 +67,24 @@ class MongoRepositoriesIntegrationTest {
         registry.add("mongo.configObjectId", () -> "singletonConfig");
     }
 
-    @Autowired
-    private CustomMongoProjectInfoRepository projectRepository;
+    private static MongoProjectInfo project(String name, List<MongoVersionInfo> versions,
+                                            String sonarKey, String owner) {
+        MongoProjectInfo project = new MongoProjectInfo();
+        project.setName(name);
+        project.setVersions(versions);
+        project.setSonarKey(sonarKey);
+        project.setSonarMetrics(Map.of("bugs", 1));
+        MongoGitInfo gitInfo = new MongoGitInfo();
+        gitInfo.setOwner(owner);
+        project.setGitInfo(gitInfo);
+        return project;
+    }
 
-    @Autowired
-    private CustomMongoConfigRepository configRepository;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @TestConfiguration
-    static class MongoTestConfiguration {
-        @Bean
-        MongoProperties mongoProperties() {
-            MongoProperties properties = new MongoProperties();
-            properties.setProtocol("mongodb");
-            properties.setUser("");
-            properties.setPassword("");
-            properties.setHostandport(MONGO.getHost() + ":" + MONGO.getFirstMappedPort());
-            properties.setDbname("services-dashboard-test");
-            properties.setCollectionNameProj("projects");
-            properties.setCollectionNameConf("config");
-            return properties;
-        }
+    private static MongoVersionInfo version(String version, String uuid) {
+        MongoVersionInfo result = new MongoVersionInfo();
+        result.setVersion(version);
+        result.setUuid(uuid);
+        return result;
     }
 
     @BeforeEach
@@ -126,23 +131,19 @@ class MongoRepositoriesIntegrationTest {
         assertThat(saved.getLastScan()).matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}");
     }
 
-    private static MongoProjectInfo project(String name, List<MongoVersionInfo> versions,
-                                            String sonarKey, String owner) {
-        MongoProjectInfo project = new MongoProjectInfo();
-        project.setName(name);
-        project.setVersions(versions);
-        project.setSonarKey(sonarKey);
-        project.setSonarMetrics(Map.of("bugs", 1));
-        MongoGitInfo gitInfo = new MongoGitInfo();
-        gitInfo.setOwner(owner);
-        project.setGitInfo(gitInfo);
-        return project;
-    }
-
-    private static MongoVersionInfo version(String version, String uuid) {
-        MongoVersionInfo result = new MongoVersionInfo();
-        result.setVersion(version);
-        result.setUuid(uuid);
-        return result;
+    @TestConfiguration
+    static class MongoTestConfiguration {
+        @Bean
+        MongoProperties mongoProperties() {
+            MongoProperties properties = new MongoProperties();
+            properties.setProtocol("mongodb");
+            properties.setUser("");
+            properties.setPassword("");
+            properties.setHostandport(MONGO.getHost() + ":" + MONGO.getFirstMappedPort());
+            properties.setDbname("services-dashboard-test");
+            properties.setCollectionNameProj("projects");
+            properties.setCollectionNameConf("config");
+            return properties;
+        }
     }
 }

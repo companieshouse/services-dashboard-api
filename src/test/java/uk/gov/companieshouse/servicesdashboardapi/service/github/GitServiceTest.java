@@ -1,38 +1,48 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.github;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitCustomProperty;
 import uk.gov.companieshouse.servicesdashboardapi.model.github.GitInfo;
-import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class GitServiceTest {
+
+    @Mock
+    RestTemplate restTemplate;
+
+    private GitService gitService;
+
+    @BeforeEach
+    void setUp() {
+        JsonMapper jsonMapper = JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build();
+        gitService = new GitService(jsonMapper, restTemplate);
+    }
 
     @Test
     void shouldReturnCustomPropertiesFromApiResponse() {
-        GitService gitService = new GitService();
-        RestTemplate restTemplate = mock(RestTemplate.class);
 
         ReflectionTestUtils.setField(gitService, "api", "https://api.github.com");
         ReflectionTestUtils.setField(gitService, "org", "companieshouse");
-        ReflectionTestUtils.setField(gitService, "restTemplate", restTemplate);
-        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>(null));
+        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>((Object) null));
 
         GitCustomProperty owner = new GitCustomProperty();
         owner.setPropertyName("team-code-owner");
@@ -59,13 +69,9 @@ class GitServiceTest {
 
     @Test
     void shouldReturnEmptyArrayWhenCustomPropertiesRequestFails() {
-        GitService gitService = new GitService();
-        RestTemplate restTemplate = mock(RestTemplate.class);
-
         ReflectionTestUtils.setField(gitService, "api", "https://api.github.com");
         ReflectionTestUtils.setField(gitService, "org", "companieshouse");
-        ReflectionTestUtils.setField(gitService, "restTemplate", restTemplate);
-        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>(null));
+        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>((Object) null));
 
         String endpoint = "https://api.github.com/repos/companieshouse/my-service/properties/values";
 
@@ -83,8 +89,6 @@ class GitServiceTest {
 
     @Test
     void shouldReturnRepoOwnerFromCustomProperties() {
-        GitService gitService = new GitService();
-
         GitCustomProperty teamOwner = new GitCustomProperty();
         teamOwner.setPropertyName("team-code-owner");
         teamOwner.setValue("team-photon");
@@ -100,24 +104,18 @@ class GitServiceTest {
 
     @Test
     void shouldReturnNoOwnerFromCustomProperties() {
-        GitService gitService = new GitService();
-
         assertEquals("No-Owner", gitService.getRepoOwner(new GitCustomProperty[0]));
         assertEquals("No-Owner", gitService.getRepoOwner(null));
     }
 
     @Test
     void shouldReturnNoServiceAreaFromCustomProperties() {
-        GitService gitService = new GitService();
-
         assertEquals("No-Service-Area", gitService.getServiceArea(new GitCustomProperty[0]));
         assertEquals("No-Service-Area", gitService.getServiceArea(null));
     }
 
     @Test
     void shouldReturnServiceAreaFromCustomProperties() {
-        GitService gitService = new GitService();
-
         GitCustomProperty teamOwner = new GitCustomProperty();
         teamOwner.setPropertyName("team-code-owner");
         teamOwner.setValue("team-photon");
@@ -131,20 +129,14 @@ class GitServiceTest {
         assertEquals("Common Components", area);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    void shouldReturnRepoInfoWithDominantLanguageReleasesOwnerAndServiceArea() throws Exception {
-        GitService gitService = new GitService();
-        RestTemplate restTemplate = mock(RestTemplate.class);
-        CustomJsonMapper jsonMapper = mock(CustomJsonMapper.class);
-
+    void shouldReturnRepoInfoWithDominantLanguageReleasesOwnerAndServiceArea() {
         ReflectionTestUtils.setField(gitService, "urlHome", "https://github.com/companieshouse");
         ReflectionTestUtils.setField(gitService, "api", "https://api.github.com");
         ReflectionTestUtils.setField(gitService, "org", "companieshouse");
         ReflectionTestUtils.setField(gitService, "releasesPerPage", 5);
         ReflectionTestUtils.setField(gitService, "restTemplate", restTemplate);
-        ReflectionTestUtils.setField(gitService, "jsonMapper", jsonMapper);
-        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>(null));
+        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>((Object) null));
 
         String baseRepoEndpoint = "https://api.github.com/repos/companieshouse/my-service/";
         String releasesEndpoint = "https://api.github.com/repos/companieshouse/my-service/releases?per_page=5";
@@ -162,13 +154,7 @@ class GitServiceTest {
                 eq(HttpMethod.GET),
                 any(HttpEntity.class),
                 eq(String.class)
-        )).thenReturn(ResponseEntity.ok("releases-json"));
-
-        GitReleaseInfo release = new GitReleaseInfo();
-        release.setVersion("v1.0.0");
-        release.setDate("2026-01-01T00:00:00Z");
-        when(jsonMapper.readValue(eq("releases-json"), any(com.fasterxml.jackson.core.type.TypeReference.class)))
-                .thenReturn(List.of(release));
+        )).thenReturn(ResponseEntity.ok("[{\"tag_name\":\"v1.0.0\",\"published_at\":\"2026-01-01T00:00:00Z\"}]"));
 
         GitCustomProperty owner = new GitCustomProperty();
         owner.setPropertyName("team-code-owner");
@@ -196,17 +182,12 @@ class GitServiceTest {
 
     @Test
     void shouldReturnRepoOnlyWhenGitHubRequestFailsInRepoInfo() {
-        GitService gitService = new GitService();
-        RestTemplate restTemplate = mock(RestTemplate.class);
-        CustomJsonMapper jsonMapper = mock(CustomJsonMapper.class);
-
         ReflectionTestUtils.setField(gitService, "urlHome", "https://github.com/companieshouse");
         ReflectionTestUtils.setField(gitService, "api", "https://api.github.com");
         ReflectionTestUtils.setField(gitService, "org", "companieshouse");
         ReflectionTestUtils.setField(gitService, "releasesPerPage", 5);
         ReflectionTestUtils.setField(gitService, "restTemplate", restTemplate);
-        ReflectionTestUtils.setField(gitService, "jsonMapper", jsonMapper);
-        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>(null));
+        ReflectionTestUtils.setField(gitService, "httpEntity", new HttpEntity<>((Object) null));
 
         String baseRepoEndpoint = "https://api.github.com/repos/companieshouse/my-service/";
         when(restTemplate.exchange(

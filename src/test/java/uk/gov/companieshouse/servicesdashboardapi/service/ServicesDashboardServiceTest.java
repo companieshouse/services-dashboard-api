@@ -1,8 +1,8 @@
 package uk.gov.companieshouse.servicesdashboardapi.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.servicesdashboardapi.model.dao.MongoProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ProjectInfo;
 import uk.gov.companieshouse.servicesdashboardapi.model.merge.ServicesInfo;
@@ -23,15 +23,21 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("unchecked")
 class ServicesDashboardServiceTest {
 
+    private ServicesDashboardService service;
+
+    private ServicesInfo servicesInfo;
+
+    private CustomMongoProjectInfoRepository repository;
+
+    @BeforeEach
+    void setUp() {
+        servicesInfo = mock(ServicesInfo.class);
+        repository = mock(CustomMongoProjectInfoRepository.class);
+        service = new ServicesDashboardService(servicesInfo, repository);
+    }
+
     @Test
     void createsDashboardAndSavesMappedProjects() {
-        ServicesDashboardService service = new ServicesDashboardService();
-        ServicesInfo servicesInfo = mock(ServicesInfo.class);
-        CustomMongoProjectInfoRepository repository = mock(CustomMongoProjectInfoRepository.class);
-
-        ReflectionTestUtils.setField(service, "servicesInfo", servicesInfo);
-        ReflectionTestUtils.setField(service, "customMongoProjectInfoRepository", repository);
-
         VersionInfo versionInfo = new VersionInfo();
         versionInfo.setVersion("1.0.0");
         versionInfo.setUuid("uuid-1");
@@ -60,13 +66,6 @@ class ServicesDashboardServiceTest {
 
     @Test
     void createsDashboardAndSavesEmptyListWhenNoProjectsExist() {
-        ServicesDashboardService service = new ServicesDashboardService();
-        ServicesInfo servicesInfo = mock(ServicesInfo.class);
-        CustomMongoProjectInfoRepository repository = mock(CustomMongoProjectInfoRepository.class);
-
-        ReflectionTestUtils.setField(service, "servicesInfo", servicesInfo);
-        ReflectionTestUtils.setField(service, "customMongoProjectInfoRepository", repository);
-
         when(servicesInfo.getProjectInfoMap()).thenReturn(Collections.emptyMap());
 
         service.createServicesDashboard();
@@ -78,13 +77,6 @@ class ServicesDashboardServiceTest {
 
     @Test
     void throwsExceptionAndDoesNotSaveWhenProjectInfoMapIsNull() {
-        ServicesDashboardService service = new ServicesDashboardService();
-        ServicesInfo servicesInfo = mock(ServicesInfo.class);
-        CustomMongoProjectInfoRepository repository = mock(CustomMongoProjectInfoRepository.class);
-
-        ReflectionTestUtils.setField(service, "servicesInfo", servicesInfo);
-        ReflectionTestUtils.setField(service, "customMongoProjectInfoRepository", repository);
-
         when(servicesInfo.getProjectInfoMap()).thenReturn(null);
 
         assertThrows(NullPointerException.class, service::createServicesDashboard);
