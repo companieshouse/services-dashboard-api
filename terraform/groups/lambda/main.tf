@@ -32,11 +32,10 @@ module "secrets" {
 module "lambda" {
   source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.427"
 
-  environment    = var.environment
-  function_name  = local.lambda_function_name
-  lambda_runtime = var.lambda_runtime
-  lambda_handler = var.lambda_handler_name
-
+  environment           = var.environment
+  function_name         = local.lambda_function_name
+  lambda_runtime        = var.lambda_runtime
+  lambda_handler        = var.lambda_handler_name
   lambda_code_s3_bucket = var.release_bucket_name
   lambda_code_s3_key    = var.release_artifact_key
 
@@ -45,12 +44,13 @@ module "lambda" {
   lambda_logs_retention_days = var.lambda_logs_retention_days
 
   lambda_env_vars = {
-    DT_SERVER_BASEURL = local.dt_server_baseurl
-    SSM_PREFIX        = "/${local.service_name}"
-    OTEL_LOG_ENABLED  = true
-    OTEL_EXPORTER_OTLP_ENDPOINT = "https://otel-collector.cidev.aws.chdev.org"
-    OTEL_SERVICE_NAME = "services-dashboard-api"
+    DT_SERVER_BASEURL           = local.dt_server_baseurl
+    SSM_PREFIX                  = "/${local.service_name}"
+    OTEL_EXPORTER_OTLP_ENDPOINT = data.aws_ssm_parameter.otel_exporter_otlp_endpoint.value
+    OTEL_LOG_ENABLED            = false
+    OTEL_SERVICE_NAME           = "services-dashboard-api"
   }
+  enable_adot = var.enable_adot ? true : null
 
   lambda_cloudwatch_event_rules = local.lambda_cloudwatch_event_rules
   additional_policies           = local.additional_iam_policies_json

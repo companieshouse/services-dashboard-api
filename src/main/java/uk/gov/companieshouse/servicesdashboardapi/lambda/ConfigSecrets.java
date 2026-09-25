@@ -28,6 +28,7 @@ import java.util.Properties;
 public class ConfigSecrets implements BeanFactoryPostProcessor {
 
     private final String ssmPrefix = System.getenv("SSM_PREFIX");
+    private final String lambdaGlobalSsmPrefix = System.getenv("LAMBDA_GLOBAL_SSM_PREFIX");
 
     private String lambdaFunctionNameOverride;
 
@@ -73,7 +74,12 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
                 if (keyStr.endsWith(".secret")) {
                     // get the key without the ".secret" suffix and replace '.' with '_'
                     String modifiedKeyStr = keyStr.substring(0, keyStr.length() - 7).replace('.', '_');
-                    String secretName = String.format("%s/%s", ssmPrefix, modifiedKeyStr);
+                    String secretName;
+                    if (keyStr.startsWith("otel.") && lambdaGlobalSsmPrefix != null) {
+                        secretName = String.format("%s/%s", lambdaGlobalSsmPrefix, modifiedKeyStr);
+                    } else {
+                        secretName = String.format("%s/%s", ssmPrefix, modifiedKeyStr);
+                    }
                     ApiLogger.info("reading SSM param (key: " + modifiedKeyStr + ")");
                     properties.setProperty(keyStr, getSecret(secretName));
                 }
