@@ -75,8 +75,9 @@ public class ConfigSecrets implements BeanFactoryPostProcessor {
                     // get the key without the ".secret" suffix and replace '.' with '_'
                     String modifiedKeyStr = keyStr.substring(0, keyStr.length() - 7).replace('.', '_');
                     String secretName;
-                    if (keyStr.startsWith("otel.") && lambdaGlobalSsmPrefix != null) {
-                        secretName = String.format("%s/%s", lambdaGlobalSsmPrefix, modifiedKeyStr);
+                    if (keyStr.startsWith("global.") && lambdaGlobalSsmPrefix != null) {
+                        String globalKey = modifiedKeyStr.substring("global_".length());
+                        secretName = String.format("%s/%s", lambdaGlobalSsmPrefix, globalKey);
                     } else {
                         secretName = String.format("%s/%s", ssmPrefix, modifiedKeyStr);
                     }

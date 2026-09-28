@@ -47,7 +47,6 @@ module "lambda" {
     DT_SERVER_BASEURL           = local.dt_server_baseurl
     SSM_PREFIX                  = "/${local.service_name}"
     OTEL_EXPORTER_OTLP_ENDPOINT = data.aws_ssm_parameter.otel_exporter_otlp_endpoint.value
-    OTEL_LOG_ENABLED            = false
     OTEL_SERVICE_NAME           = "services-dashboard-api"
   }
   enable_adot = var.enable_adot ? true : null
