@@ -167,13 +167,6 @@
       </profile>
    </profiles>
 
-   <!-- <repositories>
-      <repository>
-            <id>centralOri</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-      </repository>
-   </repositories> -->
-
    <dependencyManagement>
       <dependencies>
             <dependency>
