@@ -1,25 +1,25 @@
 package uk.gov.companieshouse.servicesdashboardapi.utils;
 
+import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import uk.gov.companieshouse.servicesdashboardapi.model.github.GitReleaseInfo;
-
 public class GitUtils {
-   private GitUtils() {
-      /* This utility class should not be instantiated */
-   }
+    private GitUtils() {
+        /* This utility class should not be instantiated */
+    }
 
     // Filter out the 2 latest releases that are not part of the same release cycle
-   // ex.
-   //    "ecs-service-1.0.22"  |
-   //    "ecs-service-1.0.21"  |
-   //    "ecs-service-1.0.20"  |-----> "ecs-service-1.0.22"
-   //    "4.0.11"              |       "4.0.11"
-   //    "4.0.10"              |
-   //    "ecs-service-1.0.20"  |
-   public static List<GitReleaseInfo> filterReleases(List<GitReleaseInfo> gitReleases) {
+    // ex.
+    //    "ecs-service-1.0.22"  |
+    //    "ecs-service-1.0.21"  |
+    //    "ecs-service-1.0.20"  |-----> "ecs-service-1.0.22"
+    //    "4.0.11"              |       "4.0.11"
+    //    "4.0.10"              |
+    //    "ecs-service-1.0.20"  |
+    public static List<GitReleaseInfo> filterReleases(List<GitReleaseInfo> gitReleases) {
         List<GitReleaseInfo> rel = new ArrayList<>();
 
         if (gitReleases.isEmpty()) {

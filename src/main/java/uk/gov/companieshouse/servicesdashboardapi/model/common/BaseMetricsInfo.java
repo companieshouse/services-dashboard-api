@@ -31,11 +31,11 @@ public abstract class BaseMetricsInfo {
     @JsonProperty("policyViolationsTotal")
     @Field("policyViolationsTotal")
     protected int policyViolationsTotal;
-    
+
     @JsonProperty("policyViolationsWarn")
     @Field("policyViolationsWarn")
     protected int policyViolationsWarn;
-    
+
     @JsonProperty("policyViolationsFail")
     @Field("policyViolationsFail")
     protected int policyViolationsFail;

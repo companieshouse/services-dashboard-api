@@ -1,8 +1,9 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.github;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,8 +42,8 @@ class GitInfoTest {
 
         assertNotNull(gitInfo.getReleases());
         assertEquals(1, gitInfo.getReleases().size());
-        assertEquals("1.0.0", gitInfo.getReleases().get(0).getVersion());
-        assertEquals("2026-01-01", gitInfo.getReleases().get(0).getDate());
+        assertEquals("1.0.0", gitInfo.getReleases().getFirst().getVersion());
+        assertEquals("2026-01-01", gitInfo.getReleases().getFirst().getDate());
         assertEquals("{r:null l:null o:null sA:null [R:[{v:1.0.0,d:2026-01-01}]]}", gitInfo.toString());
     }
 

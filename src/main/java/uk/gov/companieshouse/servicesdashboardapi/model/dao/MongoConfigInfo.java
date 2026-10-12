@@ -1,49 +1,50 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.dao;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 @Document
 public class MongoConfigInfo {
-   @Id
-   private String id;
+    @Id
+    private String id;
 
-   @Field("endol")
-   private Map<String, List<MongoEndoflifeInfo>> endol;
+    @Field("endol")
+    private Map<String, List<MongoEndoflifeInfo>> endol;
 
-   @Field("lastScan")
-   private String lastScan;
+    @Field("lastScan")
+    private String lastScan;
 
-   // Getters and Setters
-   public String getId() {
-      return id;
-   }
-   public void setId(String id) {
-      this.id = id;
-   }
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
 
-   public Map<String, List<MongoEndoflifeInfo>> getEndol() {
-      return endol;
-   }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   public void setEndol(Map<String, List<MongoEndoflifeInfo>> endol) {
-      this.endol = endol;
-   }
+    public Map<String, List<MongoEndoflifeInfo>> getEndol() {
+        return endol;
+    }
 
-   public String getLastScan() {
-      return lastScan;
-   }
-   public void setLastScan(String lastScan) {
-      this.lastScan = lastScan;
-   }
+    public void setEndol(Map<String, List<MongoEndoflifeInfo>> endol) {
+        this.endol = endol;
+    }
 
-   @Override
-   public String toString() {
-      return String.format("endol:{%s},lastScan=%s", endol, lastScan);
-   }
+    public String getLastScan() {
+        return lastScan;
+    }
+
+    public void setLastScan(String lastScan) {
+        this.lastScan = lastScan;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("endol:{%s},lastScan=%s", endol, lastScan);
+    }
 }

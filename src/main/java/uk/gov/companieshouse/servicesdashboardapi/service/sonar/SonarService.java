@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.servicesdashboardapi.service.sonar;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.servicesdashboardapi.utils.ApiLogger;
 
 import org.springframework.http.HttpHeaders;
@@ -14,10 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import uk.gov.companieshouse.servicesdashboardapi.model.sonar.SonarProjectInfo;
-
-// import java.net.URLEncoder;
-
-import uk.gov.companieshouse.servicesdashboardapi.utils.CustomJsonMapper;
 
 @Service
 public class SonarService {
@@ -37,50 +33,53 @@ public class SonarService {
     @Value("${sonar.endpoint.measures}")
     private String endpointMeasures;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private CustomJsonMapper jsonMapper;
+    private final JsonMapper jsonMapper;
 
-   private String[] getProjKeys(String project) {
-      String[] projKeys = new String[2];
+    public SonarService(RestTemplate restTemplate, JsonMapper jsonMapper) {
+        this.restTemplate = restTemplate;
+        this.jsonMapper = jsonMapper;
+    }
 
-      projKeys[0] = projectKeyPreamble + project ; // this should be the standard key
-      projKeys[1] = project; // this is a fallback key to try
+    private String[] getProjKeys(String project) {
+        String[] projKeys = new String[2];
 
-      return projKeys;
-   }
+        projKeys[0] = projectKeyPreamble + project; // this should be the standard key
+        projKeys[1] = project; // this is a fallback key to try
 
-   public SonarProjectInfo fetchMetrics(String project) {
+        return projKeys;
+    }
 
-      SonarProjectInfo sonarInfo = new SonarProjectInfo();
-      String[] projKeys = getProjKeys(project);
+    public SonarProjectInfo fetchMetrics(String project) {
 
-      HttpHeaders headers = new HttpHeaders();
-      headers.setBasicAuth(sonarToken, "");
+        SonarProjectInfo sonarInfo = new SonarProjectInfo();
+        String[] projKeys = getProjKeys(project);
 
-      HttpEntity<String> entity = new HttpEntity<>(headers);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(sonarToken, "");
 
-      for (String projectKey : projKeys) {
-         try {
-            String url = String.format("%s/%s?component=%s&metricKeys=%s",
-                                       sonarUrl, endpointMeasures, projectKey, metrics);
-            ApiLogger.info("----- Sending SonarQube request: " + url);
-            ResponseEntity<String> response = restTemplate.exchange(
-               // URLEncoder.encode(url, StandardCharsets.UTF_8.toString()),
-               url,
-               HttpMethod.GET, entity, String.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                  sonarInfo = jsonMapper.readValue(response.getBody(), new TypeReference<SonarProjectInfo>() {});
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-                  ApiLogger.info(sonarInfo.toString());
-                  break; // Stop the loop on the first successful response
+        for (String projectKey : projKeys) {
+            try {
+                String url = String.format("%s/%s?component=%s&metricKeys=%s",
+                        sonarUrl, endpointMeasures, projectKey, metrics);
+                ApiLogger.info("----- Sending SonarQube request: " + url);
+                ResponseEntity<String> response = restTemplate.exchange(
+                        // URLEncoder.encode(url, StandardCharsets.UTF_8.toString()),
+                        url,
+                        HttpMethod.GET, entity, String.class);
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    sonarInfo = jsonMapper.readValue(response.getBody(), new TypeReference<>() {});
+
+                    ApiLogger.info(sonarInfo.toString());
+                    break; // Stop the loop on the first successful response
+                }
+            } catch (Exception e) {
+                ApiLogger.info("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage());
             }
-         } catch (Exception e) {
-            ApiLogger.info("Failed to fetch Sonar metrics for project " + project + ": " + e.getMessage());
-      }
-      }
-      return sonarInfo;
-   }
+        }
+        return sonarInfo;
+    }
 }

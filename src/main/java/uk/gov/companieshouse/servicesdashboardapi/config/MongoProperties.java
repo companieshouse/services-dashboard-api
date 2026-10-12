@@ -27,24 +27,59 @@ public class MongoProperties {
     private String collectionNameConf;
 
     // Getters and Setters
-    public String getProtocol() { return protocol; }
-    public void setProtocol(String protocol) { this.protocol = protocol; }
+    public String getProtocol() {
+        return protocol;
+    }
 
-    public String getUser() { return user; }
-    public void setUser(String user) { this.user = user; }
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getUser() {
+        return user;
+    }
 
-    public String getHostandport() { return hostandport; }
-    public void setHostandport(String hostandport) { this.hostandport = hostandport; }
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-    public String getDbname() { return dbname; }
-    public void setDbname(String dbname) { this.dbname = dbname; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getCollectionNameProj() { return collectionNameProj; }
-    public void setCollectionNameProj(String collectionName) { this.collectionNameProj = collectionName; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getCollectionNameConf() { return collectionNameConf; }
-    public void setCollectionNameConf(String collectionName) { this.collectionNameConf = collectionName; }
+    public String getHostandport() {
+        return hostandport;
+    }
+
+    public void setHostandport(String hostandport) {
+        this.hostandport = hostandport;
+    }
+
+    public String getDbname() {
+        return dbname;
+    }
+
+    public void setDbname(String dbname) {
+        this.dbname = dbname;
+    }
+
+    public String getCollectionNameProj() {
+        return collectionNameProj;
+    }
+
+    public void setCollectionNameProj(String collectionName) {
+        this.collectionNameProj = collectionName;
+    }
+
+    public String getCollectionNameConf() {
+        return collectionNameConf;
+    }
+
+    public void setCollectionNameConf(String collectionName) {
+        this.collectionNameConf = collectionName;
+    }
 }

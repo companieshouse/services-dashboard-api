@@ -4,63 +4,64 @@ import uk.gov.companieshouse.servicesdashboardapi.model.deptrack.DepTrackMetrics
 
 public class VersionInfo {
 
-   private String version;
-   private String uuid;
-   private long lastBomImport;
-   private DepTrackMetricsInfo depTrackMetrics;
-   private String lang;
-   private String runtime;
+    private String version;
+    private String uuid;
+    private long lastBomImport;
+    private DepTrackMetricsInfo depTrackMetrics;
+    private String lang;
+    private String runtime;
 
-   // Getters and setters
-   public String getVersion() {
-      return version;
-   }
+    // Getters and setters
+    public String getVersion() {
+        return version;
+    }
 
-  public void setVersion(String version) {
-      this.version = version;
-   }
-   public String getUuid() {
-      return uuid;
-   }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   public void setUuid(String uuid) {
-      this.uuid = uuid;
-   }
+    public String getUuid() {
+        return uuid;
+    }
 
-   public long getLastBomImport() {
-      return lastBomImport;
-   }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-   public void setLastBomImport(long lastBomImport) {
-      this.lastBomImport = lastBomImport;
-   }
+    public long getLastBomImport() {
+        return lastBomImport;
+    }
 
-   public DepTrackMetricsInfo getDepTrackMetrics() {
-    return depTrackMetrics;
-   }
+    public void setLastBomImport(long lastBomImport) {
+        this.lastBomImport = lastBomImport;
+    }
 
-   public void setDepTrackMetrics(DepTrackMetricsInfo metrics) {
-      this.depTrackMetrics = metrics;
-   }
+    public DepTrackMetricsInfo getDepTrackMetrics() {
+        return depTrackMetrics;
+    }
 
-   public String getLang() {
-      return lang;
-   }
+    public void setDepTrackMetrics(DepTrackMetricsInfo metrics) {
+        this.depTrackMetrics = metrics;
+    }
 
-   public void setLang(String lang) {
-      this.lang = lang;
-   }
+    public String getLang() {
+        return lang;
+    }
 
-   public String getRuntime() {
-      return runtime;
-   }
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 
-   public void setRuntime(String runtime) {
-      this.runtime = runtime;
-   }
+    public String getRuntime() {
+        return runtime;
+    }
 
-   @Override
-   public String toString() {
-         return String.format("{v:%s,u:%s,l:%s,m:%s,l:%s,r:%s}", version, uuid, lastBomImport, depTrackMetrics, lang, runtime);
-   }
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{v:%s,u:%s,l:%s,m:%s,l:%s,r:%s}", version, uuid, lastBomImport, depTrackMetrics, lang, runtime);
+    }
 }

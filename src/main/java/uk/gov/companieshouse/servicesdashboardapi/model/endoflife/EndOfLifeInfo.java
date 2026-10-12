@@ -2,7 +2,8 @@ package uk.gov.companieshouse.servicesdashboardapi.model.endoflife;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/* Here the responses to the following projects
+/**
+ * Here the responses to the following projects
          nodejs
          go
          amazon-corretto
@@ -64,7 +65,7 @@ the numbers on the fields highlight the commonality of these 6 fields:
                                                                                                                             3 "lts": false,
                                                                                                                               "extendedSupport": "2023-12-31"
 */
-public class EndofLifeInfo  {
+public class EndOfLifeInfo {
 
     @JsonProperty("cycle")
     private String cycle;
@@ -87,8 +88,9 @@ public class EndofLifeInfo  {
     // Getters and Setters
 
     public String getCycle() {
-      return cycle;
+        return cycle;
     }
+
     public void setCycle(String cycle) {
         this.cycle = cycle;
     }
@@ -96,6 +98,7 @@ public class EndofLifeInfo  {
     public String getReleaseDate() {
         return releaseDate;
     }
+
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
@@ -103,6 +106,7 @@ public class EndofLifeInfo  {
     public String getLts() {
         return lts;
     }
+
     public void setLts(String lts) {
         this.lts = lts;
     }
@@ -110,6 +114,7 @@ public class EndofLifeInfo  {
     public String getEol() {
         return eol;
     }
+
     public void setEol(String eol) {
         this.eol = eol;
     }
@@ -117,6 +122,7 @@ public class EndofLifeInfo  {
     public String getLatest() {
         return latest;
     }
+
     public void setLatest(String latest) {
         this.latest = latest;
     }
@@ -124,6 +130,7 @@ public class EndofLifeInfo  {
     public String getLatestReleaseDate() {
         return latestReleaseDate;
     }
+
     public void setLatestReleaseDate(String latestReleaseDate) {
         this.latestReleaseDate = latestReleaseDate;
     }
@@ -131,11 +138,11 @@ public class EndofLifeInfo  {
     @Override
     public String toString() {
         return String.format("cycle=%s, releaseDate=%s, lts:%s, eol=%s, latest=%s, latestReleaseDate:%s",
-        cycle,
-        releaseDate,
-        lts,
-        eol,
-        latest,
-        latestReleaseDate);
+                cycle,
+                releaseDate,
+                lts,
+                eol,
+                latest,
+                latestReleaseDate);
     }
 }

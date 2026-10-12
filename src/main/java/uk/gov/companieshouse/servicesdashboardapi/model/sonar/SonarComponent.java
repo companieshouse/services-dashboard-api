@@ -1,9 +1,9 @@
 package uk.gov.companieshouse.servicesdashboardapi.model.sonar;
 
+import tools.jackson.databind.annotation.JsonDeserialize;
 import uk.gov.companieshouse.servicesdashboardapi.utils.DeserializerSonarMeasures;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Map;
 

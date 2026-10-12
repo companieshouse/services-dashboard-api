@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DepTrackTag {
 
-   @JsonProperty("name")
-   private String name;
+    @JsonProperty("name")
+    private String name;
 
-   // Getters and Setters
-   public String getName() {
-      return name;
-   }
+    // Getters and Setters
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name) {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String toString() {
-       return String.format("{n:%s}", name);
-   }
+    @Override
+    public String toString() {
+        return String.format("{n:%s}", name);
+    }
 }
 
 
