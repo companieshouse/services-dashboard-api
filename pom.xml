@@ -19,7 +19,7 @@
       <java.version>21</java.version>
 
       <log4j.version>2.24.3</log4j.version>
-      <structured-logging.version>3.0.38</structured-logging.version>
+      <structured-logging.version>3.0.57</structured-logging.version>
       <jackson-databind.version>2.18.2</jackson-databind.version>
       <org.mapstruct.version>1.6.3</org.mapstruct.version>
       <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
@@ -162,25 +162,17 @@
                         </execution>
                      </executions>
                   </plugin>
-
                </plugins>
             </build>
       </profile>
-      <!-- <profile>
-            <id>sonar-pr-analysis</id>
-            <properties>
-               <sonar.pullrequest.base>main</sonar.pullrequest.base>
-            </properties>
-      </profile> -->
-
    </profiles>
 
-   <repositories>
+   <!-- <repositories>
       <repository>
             <id>centralOri</id>
             <url>https://repo.maven.apache.org/maven2</url>
       </repository>
-   </repositories>
+   </repositories> -->
 
    <dependencyManagement>
       <dependencies>
@@ -268,12 +260,6 @@
 
 
       <!-- AWS dependencies -->
-      <!-- <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>ecs</artifactId>
-            <version>${aws.java.sdk.version}</version>
-      </dependency> -->
-
       <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>ssm</artifactId>
@@ -288,14 +274,7 @@
             <scope>test</scope>
       </dependency>
 
-      <!-- Sonar -->
-      <!-- <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
-      </dependency> -->
-
+      <!-- OpenTelemetry -->
        <dependency>
            <groupId>io.opentelemetry.instrumentation</groupId>
            <artifactId>opentelemetry-spring-boot-starter</artifactId>
