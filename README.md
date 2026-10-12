@@ -73,4 +73,4 @@ a different (manual) "deepscan" execution can instead be triggered with this :
     - An average light scan takes a few seconds.
 - deep scan:
     - skips the 2nd step. This will query GitHub and Sonar for every entry. Possible use cases: some info in GitHub for that project have changed (ex. the scrum/owner of the repo is changed), a new version of Sonar (ex. different server-url becomes available and we want to refresh the data in Mongo [this happened])
-    - A deepscan takes slightly more than `1min/100uuids`
+    - A deepscan takes slightly more than `1min/100uuids` 
