@@ -12,6 +12,11 @@ data "aws_kms_key" "kms_key" {
 
 data "aws_caller_identity" "aws_identity" {}
 
+data "aws_ssm_parameter" "otel_exporter_otlp_endpoint" {
+  name            = "/lambda-global-${var.environment}/otel_exporter_otlp_endpoint"
+  with_decryption = true
+}
+
 # Policy to allow Lambda to access SSM Parameter Store
 data "aws_iam_policy_document" "ssm_access_policy" {
   statement {
