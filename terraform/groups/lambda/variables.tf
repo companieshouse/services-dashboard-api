@@ -63,3 +63,9 @@ variable "lambda_logs_retention_days" {
   description = "The number of days to retain Lambda logs in CloudWatch"
   default     = 7
 }
+
+variable "enable_adot" {
+  type        = bool
+  description = "Flag to enable ADOT (AWS Distro for OpenTelemetry) for the Lambda function"
+  default     = false
+}

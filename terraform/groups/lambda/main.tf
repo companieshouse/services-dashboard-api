@@ -30,12 +30,15 @@ module "secrets" {
 }
 
 module "lambda" {
-  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.427"
+  source = "git@github.com:companieshouse/terraform-modules.git//aws/lambda?ref=1.0.448"
 
   environment    = var.environment
   function_name  = local.lambda_function_name
   lambda_runtime = var.lambda_runtime
   lambda_handler = var.lambda_handler_name
+
+  enable_adot = var.enable_adot
+  aws_profile = var.aws_profile
 
   lambda_code_s3_bucket = var.release_bucket_name
   lambda_code_s3_key    = var.release_artifact_key
@@ -47,8 +50,6 @@ module "lambda" {
   lambda_env_vars = {
     DT_SERVER_BASEURL = local.dt_server_baseurl
     SSM_PREFIX        = "/${local.service_name}"
-    OTEL_LOG_ENABLED  = true
-    OTEL_EXPORTER_OTLP_ENDPOINT = "https://otel-collector.cidev.aws.chdev.org"
     OTEL_SERVICE_NAME = "services-dashboard-api"
   }
 
