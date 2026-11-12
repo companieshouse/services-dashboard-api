@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Represents the response from SonarQube API for project information.
  * <p>
  * Here how a response to
- *  /api/measures/component?component=uk.gov.companieshouse:api-sdk-java&metricKeys=vulnerabilities,bugs,code_smells,coverage
+ *  /api/measures/component?component=uk.gov.companieshouse:api-sdk-java&metricKeys=software_quality_security_issues,software_quality_reliability_issues,software_quality_maintainability_issues,coverage
  *  looks like:
  * <p>
  * {@snippet lang = json:
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *     "qualifier": "TRK",
  *     "measures": [
  *       {
- *         "metric": "vulnerabilities",
+ *         "metric": "software_quality_security_issues",
  *         "value": "0",
  *         "bestValue": true
  *       },
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *         "bestValue": false
  *       },
  *       {
- *         "metric": "code_smells",
+ *         "metric": "software_quality_maintainability_issues",
  *         "value": "129",
  *         "bestValue": false
  *       }

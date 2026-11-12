@@ -63,7 +63,9 @@ class FullApplicationIntegrationTest extends AbstractIntegrationTest {
         ProjectInfo project = response.getBody()[0];
         assertThat(project.getName()).isEqualTo("test-service");
         assertThat(project.getSonarKey()).isEqualTo("uk.gov.companieshouse:test-service");
-        assertThat(project.getSonarMetrics()).containsEntry("bugs", 2);
+        assertThat(project.getSonarMetrics()).containsEntry("software_quality_reliability_issues", 2);
+        assertThat(project.getSonarMetrics()).containsEntry("software_quality_security_issues", 0);
+        assertThat(project.getSonarMetrics()).containsEntry("coverage", 89);
         assertThat(project.getGitInfo().getLang()).isEqualTo("Java");
         assertThat(project.getGitInfo().getOwner()).isEqualTo("team-x");
         assertThat(project.getGitInfo().getServiceArea()).isEqualTo("service-y");
@@ -166,7 +168,7 @@ class FullApplicationIntegrationTest extends AbstractIntegrationTest {
         EXTERNAL_APIS.stubFor(get(urlPathEqualTo("/api/measures/component"))
                 .withQueryParam("component", equalTo("uk.gov.companieshouse:test-service"))
                 .withQueryParam("metricKeys", equalTo(
-                        "vulnerabilities,bugs,code_smells,coverage,new_vulnerabilities,new_bugs,new_code_smells,new_coverage"))
+                        "software_quality_security_issues,software_quality_reliability_issues,software_quality_maintainability_issues,coverage,new_software_quality_security_issues,new_software_quality_reliability_issues,new_software_quality_maintainability_issues,new_coverage"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -176,9 +178,14 @@ class FullApplicationIntegrationTest extends AbstractIntegrationTest {
                                         "key": "uk.gov.companieshouse:test-service",
                                         "name": "test-service",
                                         "measures": [
-                                            {"metric": "bugs", "value": "2", "bestValue": false},
-                                            {"metric": "vulnerabilities", "value": "0", "bestValue": true},
-                                            {"metric": "coverage", "value": "88.5", "bestValue": false}
+                                            {"metric": "software_quality_reliability_issues", "value": "2", "bestValue": false},
+                                            {"metric": "software_quality_security_issues", "value": "0", "bestValue": true},
+                                            {"metric": "software_quality_maintainability_issues", "value": "6", "bestValue": false},
+                                            {"metric": "coverage", "value": "88.5", "bestValue": false},
+                                            {"metric": "new_software_quality_security_issues", "period": {"index": 1, "value": "0", "bestValue": true}},
+                                            {"metric": "new_software_quality_reliability_issues", "period": {"index": 1, "value": "1", "bestValue": false}},
+                                            {"metric": "new_software_quality_maintainability_issues", "period": {"index": 1, "value": "3", "bestValue": false}},
+                                            {"metric": "new_coverage", "period": {"index": 1, "value": "90.5", "bestValue": false}}
                                         ]
                                     }
                                 }
