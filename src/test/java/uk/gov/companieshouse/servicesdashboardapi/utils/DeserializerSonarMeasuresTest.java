@@ -21,7 +21,8 @@ class DeserializerSonarMeasuresTest {
                   "key": "service-key",
                   "name": "service-name",
                   "measures": [
-                	{ "metric": "code_smells", "value": "514", "bestValue": false },
+                	{ "metric": "software_quality_maintainability_issues", "value": "514", "bestValue": false },
+                	{ "metric": "new_software_quality_reliability_issues", "period": { "index": 1, "value": "3", "bestValue": false } },
                 	{ "metric": "new_coverage", "period": { "index": 1, "value": "90.6", "bestValue": false } }
                   ]
                 }
@@ -29,7 +30,8 @@ class DeserializerSonarMeasuresTest {
 
         SonarComponent component = jsonMapper.readValue(json, SonarComponent.class);
 
-        assertEquals(514, component.getMeasures().get("code_smells"));
+        assertEquals(514, component.getMeasures().get("software_quality_maintainability_issues"));
+        assertEquals(3, component.getMeasures().get("new_software_quality_reliability_issues"));
         assertEquals(91, component.getMeasures().get("new_coverage"));
     }
 
