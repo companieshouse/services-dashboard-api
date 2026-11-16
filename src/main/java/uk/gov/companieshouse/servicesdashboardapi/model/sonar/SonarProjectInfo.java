@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Represents the response from SonarQube API for project information.
  * <p>
  * Here how a response to
- *  /api/measures/component?component=uk.gov.companieshouse:api-sdk-java&metricKeys=software_quality_security_issues,software_quality_reliability_issues,software_quality_maintainability_issues,coverage
+ *  /api/measures/component?component=uk.gov.companieshouse:api-sdk-java&metricKeys=software_quality_security_issues,software_quality_reliability_issues,software_quality_maintainability_issues,coverage,new_software_quality_security_issues,new_software_quality_reliability_issues,new_software_quality_maintainability_issues,new_coverage
  *  looks like:
  * <p>
  * {@snippet lang = json:
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *         "bestValue": true
  *       },
  *       {
- *         "metric": "bugs",
+ *         "metric": "software_quality_reliability_issues",
  *         "value": "1",
  *         "bestValue": false
  *       },

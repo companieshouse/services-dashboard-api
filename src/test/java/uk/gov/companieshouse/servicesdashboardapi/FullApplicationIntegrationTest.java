@@ -80,6 +80,8 @@ class FullApplicationIntegrationTest extends AbstractIntegrationTest {
         assertThat(persisted.getVersions().getFirst().getVersion()).isEqualTo("1.2.3");
         assertThat(persisted.getVersions().getFirst().getUuid()).isEqualTo("11111111-1111-1111-1111-111111111111");
         assertThat(persisted.getSonarKey()).isEqualTo("uk.gov.companieshouse:test-service");
+        assertThat(persisted.getSonarMetrics()).containsEntry("software_quality_reliability_issues", 2);
+        assertThat(persisted.getSonarMetrics()).containsEntry("new_software_quality_reliability_issues", 1);
         assertThat(persisted.getGitInfo().getOwner()).isEqualTo("team-x");
     }
 

@@ -77,7 +77,7 @@ class ServicesDashboardHttpIntegrationTest {
         project.setDepTrackVersions(List.of());
         SonarComponent component = new SonarComponent();
         component.setKey("sonar-service-a");
-        component.setMeasures(Map.of("bugs", 2));
+        component.setMeasures(Map.of("software_quality_reliability_issues", 2));
         SonarProjectInfo sonar = new SonarProjectInfo();
         sonar.setComponent(component);
 
@@ -91,6 +91,6 @@ class ServicesDashboardHttpIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("service-a"))
                 .andExpect(jsonPath("$[0].sonarKey").value("sonar-service-a"))
-                .andExpect(jsonPath("$[0].sonarMetrics.bugs").value(2));
+                .andExpect(jsonPath("$[0].sonarMetrics.software_quality_reliability_issues").value(2));
     }
 }
